@@ -4,10 +4,9 @@
   "private": true,
   "homepage": "https://zivelab.github.io/zivelab-app-channels",
   "dependencies": {
-    "@material-ui/core": "next",
-    "@material-ui/icons": "^3.0.2",
-    "classnames": "^2.2.6",
-    "jss": "next",
+    "@material-ui/core": "latest",
+    "@material-ui/icons": "latest",
+    "classnames": "latest",
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
@@ -27,6 +26,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "gh-pages": "^2.0.1"
+    "gh-pages": "latest"
   }
 }

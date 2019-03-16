@@ -123,7 +123,7 @@ class Index extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
-              Persistent drawer
+              ZiveLab Channels
             </Typography>
           </Toolbar>
         </AppBar>
@@ -201,4 +201,4 @@ Index.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withRoot(withStyles(styles)(Index));
+export default withRoot(withStyles(styles, { withTheme: true })(Index));
