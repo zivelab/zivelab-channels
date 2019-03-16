@@ -1,21 +1,26 @@
-# Create React App v4-alpha example
+# ZiveLab-App-Channels
 
-## How to use
+This site is published at https://zivelab.github.io/zivelab-app-channels/.
 
-Download the example [or clone the repo](https://github.com/mui-org/material-ui):
+## How to install, build, and deploy
 
-```sh
-curl https://codeload.github.com/mui-org/material-ui/tar.gz/next | tar -xz --strip=2 material-ui-next/examples/create-react-app-next
-cd create-react-app-next
-```
+Download the repo.
 
 Install it and run:
 
 ```sh
-npm install
-npm run start
+npm install --save-dev gh-pages
+npm run build
+npm run deploy
 ```
 
-## The idea behind the example
+## After changes in repo, build and deploy again
 
-[Create React App](https://github.com/facebookincubator/create-react-app) with no build configuration.
+```sh
+npm run build
+npm run deploy
+```
+
+## Where to find npm for windows
+
+- https://www.npmjs.com/get-npm
