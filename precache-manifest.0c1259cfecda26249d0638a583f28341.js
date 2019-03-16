@@ -12,7 +12,7 @@ self.__precacheManifest = [
     "url": "/zivelab-app-channels/static/js/2.816c1915.chunk.js"
   },
   {
-    "revision": "8eedf30043945d48e89a5e619d7a49f0",
+    "revision": "5a37c7f76361648fb73183db073061b6",
     "url": "/zivelab-app-channels/index.html"
   }
 ];
