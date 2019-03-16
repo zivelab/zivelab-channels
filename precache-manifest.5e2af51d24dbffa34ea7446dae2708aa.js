@@ -4,15 +4,15 @@ self.__precacheManifest = [
     "url": "/zivelab-app-channels/static/js/runtime~main.041d34bd.js"
   },
   {
-    "revision": "ca8f313c5c22d83338d1",
-    "url": "/zivelab-app-channels/static/js/main.3612ac32.chunk.js"
+    "revision": "249fed5511bb79dfb184",
+    "url": "/zivelab-app-channels/static/js/main.615885dd.chunk.js"
   },
   {
     "revision": "22ea303ecf3d17169ea6",
     "url": "/zivelab-app-channels/static/js/2.816c1915.chunk.js"
   },
   {
-    "revision": "b6d14083836c9fbe5097e856d0c55342",
+    "revision": "58aa09820822de0185c9b7d8e8706df6",
     "url": "/zivelab-app-channels/index.html"
   }
 ];
