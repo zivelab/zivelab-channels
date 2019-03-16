@@ -1,0 +1,27 @@
+{
+  "name": "zivelab-app-channels",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://zivelab.github.io/zivelab-app-channels",
+  "dependencies": {
+    "@material-ui/core": "next",
+    "jss": "next",
+    "prop-types": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-scripts": "latest"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "deploy": "npm run build&&gh-pages -d build"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
