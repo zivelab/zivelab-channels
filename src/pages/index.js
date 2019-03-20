@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { withStyles } from '@material-ui/core/styles';
+import withRoot from '../withRoot';
 
 import AppBar from '@material-ui/core/AppBar';
+import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Dialog from '@material-ui/core/Dialog';
@@ -17,16 +20,19 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Snackbar from '@material-ui/core/Snackbar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
-import withRoot from '../withRoot';
+
+import { getLocalIP, getFullRange, validateIPaddress, isZiveDevice } from '../utilities/utilities.js';
 
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import CloseIcon from '@material-ui/icons/Close';
+import DeviceHubIcon from '@material-ui/icons/DeviceHub';
 import MenuIcon from '@material-ui/icons/Menu';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import TabletIcon from '@material-ui/icons/Tablet';
 
 const drawerWidth = 240;
 
@@ -47,6 +53,9 @@ const styles = theme => ({
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
+  },
+  badgeMargin: {
+    margin: theme.spacing.unit * 2,
   },
   menuButton: {
     marginLeft: 12,
@@ -89,20 +98,118 @@ const styles = theme => ({
 
 class Index extends React.Component {
   state = {
-    open: false,
+    openDrawer: false,
+    openSnackbar: false,
+    snackbarMessage: "",
+    
+    localIP: null,
+    localDevices: [],
+    remoteDevices: [],
   };
 
   handleDrawerOpen = () => {
-    this.setState({ open: true });
+    this.setState({ openDrawer: true });
   };
 
   handleDrawerClose = () => {
-    this.setState({ open: false });
+    this.setState({ openDrawer: false });
+  };
+
+  handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({ openSnackbar: false });
+  };
+
+  handleLocalClick = () => {
+    this.findDevices(true);
+  };
+
+  handleRemoteClick = () => {
+    this.findDevices(false);
+  };
+
+  async findDevices (isLocal) {
+    try {
+      const message = (isLocal) ? "Scanning local devices..." : "Scanning remote devices...";
+      this.setState({ openSnackbar: true, snackbarMessage: message });
+      if (!isLocal && !this.state.localIP) {
+        await this.getLocalIPAddressAsync();
+      }
+      const baseIP = (isLocal) ? "169.254.17.1" : this.state.localIP;
+      const scanDevices = getFullRange(baseIP);
+      (scanDevices).map(async (ip) => {
+        console.log("scan");
+        await this.loadAboutAsync(ip);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  async getLocalIPAddressAsync () {
+    try {
+      console.log(window.navigator);
+      const ip = await getLocalIP();
+      if (ip) {
+        console.log("My local IP is " + ip);
+        this.setState({
+          localIP: ip,
+        });
+      }; 
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  async loadAboutAsync (ip) {
+    if (!ip || !validateIPaddress(ip)) return;
+
+    const isLocalDevice = (ip.split('.').slice(0, 1) === "169");
+    try {
+      const aboutURL = 'http://' + ip + '/about';
+      const aboutRequest = new Request(aboutURL);
+			const aboutFetch = await fetch(aboutRequest);
+      const aboutJson = await aboutFetch.json();
+			if (aboutJson) {
+        if (!isZiveDevice(aboutJson.MacAddress)) return;
+        const validDevice = {
+          "name": aboutJson.Model,
+          "serialNumber": aboutJson.SerialNumber,
+          "ipAddress": ip, //aboutJson.IPAddress,
+          "macAddress": aboutJson.MacAddress,
+        };
+        if (isLocalDevice && this.state.localDevices.filter(device => device.ipAddress === ip).length <= 0) {
+          this.setState({ 
+            localDevices: [ ...this.state.localDevices, validDevice ], 
+          });
+        } else if (!isLocalDevice && this.state.remoteDevices.filter(device => device.ipAddress === ip).length <= 0) {
+          this.setState({ 
+            remoteDevices: [ ...this.state.remoteDevices, validDevice ], 
+          });	
+        }
+			}
+		} catch (e) {
+      console.log(e);
+      if (isLocalDevice) {
+        const invalidDevice = this.state.localDevices.filter(device => device.ipAddress === ip);
+        this.setState({ localDevices : this.state.localDevices.filter(function(device) {
+          return device !== invalidDevice
+        })});
+      } else {
+        const invalidDevice = this.state.remoteDevices.filter(device => device.ipAddress === ip);
+        this.setState({ remoteDevices : this.state.remoteDevices.filter(function(device) {
+          return device !== invalidDevice
+        })});
+      }
+		}
   };
 
   render() {
     const { classes, theme } = this.props;
-    const { open } = this.state;
+    const { openDrawer, openSnackbar, snackbarMessage } = this.state;
+    const { localIP, localDevices, remoteDevices } = this.state;
 
     return (
       <div className={classes.root}>
@@ -110,20 +217,20 @@ class Index extends React.Component {
         <AppBar
           position="fixed"
           className={classNames(classes.appBar, {
-            [classes.appBarShift]: open,
+            [classes.appBarShift]: openDrawer,
           })}
         >
-          <Toolbar disableGutters={!open}>
+          <Toolbar disableGutters={!openDrawer}>
             <IconButton
               color="inherit"
               aria-label="Open drawer"
               onClick={this.handleDrawerOpen}
-              className={classNames(classes.menuButton, open && classes.hide)}
+              className={classNames(classes.menuButton, openDrawer && classes.hide)}
             >
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
-              ZiveLab Channels
+              ZiveLab Channels v0.1.1
             </Typography>
           </Toolbar>
         </AppBar>
@@ -131,7 +238,7 @@ class Index extends React.Component {
           className={classes.drawer}
           variant="persistent"
           anchor="left"
-          open={open}
+          open={openDrawer}
           classes={{
             paper: classes.drawerPaper,
           }}
@@ -141,28 +248,45 @@ class Index extends React.Component {
               {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </IconButton>
           </div>
-          <Divider />
-          <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
+          <Divider/>
+          <List key="local-devices">
+            <ListItem button key="local-devices-nav" onClick={this.handleLocalClick}>
+              <ListItemIcon>
+                <DeviceHubIcon/>
+              </ListItemIcon>
+              <ListItemText primary="My Devices" />
+            </ListItem>
+            {localDevices.map(device => (
+              <ListItem button key={device.ipAddress}>
+                <ListItemIcon>
+                  <TabletIcon />
+                </ListItemIcon>
+                <ListItemText primary={device.ipAddress} />
               </ListItem>
             ))}
           </List>
-          <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
+          <Divider/>
+          <List key="remote-devices"> 
+            <ListItem button key="remote-devices-nav" onClick={this.handleRemoteClick}>
+              <ListItemIcon>
+                <DeviceHubIcon/>
+              </ListItemIcon>
+              <ListItemText primary="Remote Devices" secondary={localIP}/>
+            </ListItem>     
+            {remoteDevices.map(device => (
+              <ListItem button key={device.ipAddress}>
+                <ListItemIcon>
+                  <TabletIcon />
+                </ListItemIcon>
+                <ListItemText primary={device.ipAddress} />
               </ListItem>
             ))}
           </List>
+          <Divider/>
         </Drawer>
         <main
           className={classNames(classes.content, {
-            [classes.contentShift]: open,
+            [classes.contentShift]: openDrawer,
           })}
         >
           <div className={classes.drawerHeader} />
@@ -191,6 +315,30 @@ class Index extends React.Component {
             ultrices sagittis orci a.
           </Typography>
         </main>
+        <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            open={openSnackbar}
+            autoHideDuration={2000}
+            onClose={this.handleSnackbarClose}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={<span id="message-id">{snackbarMessage}</span>}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={this.handleSnackbarClose}
+              >
+                <CloseIcon />
+              </IconButton>,
+            ]}
+          />
       </div>
     );
   }
