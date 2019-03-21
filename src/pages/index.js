@@ -10,7 +10,6 @@ import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import IconButton from "@material-ui/core/IconButton";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -156,7 +155,7 @@ class Index extends React.Component {
     } catch (e) {
       console.log(e);
     }
-  };
+  }
 
   async getLocalIPAddressAsync() {
     try {
@@ -169,7 +168,7 @@ class Index extends React.Component {
     } catch (e) {
       console.log(e);
     }
-  };
+  }
 
   async loadAboutAsync(ip) {
     // ip should be a valid IP address.
@@ -229,7 +228,7 @@ class Index extends React.Component {
     } finally {
       this.setState({ scanCompleted: this.state.scanCompleted + 1 });
     }
-  };
+  }
 
   ScanProgress(disabled = false, value = 0) {
     if (disabled) {
@@ -245,7 +244,7 @@ class Index extends React.Component {
         </React.Fragment>
       );
     }
-  };
+  }
 
   ListDevices(devices) {
     if (devices) {
@@ -263,7 +262,7 @@ class Index extends React.Component {
     } else {
       return <React.Fragment />;
     }
-  };
+  }
 
   render() {
     const { classes, theme } = this.props;
@@ -320,36 +319,34 @@ class Index extends React.Component {
             </IconButton>
           </div>
           <Divider />
-          <List key="devices-nav">
-            <ListItem
-              button
-              key="local-devices-nav"
-              onClick={this.handleLocalClick}
-              disabled={isScanning}
-            >
-              <ListItemIcon>
-                <DeviceHubIcon />
-              </ListItemIcon>
-              <ListItemText primary="My Devices" />
-            </ListItem>
-            {this.ScanProgress(!isLocalScan || !isScanning, completed)}
-            {this.ListDevices(localDevices)}
-            <Divider />
-            <ListItem
-              button
-              key="remote-devices-nav"
-              onClick={this.handleRemoteClick}
-              disabled={isScanning}
-            >
-              <ListItemIcon>
-                <DeviceHubIcon />
-              </ListItemIcon>
-              <ListItemText primary="Remote Devices" secondary={localIP} />
-            </ListItem>
-            {this.ScanProgress(!isRemoteScan || !isScanning, completed)}
-            {this.ListDevices(remoteDevices)}
-            <Divider />
-          </List>
+          <ListItem
+            button
+            key="local-devices-nav"
+            onClick={this.handleLocalClick}
+            disabled={isScanning}
+          >
+            <ListItemIcon>
+              <DeviceHubIcon />
+            </ListItemIcon>
+            <ListItemText primary="My Devices" />
+          </ListItem>
+          {this.ScanProgress(!isLocalScan || !isScanning, completed)}
+          {this.ListDevices(localDevices)}
+          <Divider />
+          <ListItem
+            button
+            key="remote-devices-nav"
+            onClick={this.handleRemoteClick}
+            disabled={isScanning}
+          >
+            <ListItemIcon>
+              <DeviceHubIcon />
+            </ListItemIcon>
+            <ListItemText primary="Remote Devices" secondary={localIP} />
+          </ListItem>
+          {this.ScanProgress(!isRemoteScan || !isScanning, completed)}
+          {this.ListDevices(remoteDevices)}
+          <Divider />
         </Drawer>
         <main
           className={classNames(classes.content, {
