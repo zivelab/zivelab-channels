@@ -1,0 +1,101 @@
+{
+  "state": "Idle",
+  "elapsedTime": 102.5,
+  "progress": 56.0,
+  "stepFrequency": 1.0,
+  "stepSamples": [
+    {
+      "time": 0,
+      "voltage": 0.0,
+      "current": 3.420201e-2
+    },
+    {
+      "time": 1,
+      "voltage": 3.826834e-4,
+      "current": 6.755902e-2
+    },
+    {
+      "time": 2,
+      "voltage": 7.071068e-4,
+      "current": 9.063078e-2
+    },
+    {
+      "time": 3,
+      "voltage": 9.238795e-4,
+      "current": 9.990482e-2
+    },
+    {
+      "time": 4,
+      "voltage": 1.0e-3,
+      "current": 9.396926e-2
+    },
+    {
+      "time": 5,
+      "voltage": 9.238795e-4,
+      "current": 7.372773e-2
+    },
+    {
+      "time": 6,
+      "voltage": 7.071068e-4,
+      "current": 4.226183e-2
+    },
+    {
+      "time": 7,
+      "voltage": 3.826834e-4,
+      "current": 4.361939e-3
+    },
+    {
+      "time": 8,
+      "voltage": -6.469214e-20,
+      "current": -3.420201e-2
+    },
+    {
+      "time": 9,
+      "voltage": -3.826834e-4,
+      "current": -6.755902e-2
+    },
+    {
+      "time": 10,
+      "voltage": -7.071068e-4,
+      "current": -9.063078e-2
+    },
+    {
+      "time": 11,
+      "voltage": -9.238795e-4,
+      "current": -9.990482e-2
+    },
+    {
+      "time": 12,
+      "voltage": -1.0e-3,
+      "current": -9.396926e-2
+    },
+    {
+      "time": 13,
+      "voltage": -9.238795e-4,
+      "current": -7.372773e-2
+    },
+    {
+      "time": 14,
+      "voltage": -7.071068e-4,
+      "current": -4.226183e-2
+    },
+    {
+      "time": 15,
+      "voltage": -3.826834e-4,
+      "current": -4.361939e-3
+    }
+  ],
+  "lastFrequency": 800.0,
+  "lastZreal": 0.00123,
+  "lastZimag": 0.00123,
+  "lastZmod": 0.00123,
+  "lastZphase": 0.00123,
+  "lastStarted": {
+    "ticks": 63687400550835,
+    "count": 31
+  },
+  "voltageRange": 1,
+  "currentRange": 2,
+  "auxTemperature": 25.85656,
+  "auxVoltage": 37.5789
+}

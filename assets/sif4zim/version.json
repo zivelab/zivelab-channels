@@ -1,7 +1,7 @@
-{  
-    "name": "sif4zim",
-    "description": "Firmware of SIF2 supporting ZIM",
-    "version": "1.0.1.1",
-    "releaseDate": "2019-03-21",
-    "path": "SIF4ZIM.1.0.1.1.bin"
- }
+{
+  "name": "sif4zim",
+  "description": "Firmware of SIF2 supporting ZIM",
+  "version": "1.0.1.1",
+  "releaseDate": "2019-03-21",
+  "path": "SIF4ZIM.1.0.1.1.bin"
+}
