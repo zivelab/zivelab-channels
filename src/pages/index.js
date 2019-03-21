@@ -156,7 +156,7 @@ class Index extends React.Component {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   async getLocalIPAddressAsync() {
     try {
@@ -169,7 +169,7 @@ class Index extends React.Component {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   async loadAboutAsync(ip) {
     // ip should be a valid IP address.
@@ -229,7 +229,7 @@ class Index extends React.Component {
     } finally {
       this.setState({ scanCompleted: this.state.scanCompleted + 1 });
     }
-  }
+  };
 
   ScanProgress(disabled = false, value = 0) {
     if (disabled) {
@@ -245,7 +245,7 @@ class Index extends React.Component {
         </React.Fragment>
       );
     }
-  }
+  };
 
   ListDevices(devices) {
     if (devices) {
@@ -263,7 +263,7 @@ class Index extends React.Component {
     } else {
       return <React.Fragment />;
     }
-  }
+  };
 
   render() {
     const { classes, theme } = this.props;
