@@ -1,8 +1,8 @@
 {
-  "name": "zivelab-app-channels",
+  "name": "zivelab-channels",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://zivelab.github.io/zivelab-app-channels",
+  "homepage": "https://zivelab.github.io/zivelab-channels",
   "dependencies": {
     "@material-ui/core": "latest",
     "@material-ui/icons": "latest",

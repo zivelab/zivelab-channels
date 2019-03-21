@@ -1,6 +1,6 @@
-# ZiveLab-App-Channels
+# ZiveLab-Channels
 
-This site is published at https://zivelab.github.io/zivelab-app-channels/.
+This site is published at https://zivelab.github.io/zivelab-channels/.
 
 ## How to install, build, and deploy
 
