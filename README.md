@@ -16,6 +16,14 @@ npm run deploy
 
 ## After changes in repo, build and deploy again
 
+for localhost
+
+```sh
+npm start build
+```
+
+or, for production build and deploy
+
 ```sh
 npm run build
 npm run deploy
