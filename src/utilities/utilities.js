@@ -26,11 +26,11 @@ const addresses = {
  * 
  * @returns Promise Object
  *
- * getLocalIP().then((ipAddr) => {
+ * getLocalIPAddress().then((ipAddr) => {
  *    console.log(ipAddr); // 192.168.0.122
  * });
  */
-function getLocalIP() {
+function getLocalIPAddress() {
     return new Promise(function(resolve, reject) {
       // NOTE: window.RTCPeerConnection is "not a constructor" in FF22/23
       var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
@@ -128,4 +128,4 @@ function isZiveDevice(mac) {
     return macLookup(mac, "ZiveLab") === "ZiveLab";
 }
 
-export { getLocalIP, getFullRange, validateIPaddress, macLookup, isZiveDevice };
+export { getLocalIPAddress, getFullRange, validateIPaddress, macLookup, isZiveDevice };
