@@ -22,7 +22,7 @@ for localhost
 npm start build
 ```
 
-or, for production build and deploy
+, or for production build and deploy
 
 ```sh
 npm run build
