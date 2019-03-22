@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import withRoot from "../withRoot";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -16,6 +16,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Snackbar from "@material-ui/core/Snackbar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -23,7 +24,6 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import CloseIcon from "@material-ui/icons/Close";
 import DeviceHubIcon from "@material-ui/icons/DeviceHub";
 import MenuIcon from "@material-ui/icons/Menu";
-import InfoIcon from "@material-ui/icons/Info";
 import TabletIcon from "@material-ui/icons/Tablet";
 
 import {
@@ -94,11 +94,14 @@ const styles = theme => ({
   }
 });
 
+const gettingStartedKey = "getting-started-nav";
+
 class Index extends React.Component {
   state = {
     openDrawer: false,
     openSnackbar: false,
     snackbarMessage: "",
+    selectedKey: gettingStartedKey,
 
     localIP: null,
     localDevices: [],
@@ -111,12 +114,8 @@ class Index extends React.Component {
     scanTotal: 0
   };
 
-  handleDrawerOpen = () => {
-    this.setState({ openDrawer: true });
-  };
-
-  handleDrawerClose = () => {
-    this.setState({ openDrawer: false });
+  toggleDrawer = open => () => {
+    this.setState({ openDrawer: open });
   };
 
   handleSnackbarClose = (event, reason) => {
@@ -124,6 +123,10 @@ class Index extends React.Component {
       return;
     }
     this.setState({ openSnackbar: false });
+  };
+
+  handleListItemClick = (event, key) => {
+    this.setState({ selectedKey: key });
   };
 
   handleLocalClick = () => {
@@ -175,6 +178,7 @@ class Index extends React.Component {
   async loadAboutAsync(ip) {
     // ip should be a valid IP address.
     const isLocal = ip.split(".").slice(0, 1) === "169";
+    const devices = isLocal ? "localDevices" : "remoteDevices";
     try {
       const aboutURL = "http://" + ip + "/about";
       const aboutRequest = new Request(aboutURL);
@@ -183,50 +187,29 @@ class Index extends React.Component {
       if (aboutJson) {
         if (!isZiveDevice(aboutJson.MacAddress)) return;
         const validDevice = {
-          name: aboutJson.Model,
-          serialNumber: aboutJson.SerialNumber,
-          ipAddress: ip, //aboutJson.IPAddress,
-          macAddress: aboutJson.MacAddress
+          name: aboutJson.Model || aboutJson.model,
+          serialNumber: aboutJson.SerialNumber || aboutJson.serialNumber,
+          ipAddress: aboutJson.IPAddress || aboutJson.ipAddress,
+          macAddress: aboutJson.MacAddress || aboutJson.macAddress
         };
         if (
-          isLocal &&
-          this.state.localDevices.filter(device => device.ipAddress === ip)
+          this.state[devices].filter(device => device.ipAddress === ip)
             .length <= 0
         ) {
           this.setState({
-            localDevices: [...this.state.localDevices, validDevice]
-          });
-        } else if (
-          !isLocal &&
-          this.state.remoteDevices.filter(device => device.ipAddress === ip)
-            .length <= 0
-        ) {
-          this.setState({
-            remoteDevices: [...this.state.remoteDevices, validDevice]
+            [devices]: [...this.state[devices], validDevice]
           });
         }
       }
     } catch (e) {
-      console.log(e);
-      if (isLocal) {
-        const invalidDevice = this.state.localDevices.filter(
-          device => device.ipAddress === ip
-        );
-        this.setState({
-          localDevices: this.state.localDevices.filter(function(device) {
-            return device !== invalidDevice;
-          })
-        });
-      } else {
-        const invalidDevice = this.state.remoteDevices.filter(
-          device => device.ipAddress === ip
-        );
-        this.setState({
-          remoteDevices: this.state.remoteDevices.filter(function(device) {
-            return device !== invalidDevice;
-          })
-        });
-      }
+      const invalidDevice = this.state[devices].filter(
+        device => device.ipAddress === ip
+      );
+      this.setState({
+        [devices]: this.state[devices].filter(function(device) {
+          return device !== invalidDevice;
+        })
+      });
     } finally {
       this.setState({ scanCompleted: this.state.scanCompleted + 1 });
     }
@@ -247,11 +230,10 @@ class Index extends React.Component {
       );
     }
   }
-  linkTo(ip) {
-    return "/device/" + ip;
-  }
+
   ListDevices(devices) {
-    const deviceLink = ip => props => <Link to={this.linkTo(ip)} {...props} />;
+    const linkTo = ip => "/device/" + ip;
+    const deviceLink = ip => props => <Link to={linkTo(ip)} {...props} />;
     if (devices) {
       return devices.map(device => (
         <React.Fragment>
@@ -260,11 +242,13 @@ class Index extends React.Component {
             button
             key={device.ipAddress}
             component={deviceLink(device.ipAddress)}
+            selected={this.state.selectedKey === device.ipAddress}
+            onClick={event => this.handleListItemClick(event, device.ipAddress)}
           >
             <ListItemIcon>
               <TabletIcon />
             </ListItemIcon>
-            <ListItemText primary={device.ipAddress} />
+            <ListItemText primary={device.name} secondary={device.ipAddress} />
           </ListItem>
         </React.Fragment>
       ));
@@ -273,20 +257,27 @@ class Index extends React.Component {
     }
   }
 
-  ChannelHome = () => <h1>Getting Started</h1>;
-  ChannelTitle = () => (
+  GettingStartedHome = () => <h1>Getting Started</h1>;
+  GettingStartedTitle = () => (
     <Typography variant="h6" color="inherit" noWrap>
       ZiveLab Channels v0.1.0
     </Typography>
   );
-  DeviceHome = () => <h1>Device will be rendered here</h1>;
+
   DeviceTitle = ({ match: { params } }) => (
     <Typography variant="h6" color="inherit" noWrap>
-      Device {params.id}
+      Device at {params.id}
     </Typography>
   );
+  DeviceHome({ match: { params } }) {
+    return (
+      <React.Fragment>
+        <h1>Device will be rendered here</h1>
+      </React.Fragment>
+    );
+  }
 
-  homeLink = props => <Link to="/" {...props} />;
+  gettingStartedLink = props => <Link to="/" {...props} />;
 
   render() {
     const { classes, theme } = this.props;
@@ -296,8 +287,9 @@ class Index extends React.Component {
 
     // progress in scanning
     const isScanning = scanTotal > 0 && scanCompleted < scanTotal;
+    const isLocalScanning = isLocalScan && isScanning;
+    const isRemoteScanning = isRemoteScan && isScanning;
     const completed = isScanning ? (scanCompleted * 100) / scanTotal : 0;
-    console.log(scanCompleted + "/" + scanTotal);
     return (
       <Router>
         <div className={classes.root}>
@@ -312,7 +304,7 @@ class Index extends React.Component {
               <IconButton
                 color="inherit"
                 aria-label="Open drawer"
-                onClick={this.handleDrawerOpen}
+                onClick={this.toggleDrawer(true)}
                 className={classNames(
                   classes.menuButton,
                   openDrawer && classes.hide
@@ -320,8 +312,10 @@ class Index extends React.Component {
               >
                 <MenuIcon />
               </IconButton>
-              <Route path="/" exact component={this.ChannelTitle} />
-              <Route path="/device/:id" exact component={this.DeviceTitle} />
+              <Switch>
+                <Route path="/" exact component={this.GettingStartedTitle} />
+                <Route path="/device/:id" exact component={this.DeviceTitle} />
+              </Switch>
             </Toolbar>
           </AppBar>
           <Drawer
@@ -334,7 +328,7 @@ class Index extends React.Component {
             }}
           >
             <div className={classes.drawerHeader}>
-              <IconButton onClick={this.handleDrawerClose}>
+              <IconButton onClick={this.toggleDrawer(false)}>
                 {theme.direction === "ltr" ? (
                   <ChevronLeftIcon />
                 ) : (
@@ -343,36 +337,72 @@ class Index extends React.Component {
               </IconButton>
             </div>
             <Divider />
-            <ListItem button key="about-nav" component={this.homeLink}>
+            <ListItem
+              button
+              key={gettingStartedKey}
+              component={this.gettingStartedLink}
+              selected={this.state.selectedKey === gettingStartedKey}
+              onClick={event =>
+                this.handleListItemClick(event, gettingStartedKey)
+              }
+            >
               <ListItemText primary="Getting Started" />
             </ListItem>
             <Divider />
-            <ListItem
-              button
-              key="local-devices-nav"
-              onClick={this.handleLocalClick}
-              disabled={isScanning}
+            <Tooltip
+              title="Click to scan local devices"
+              aria-label="Click to scan local devices"
             >
-              <ListItemIcon>
-                <DeviceHubIcon />
-              </ListItemIcon>
-              <ListItemText primary="My Devices" />
-            </ListItem>
-            {this.ScanProgress(!isLocalScan || !isScanning, completed)}
+              <ListItem
+                button
+                key="local-devices-nav"
+                onClick={this.handleLocalClick}
+                disabled={isScanning}
+              >
+                <ListItemIcon>
+                  <DeviceHubIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="My Devices"
+                  secondary={
+                    isLocalScanning
+                      ? "scanning... " + scanCompleted + "/" + scanTotal
+                      : localDevices.length
+                      ? ""
+                      : "no devices found"
+                  }
+                />
+              </ListItem>
+            </Tooltip>
+            {this.ScanProgress(!isLocalScanning, completed)}
             {this.ListDevices(localDevices)}
             <Divider />
-            <ListItem
-              button
-              key="remote-devices-nav"
-              onClick={this.handleRemoteClick}
-              disabled={isScanning}
+            <Tooltip
+              title="Click to scan remote devices"
+              aria-label="Click to scan remote devices"
             >
-              <ListItemIcon>
-                <DeviceHubIcon />
-              </ListItemIcon>
-              <ListItemText primary="Remote Devices" secondary={localIP} />
-            </ListItem>
-            {this.ScanProgress(!isRemoteScan || !isScanning, completed)}
+              <ListItem
+                button
+                key="remote-devices-nav"
+                onClick={this.handleRemoteClick}
+                disabled={isScanning}
+              >
+                <ListItemIcon>
+                  <DeviceHubIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Remote Devices"
+                  secondary={
+                    isRemoteScanning
+                      ? "scanning... " + scanCompleted + "/" + scanTotal
+                      : remoteDevices.length
+                      ? localIP
+                      : "no devices found"
+                  }
+                />
+              </ListItem>
+            </Tooltip>
+            {this.ScanProgress(!isRemoteScanning, completed)}
             {this.ListDevices(remoteDevices)}
             <Divider />
           </Drawer>
@@ -382,8 +412,10 @@ class Index extends React.Component {
             })}
           >
             <div className={classes.drawerHeader} />
-            <Route path="/" exact component={this.ChannelHome} />
-            <Route path="/device/:id" exact component={this.DeviceHome} />
+            <Switch>
+              <Route path="/" exact component={this.GettingStartedHome} />
+              <Route path="/device/:id" exact component={this.DeviceHome} />
+            </Switch>
           </main>
           <Snackbar
             anchorOrigin={{
