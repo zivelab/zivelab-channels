@@ -19,8 +19,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 
-import ReactJson from "react-json-view";
-
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import CloseIcon from "@material-ui/icons/Close";
@@ -32,9 +30,10 @@ import {
   getLocalIPAddress,
   getFullRange,
   isZiveDevice
-} from "../utilities/utilities.js";
+} from "../modules/utils/net";
 
-import GettingStartedPage from "./GettingStartedPage.js";
+import GettingStartedPage from "./GettingStartedPage";
+import ChannelPage from "./ChannelPage";
 
 const drawerWidth = 240;
 
@@ -189,12 +188,12 @@ class Index extends React.Component {
       const aboutFetch = await fetch(aboutRequest);
       const aboutJson = await aboutFetch.json();
       if (aboutJson) {
-        if (!isZiveDevice(aboutJson.MacAddress)) return;
+        if (!isZiveDevice(aboutJson.macAddress)) return;
         const validDevice = {
-          name: aboutJson.Model || aboutJson.model,
-          serialNumber: aboutJson.SerialNumber || aboutJson.serialNumber,
-          ipAddress: aboutJson.IPAddress || aboutJson.ipAddress,
-          macAddress: aboutJson.MacAddress || aboutJson.macAddress,
+          name: aboutJson.model,
+          serialNumber: aboutJson.serialNumber,
+          ipAddress: aboutJson.ipAddress,
+          macAddress: aboutJson.macAddress,
           about: aboutJson
         };
         if (
@@ -239,13 +238,16 @@ class Index extends React.Component {
   ListDevices(devices) {
     const linkTo = ip => "/device/" + ip;
     const deviceLink = ip => props => <Link to={linkTo(ip)} {...props} />;
+    const listKey = ip => {
+      return "ip" + ip;
+    };
     if (devices) {
       return devices.map(device => (
         <React.Fragment>
-          <Divider />
+          <Divider Inset />
           <ListItem
             button
-            key={device.ipAddress}
+            key={listKey(device.ipAddress)}
             component={deviceLink(device.ipAddress)}
             selected={this.state.selectedKey === device.ipAddress}
             onClick={event => this.handleListItemClick(event, device.ipAddress)}
@@ -277,40 +279,28 @@ class Index extends React.Component {
       ZiveLab Channels
     </Typography>
   );
-  GettingStartedHome = () => <GettingStartedPage />;
 
-  DeviceTitle = ({ match: { params } }) => (
-    <Typography variant="h6" color="inherit" noWrap>
-      Device at {params.id}
-    </Typography>
-  );
-  DeviceHome = ({ match: { params } }) => {
+  ChannelTitle = ({ match: { params } }) => {
     const about = this.getAbout(params.id);
-    const aboutRef = {
-      model: "Zive ZIM-SIF",
-      description: "Impedance Meter",
-      frequencyRanges: "4kHz to 0.1Hz",
-      voltageRanges: "1000V/100V",
-      currentRanges: "2A/400mA/200mA...400uA",
-      temperatureSensor: "PT1000",
-      macAddress: "00:1B:C5:08:11:00",
-      ipAddress: "192.168.0.6",
-      subnetMask: "255.255.255.0",
-      router: "192.168.0.1",
-      port: 2000,
-      sifBoard: "1.0.0.0",
-      sifFirmware: "1.0.1.1",
-      sifSerialNumber: "IF19030001A",
-      zimBoard: "1.1.0.0",
-      zimFirmware: "0.0.1.0",
-      zimSerialNumber: "IM19030001A"
-    };
+    const model = about.model.startsWith("Zive")
+      ? about.model
+          .split(" ")
+          .slice(1)
+          .join(" ")
+      : about.model;
+    const ip = about.ipAddress;
+    return (
+      <Typography variant="h6" color="inherit" noWrap>
+        {model} ({ip}) - ZiveLab Channels
+      </Typography>
+    );
+  };
+
+  channelPage = ({ match: { params } }) => {
+    //const about = this.getAbout(params.id);
     return (
       <React.Fragment>
-        <h1>Device at {params.id} will be rendered here</h1>
-        <ReactJson src={about} displayDataTypes={false} />
-        <h3>ref</h3>
-        <ReactJson src={aboutRef} displayDataTypes={false} />
+        <ChannelPage ipAddress={params.id} />
       </React.Fragment>
     );
   };
@@ -352,7 +342,7 @@ class Index extends React.Component {
               </IconButton>
               <Switch>
                 <Route path="/" exact component={this.GettingStartedTitle} />
-                <Route path="/device/:id" exact component={this.DeviceTitle} />
+                <Route path="/device/:id" exact component={this.ChannelTitle} />
               </Switch>
             </Toolbar>
           </AppBar>
@@ -451,8 +441,8 @@ class Index extends React.Component {
           >
             <div className={classes.drawerHeader} />
             <Switch>
-              <Route path="/" exact component={this.GettingStartedHome} />
-              <Route path="/device/:id" exact component={this.DeviceHome} />
+              <Route path="/" exact component={GettingStartedPage} />
+              <Route path="/device/:id" exact component={this.channelPage} />
             </Switch>
           </main>
           <Snackbar

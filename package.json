@@ -9,6 +9,7 @@
     "classnames": "latest",
     "clsx": "^1.0.3",
     "markdown-to-jsx": "^6.9.3",
+    "moment": "^2.24.0",
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
