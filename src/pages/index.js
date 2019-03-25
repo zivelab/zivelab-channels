@@ -19,6 +19,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 
+import ReactJson from "react-json-view";
+
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import CloseIcon from "@material-ui/icons/Close";
@@ -31,6 +33,8 @@ import {
   getFullRange,
   isZiveDevice
 } from "../utilities/utilities.js";
+
+import GettingStartedPage from "./GettingStartedPage.js";
 
 const drawerWidth = 240;
 
@@ -190,7 +194,8 @@ class Index extends React.Component {
           name: aboutJson.Model || aboutJson.model,
           serialNumber: aboutJson.SerialNumber || aboutJson.serialNumber,
           ipAddress: aboutJson.IPAddress || aboutJson.ipAddress,
-          macAddress: aboutJson.MacAddress || aboutJson.macAddress
+          macAddress: aboutJson.MacAddress || aboutJson.macAddress,
+          about: aboutJson
         };
         if (
           this.state[devices].filter(device => device.ipAddress === ip)
@@ -257,25 +262,58 @@ class Index extends React.Component {
     }
   }
 
-  GettingStartedHome = () => <h1>Getting Started</h1>;
+  getAbout(ip) {
+    if (!ip) return null;
+    const isLocal = ip.split(".").slice(0, 1) === "169";
+    const devices = isLocal ? "localDevices" : "remoteDevices";
+    const matchedDevice = this.state[devices].find(function(device) {
+      return device.ipAddress === ip;
+    });
+    return matchedDevice.about;
+  }
+
   GettingStartedTitle = () => (
     <Typography variant="h6" color="inherit" noWrap>
-      ZiveLab Channels v0.1.0
+      ZiveLab Channels
     </Typography>
   );
+  GettingStartedHome = () => <GettingStartedPage />;
 
   DeviceTitle = ({ match: { params } }) => (
     <Typography variant="h6" color="inherit" noWrap>
       Device at {params.id}
     </Typography>
   );
-  DeviceHome({ match: { params } }) {
+  DeviceHome = ({ match: { params } }) => {
+    const about = this.getAbout(params.id);
+    const aboutRef = {
+      model: "Zive ZIM-SIF",
+      description: "Impedance Meter",
+      frequencyRanges: "4kHz to 0.1Hz",
+      voltageRanges: "1000V/100V",
+      currentRanges: "2A/400mA/200mA...400uA",
+      temperatureSensor: "PT1000",
+      macAddress: "00:1B:C5:08:11:00",
+      ipAddress: "192.168.0.6",
+      subnetMask: "255.255.255.0",
+      router: "192.168.0.1",
+      port: 2000,
+      sifBoard: "1.0.0.0",
+      sifFirmware: "1.0.1.1",
+      sifSerialNumber: "IF19030001A",
+      zimBoard: "1.1.0.0",
+      zimFirmware: "0.0.1.0",
+      zimSerialNumber: "IM19030001A"
+    };
     return (
       <React.Fragment>
-        <h1>Device will be rendered here</h1>
+        <h1>Device at {params.id} will be rendered here</h1>
+        <ReactJson src={about} displayDataTypes={false} />
+        <h3>ref</h3>
+        <ReactJson src={aboutRef} displayDataTypes={false} />
       </React.Fragment>
     );
-  }
+  };
 
   gettingStartedLink = props => <Link to="/" {...props} />;
 

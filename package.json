@@ -7,9 +7,12 @@
     "@material-ui/core": "latest",
     "@material-ui/icons": "latest",
     "classnames": "latest",
+    "clsx": "^1.0.3",
+    "markdown-to-jsx": "^6.9.3",
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-json-view": "^1.19.1",
     "react-router-dom": "^5.0.0",
     "react-scripts": "latest"
   },
