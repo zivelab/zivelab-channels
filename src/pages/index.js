@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import withRoot from "../withRoot";
 import { HashRouter as Router, Route, Link, Switch } from "react-router-dom";
 
+// controls
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
@@ -19,6 +20,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 
+// Pages
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import CloseIcon from "@material-ui/icons/Close";
@@ -26,12 +28,17 @@ import DeviceHubIcon from "@material-ui/icons/DeviceHub";
 import MenuIcon from "@material-ui/icons/Menu";
 import TabletIcon from "@material-ui/icons/Tablet";
 
+// functions
 import {
   getLocalIPAddress,
   getFullRange,
   isZiveDevice
 } from "../modules/utils/net";
 
+// Components
+import FabAddDevice from "../modules/components/FabAddDevice";
+
+// Pages
 import GettingStartedPage from "./GettingStartedPage";
 import ChannelPage from "./ChannelPage";
 
@@ -94,6 +101,11 @@ const styles = theme => ({
       duration: theme.transitions.duration.enteringScreen
     }),
     marginLeft: 0
+  },
+  fab: {
+    position: "absolute",
+    bottom: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2
   }
 });
 
@@ -109,6 +121,7 @@ class Index extends React.Component {
     localIP: null,
     localDevices: [],
     remoteDevices: [],
+    knownDevice: "192.168.0.15",
 
     scanDevices: false,
     isLocalScan: false,
@@ -140,6 +153,15 @@ class Index extends React.Component {
     this.findDevices(false);
   };
 
+  handleAddKnownDevice = ip => {
+    this.setState({ knownDevice: ip });
+    this.scanKnownDevice(ip);
+  };
+
+  async scanKnownDevice(ip) {
+    await this.loadAboutAsync(ip);
+  }
+
   async findDevices(isLocal) {
     try {
       const message = isLocal
@@ -169,8 +191,14 @@ class Index extends React.Component {
     try {
       const ip = await getLocalIPAddress();
       if (ip) {
+        const knownDevice =
+          ip
+            .split(".")
+            .slice(0, 3)
+            .join(".") + ".15";
         this.setState({
-          localIP: ip
+          localIP: ip,
+          knownDevice: knownDevice
         });
       }
     } catch (e) {
@@ -239,14 +267,18 @@ class Index extends React.Component {
     const linkTo = ip => "/device/" + ip;
     const deviceLink = ip => props => <Link to={linkTo(ip)} {...props} />;
     const listKey = ip => {
-      return "ip" + ip;
+      return "nav-ip-" + ip.split(".").join("-");
+    };
+    const dividerKey = ip => {
+      return "nav-divider-" + ip.split(".").join("-");
     };
     if (devices) {
       return devices.map(device => (
         <React.Fragment>
-          <Divider Inset />
+          <Divider variant="inset" key={dividerKey(device.ipAddress)} />
           <ListItem
             button
+            dense
             key={listKey(device.ipAddress)}
             component={deviceLink(device.ipAddress)}
             selected={this.state.selectedKey === device.ipAddress}
@@ -276,7 +308,7 @@ class Index extends React.Component {
 
   GettingStartedTitle = () => (
     <Typography variant="h6" color="inherit" noWrap>
-      ZiveLab Channels
+      Zive Channels
     </Typography>
   );
 
@@ -291,13 +323,12 @@ class Index extends React.Component {
     const ip = about.ipAddress;
     return (
       <Typography variant="h6" color="inherit" noWrap>
-        {model} ({ip}) - ZiveLab Channels
+        {model} ({ip}) - Zive Channels
       </Typography>
     );
   };
 
   channelPage = ({ match: { params } }) => {
-    //const about = this.getAbout(params.id);
     return (
       <React.Fragment>
         <ChannelPage ipAddress={params.id} />
@@ -306,6 +337,10 @@ class Index extends React.Component {
   };
 
   gettingStartedLink = props => <Link to="/" {...props} />;
+
+  componentDidMount = () => {
+    this.getLocalIPAddressAsync();
+  };
 
   render() {
     const { classes, theme } = this.props;
@@ -364,9 +399,10 @@ class Index extends React.Component {
                 )}
               </IconButton>
             </div>
-            <Divider />
+            <Divider key="nav-first-divider" />
             <ListItem
               button
+              dense
               key={gettingStartedKey}
               component={this.gettingStartedLink}
               selected={this.state.selectedKey === gettingStartedKey}
@@ -376,14 +412,15 @@ class Index extends React.Component {
             >
               <ListItemText primary="Getting Started" />
             </ListItem>
-            <Divider />
+            <Divider key="nav-second-divider" />
             <Tooltip
               title="Click to scan local devices"
               aria-label="Click to scan local devices"
             >
               <ListItem
                 button
-                key="local-devices-nav"
+                dense
+                key="nav-local-devices"
                 onClick={this.handleLocalClick}
                 disabled={isScanning}
               >
@@ -391,7 +428,7 @@ class Index extends React.Component {
                   <DeviceHubIcon />
                 </ListItemIcon>
                 <ListItemText
-                  primary="My Devices"
+                  primary="Scan My Devices"
                   secondary={
                     isLocalScanning
                       ? "scanning... " + scanCompleted + "/" + scanTotal
@@ -404,14 +441,15 @@ class Index extends React.Component {
             </Tooltip>
             {this.ScanProgress(!isLocalScanning, completed)}
             {this.ListDevices(localDevices)}
-            <Divider />
+            <Divider key="nav-third-divider" />
             <Tooltip
               title="Click to scan remote devices"
               aria-label="Click to scan remote devices"
             >
               <ListItem
                 button
-                key="remote-devices-nav"
+                dense
+                key="nav-remote-devices"
                 onClick={this.handleRemoteClick}
                 disabled={isScanning}
               >
@@ -419,7 +457,7 @@ class Index extends React.Component {
                   <DeviceHubIcon />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Remote Devices"
+                  primary="Scan Remote Devices"
                   secondary={
                     isRemoteScanning
                       ? "scanning... " + scanCompleted + "/" + scanTotal
@@ -432,7 +470,12 @@ class Index extends React.Component {
             </Tooltip>
             {this.ScanProgress(!isRemoteScanning, completed)}
             {this.ListDevices(remoteDevices)}
-            <Divider />
+            <Divider key="nav-last-divider" />
+            <FabAddDevice
+              classes={classes}
+              knownDevice={this.state.knownDevice}
+              onClick={this.handleAddKnownDevice}
+            />
           </Drawer>
           <main
             className={classNames(classes.content, {

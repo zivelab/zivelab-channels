@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Markdown from "markdown-to-jsx";
-import Page from "./gettingStarted.md";
+import Page from "../docs/pages/gettingStarted/gettingStarted.md";
 
 class GettingStartedPage extends Component {
   constructor(props) {

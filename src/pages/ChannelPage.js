@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
 
 import ReactJson from "react-json-view";
 import moment from "moment";
@@ -63,16 +61,16 @@ const aboutLabels = {
 };
 const colHeaders = {
   pt: "Pt",
-  time: "Time" + " [" + "s" + "]",
-  frequency: "Freq" + " [" + "Hz" + "]",
-  zreal: "Zreal" + " [" + { ohmSign } + "]",
-  zimag: "Zimag" + " [" + { ohmSign } + "]",
-  zmod: "Zmod" + " [" + { ohmSign } + "]",
-  zphase: "Zphase" + " [" + { degreeSign } + "]",
-  idc: "Idc" + " [" + "A" + "]",
-  vdc: "vdc" + " [" + "V" + "]",
-  temperature: "Temperature" + " [" + { degreeCelsiusSign } + "]",
-  currentRange: "IRange" + " [" + "A" + "]"
+  time: "Time [s]",
+  frequency: "Freq [Hz]",
+  zreal: "Zreal [" + { ohmSign } + "]",
+  zimag: "Zimag [" + { ohmSign } + "]",
+  zmod: "Zmod [" + { ohmSign } + "]",
+  zphase: "Zphase [" + { degreeSign } + "]",
+  idc: "Idc [A]",
+  vdc: "vdc [V]",
+  temperature: "Temperature [" + { degreeCelsiusSign } + "]",
+  currentRange: "IRange [A]"
 };
 const defaultParameters = {
   initialFrequency: 1000,
@@ -120,8 +118,6 @@ class ChannelPage extends Component {
       auxData: []
     };
 
-    console.log(this.props);
-
     this.loadAboutAsync = this.loadAboutAsync.bind(this);
     this.loadChannelAsync = this.loadChannelAsync.bind(this);
     this.loadCookAsync = this.loadCookAsync.bind(this);
@@ -156,6 +152,7 @@ class ChannelPage extends Component {
 
   async loadChannelAsync() {
     const { ipAddress } = this.props;
+    console.log("loadChannelAsync");
     try {
       const channelURL = "http://" + ipAddress + "/channel";
       const channelFetch = await fetch(channelURL);
@@ -242,7 +239,7 @@ class ChannelPage extends Component {
   async loadSamplesAsync(index) {
     try {
       const samplesURL =
-        "http://" + this.props.ipAddress + "/sample" + "?" + index.toString();
+        "http://" + this.props.ipAddress + "/sample?" + index.toString();
       const samplesFetch = await fetch(samplesURL);
       const samplesJson = await samplesFetch.json();
       if (
