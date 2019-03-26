@@ -1,0 +1,1845 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+		<title>Channel Dashboard : Zive ZIM-SIF</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- favicon -->
+		<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+		<link rel="manifest" href="site.webmanifest">		
+		<!-- react, material-ui, and babel -->
+		<script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin="anonymous"></script>
+		<script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+		<script src="https://unpkg.com/@material-ui/core/umd/material-ui.production.min.js" crossorigin="anonymous"></script>
+		<script src="https://unpkg.com/babel-standalone@latest/babel.min.js" crossorigin="anonymous"></script>
+		<script src="https://unpkg.com/classnames@latest/index.js" crossorigin="anonymous"></script>	
+		<!-- recharts -->
+		<script src="https://unpkg.com/prop-types/prop-types.min.js" crossorigin="anonymous"></script>
+		<script src="https://unpkg.com/recharts/umd/Recharts.min.js" crossorigin="anonymous"></script>
+		<!-- d3 format and momet -->
+		<script src="https://unpkg.com/d3-format/dist/d3-format.min.js" aria-controls="anonymous"></script>
+		<script src="https://unpkg.com/moment/moment.js" crossorigin="anonymous"></script>
+		<!-- stylesheets -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+const {
+	AppBar,		
+	Button,
+	Card,
+	CardActionArea,
+	CardActions,
+	CardContent,
+	CardHeader,
+	CardMedia,
+	CircularProgress,
+	Collapse,
+	colors,
+	Container,
+	createMuiTheme,
+	CssBaseline,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+	Divider,
+	ExpansionPanel,
+	ExpansionPanelSummary,
+	ExpansionPanelDetails,
+	Fab,
+	Grid,
+	Icon,
+	IconButton,
+	LinearProgress,
+	List,
+	ListItem,
+	ListItemText,
+	MenuItem,
+	MoreVertIcon,
+	MuiThemeProvider,
+	Paper,
+	Snackbar,
+	SvgIcon,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableRow,
+	TextField,
+	Toolbar,
+	Tooltip,
+	Typography,
+	withStyles,
+} = window['material-ui'];
+
+const darkTheme = createMuiTheme({
+	palette: {
+		type: 'dark'
+	},
+	typography: {
+		useNextVariants: true,
+	},
+});
+const lightTheme = createMuiTheme({
+	palette: {
+		type: 'light'
+	},
+	typography: {
+		useNextVariants: true,
+	},
+});
+
+const styles = theme => ({
+	appBar: {
+		position: 'relative', //''fixed',
+		//zIndex: 2000,
+		//height: 65,
+		width: '100%',
+	},
+	appBarTitle: {
+		flex: 1,
+	},
+  icon: {
+    margin: theme.spacing.unit * 2,
+  },
+
+	layout: {
+		width: 'auto',
+		marginLeft: theme.spacing.unit * 3,
+		marginRight: theme.spacing.unit * 3,
+		[theme.breakpoints.up(900 + theme.spacing.unit * 3 * 2)]: {
+			width: 900,
+			marginLeft: 'auto',
+			marginRight: 'auto',
+		},
+		//paddingTop: 65, // appBar.height
+	},
+
+	section: {
+  	height: "100%",
+	},
+
+	cardContent: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'baseline',
+		marginBottom: theme.spacing.unit * 2,
+	},
+	cardDetails_col: {
+		display: 'flex',
+		flexDirection: 'column',
+	},
+	cardChart: {
+		display: 'flex',
+		alignItems: 'center',
+		paddingLeft: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2,
+		paddingTop: theme.spacing.unit,
+		paddingBottom: theme.spacing.unit,
+	},
+	cardActions: {
+		[theme.breakpoints.up('sm')]: {
+		paddingBottom: theme.spacing.unit * 2,
+		},
+	},
+	cardControls: {
+		display: 'flex',
+		alignItems: 'center',
+		paddingLeft: theme.spacing.unit,
+		paddingBottom: theme.spacing.unit,
+	},
+
+	root: {
+		flexGrow: 1,
+	},
+	grow: {
+		flexGrow: 1,
+	},
+	menuButton: {
+		marginLeft: -12,
+		marginRight: 20,
+	},
+	icon: {
+		marginRight: theme.spacing.unit,
+	},
+  fab: {
+    margin: theme.spacing.unit,
+  },
+	media: {
+		height: 0,
+		paddingTop: '56.25%', // 16:9
+	},
+	actions: {
+		display: 'flex',
+	},
+	expand: {
+		transform: 'rotate(0deg)',
+		marginLeft: 'auto',
+		transition: theme.transitions.create('transform', {
+			duration: theme.transitions.duration.shortest,
+		}),
+	},
+	expandOpen: {
+		transform: 'rotate(180deg)',
+	},
+
+	title: {
+		fontSize: 14,
+	},
+	pos: {
+		marginBottom: 12,
+	},
+	heading: {
+		fontSize: theme.typography.pxToRem(15),
+		fontWeight: theme.typography.fontWeightRegular,
+	},
+	gridContainer: {
+		width: '100%',
+		margin: 0,
+	},
+  
+	flexContainer: {
+		display: 'flex',
+		alignItems: 'center',
+		boxSizing: 'border-box',
+	},
+
+	paper: {
+		padding: theme.spacing.unit * 2,
+		margin: 'auto',
+		maxWidth: 500,
+	},
+  
+	tableContainer: {
+		width: "100%",
+		marginTop: theme.spacing.unit * 3,
+		overflowX: "auto",
+	},
+	table: {
+		fontFamily: theme.typography.fontFamily,
+		width: '100%',
+	},
+	tableRow: {
+		cursor: 'pointer',
+	},
+	tableRowHover: {
+		'&:hover': {
+			backgroundColor: theme.palette.grey[200],
+		},
+	},
+	tableCell: {
+		flex: 1,
+	},
+	noClick: {
+		cursor: 'initial',
+	},
+
+	footer: {
+		marginTop: theme.spacing.unit * 8,
+		borderTop: `1px solid ${theme.palette.divider}`,
+		padding: `${theme.spacing.unit * 6}px 0`,
+	},
+	
+	textField: {
+		marginLeft: theme.spacing.unit,
+		marginRight: theme.spacing.unit,
+		width: 200,
+	},
+	menu: {
+		width: 200,
+	},
+
+	close: {
+		padding: theme.spacing.unit / 2,
+	},
+	successSnackbar: {
+		backgroundColor: colors.green[600],
+	},
+	errorSnackbar: {
+		backgroundColor: theme.palette.error.dark,
+	},
+	infoSnackbar: {
+		backgroundColor: theme.palette.primary.dark,
+	},
+	warningSnackbar: {
+		backgroundColor: colors.amber[700],
+	},
+	
+	chartOuterContainer145: {
+		width: '100%',
+		height: 145,
+		backgroundColor: "#F5F5F5",
+	},
+	chartOuterContainer169: {
+		paddingBottom: '56.25%', /* 16:9 */
+		position: 'relative',
+		height: 0,
+		//backgroundColor: "#F5F5F5",
+	},
+	chartOuterContainerA4: {
+		paddingBottom: '70.70%', /* Landscape 297:210 */
+		position: 'relative',
+		height: 0,
+		//backgroundColor: "#F5F5F5",
+	},
+	chartInnerContainer: {
+		position: 'absolute',
+		top: '0',
+		left: '0',
+		width: '100%',
+		height: '100%',
+		//backgroundColor: "#F5F5F5",
+	},
+	areaPlotDefault: { // not working		
+		fill: "#F5F5F5",
+		fillOpacity: 0.25,
+		stroke: "#F5F5F5",
+	},
+	areaPlotPrimary: {
+		fill: theme.palette.primary.light,
+		stroke: theme.palette.primary.light,
+	},
+	areaPlotSecondary: {
+		fill: theme.palette.secondary.light,
+		stroke: theme.palette.secondary.light,
+	},
+	scatterPlotDefault: {
+		fill: theme.palette.text.secondary,
+	},
+	scatterPlotPrimary: {		
+		fill: theme.palette.primary.light,
+	},
+	scatterPlotSecondary: {
+		fill: theme.palette.secondary.light,
+	},
+	linePlotDefault: {		
+		stroke: theme.palette.primary.main, // this is not working
+	},
+	referenceLine: {
+		stroke: theme.palette.divider,
+	}
+});
+
+// https://developer.mozilla.org/en-US/docs/Web/API/Request
+const isDemo = true;
+const aboutURL = (isDemo)
+	?	new Request('https://zivelab.github.io/zivelab-channels/demo/json/about.json')
+	: new Request('/about');
+const channelURL = (isDemo)
+	? new Request('https://zivelab.github.io/zivelab-channels/demo/json/channel.json')
+	: new Request('/channel')
+const cookURL = (isDemo)
+	? new Request('https://zivelab.github.io/zivelab-channels/demo/json/cook.json')
+	: new Request('/cook');
+const samplesURL = (isDemo)
+	? new Request('https://zivelab.github.io/zivelab-channels/demo/json/samples.json')
+	: new Request('/samples?index=1');
+const startURL = new Request('/start');	// with parameters
+const stopURL = new Request('/stop');
+
+// Special characters
+const voltageSign = 'V';
+const currentSign = 'A';
+const frequencySign = 'Hz';
+const ohmSign = '\u2126';
+const degreeSign = '\u00B0';
+const degreeCelsiusSign = '\u00B0C'; 
+// Math Constatnts
+const dateTimeOffset = 62135596800000; // ticks from 0000-01-01 to 1970-01-01
+const launched = new Date().getTime();
+const queue = [];
+// Color palette for charting
+// http://ksrowell.com/blog-visualizing-data/2012/02/02/optimal-colors-for-graphs/
+const palette = {
+	bar: [
+		'#396AB1',
+		'#DA7C30',
+		'#3E9651',
+		'#CC2529',
+		'#535154',
+		'#6B4C9A',
+		'#922428',
+		'#948B3D',
+	],
+	line: [
+		'#3869B1',
+		'#DA7E30',
+		'#3F9852',
+		'#CC2428',
+		'#535055',
+		'#6B4C9A',
+		'#922427',
+		'#958C3D',
+	],
+};
+// Device specfic constants
+const states = {
+	NotAssigned: 'NotAssigned', 
+	Idle: 'Idle',
+	Running: 'Running',
+	Finished: 'Finished',
+	Stopped: 'Stopped',
+	RunningNoiseLevel: 'RunningNoiseLevel',
+};
+const voltageRanges = [
+	{ value: 0, label: '1000V', },
+	{ value: 1, label: '100V', },
+];
+const currentRanges = [
+	{ value: 0, label: '2A', },
+	{ value: 1, label: '400mA', },
+	{ value: 2, label: '200mA', },
+	{ value: 3, label: '40mA', },
+	{ value: 4, label: '20mA', },
+	{ value: 5, label: '4mA', },
+	{ value: 6, label: '2mA', },
+	{ value: 7, label: '400uA', },
+];
+const aboutLabels = {
+	model: 'Model',
+	description: 'Description',
+	frequencyRanges: 'Frequency Ranges',
+	voltageRanges: 'Voltage Ranges',
+	currentRanges: 'Current Ranges',	
+	temperatureSensor: 'Temperature Sensor',
+	macAddress: 'Mac Address',
+	ipAddress: 'IP Address',
+	subnetMask: 'Subnet Mask',
+	router: 'Router',
+	port: 'Port',
+	sifBoard: 'SIF Board',
+	sifFirmware: 'SIF Firmware',
+	sifSerialNumber: 'SIF Serial Number',
+	zimBoard: 'ZIM Board',
+	zimFirmware: 'ZIM Firmware',
+	zimSerialNumber: 'ZIM Serial Number',
+};
+const colHeaders = {
+	pt: 'Pt',
+	time: 'Time' + ' [' + 's' + ']',
+	frequency: 'Freq' + ' [' + 'Hz'+ ']',
+	zreal: 'Zreal' + ' [' + {ohmSign}+ ']',
+	zimag: 'Zimag' + ' [' + {ohmSign}+ ']',
+	zmod: 'Zmod' + ' [' + {ohmSign}+ ']',
+	zphase: 'Zphase' + ' [' + {degreeSign}+ ']',
+	idc: 'Idc' + ' [' + 'A'+ ']',
+	vdc: 'vdc' + ' [' + 'V'+ ']',
+	temperature: 'Temperature' + ' [' + {degreeCelsiusSign}+ ']',
+	currentRange: 'IRange' + ' [' + 'A'+ ']',
+};
+const defaultParameters = {  
+	initialFrequency: 1000,
+	finalFrequency: 1.0,
+	density: 10,
+	iteration: 1,
+	currentRange: 2,
+	maxInitialDelay: 12.0,
+	skip: 1,
+	cycles: 0
+};
+const parameterLabels = {  
+	initialFrequency: { label: 'Initial Frequency', min: 0.1, max: 4000, default: 1000, },
+	finalFrequency: { label: 'Final Frequency', min: 0.1, max: 4000, default: 1, },
+	density: { label: 'Density', min: 1, max: 20, default: 10, },
+	iteration: { label: 'Iteration', min: 1, max: 100, default: 1, },
+	currentRange: { label: 'Current Range', min: 0, max: 7, default: 2, },
+	maxInitialDelay: { label: 'Max Initial Delay', min: 0, max: 100, default: 12, },
+	skip: { label: 'skip', min: 1, max: 100, default: 1, },
+	cycles: { label: 'cycles', min: 0, max: 100, default: 0, },
+};
+
+// Global functions
+function renderNoShape() {
+	return null;
+};
+function durationFormat(durationAsSeconds) {
+	return moment.utc(durationAsSeconds * 1000).format('HH:mm:ss');
+};
+function LightBulbIcon(props) {
+  return (
+    <SvgIcon {...props}>
+      <path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,
+				1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,
+				22H14A1,1 0 0,0 15,21V20H9V21Z" />
+    </SvgIcon>
+  );
+}
+function LightBulbOutlineIcon(props) {
+  return (
+    <SvgIcon {...props}>
+      <path d="M12,2A7,7 0 0,1 19,9C19,11.38 17.81,13.47 16,14.74V17A1,1 0 0,1 15,18H9A1,
+				1 0 0,1 8,17V14.74C6.19,13.47 5,11.38 5,9A7,7 0 0,1 12,2M9,21V20H15V21A1,1 0 0,1 14,
+				22H10A1,1 0 0,1 9,21M12,4A5,5 0 0,0 7,9C7,11.05 8.23,12.81 10,13.58V16H14V13.58C15.77,
+				12.81 17,11.05 17,9A5,5 0 0,0 12,4Z" />
+    </SvgIcon>
+  );
+}
+
+//#region AboutDialogWrapped
+class AboutDialog extends React.Component {
+	render() {
+		const { classes, about, onClose, ...other } = this.props;
+		if (about) {
+			return (
+				<Dialog
+					onClose={onClose}
+					scroll="paper"
+					aria-labelledby="dialog-about"
+					{...other}
+				>
+					<DialogTitle id="dialog-about">
+						About
+					</DialogTitle>
+					<DialogContent>
+						{Object.keys(about).map((key, index) => (
+							<TextField
+								id={aboutLabels[key]}
+								label={aboutLabels[key]}
+								className={classes.textField}
+								value={about[key] ? about[key] : "Not assigned"} 
+								margin="normal"
+								multiline={true}
+								InputProps={{
+									readOnly: true,
+								}}
+							/>
+						))}
+					</DialogContent>
+					<DialogActions>
+						<Button disabled={true} color="primary">
+							Copy to Clipboard
+						</Button>
+					</DialogActions>
+				</Dialog>
+			);
+		} else {
+			return (
+				<React.Fragment>
+					<Typography variant="h6" color="inherit">
+							Not available
+					</Typography>
+				</React.Fragment>
+			);
+		}
+	};
+};
+AboutDialog.propTypes = {
+	classes: PropTypes.object.isRequired,
+	about: PropTypes.object.isRequired,
+	onClose: PropTypes.func.isRequired,  
+};
+const AboutDialogWrapped = withStyles(styles) (AboutDialog);
+//#endregion AboutDialogWrapped
+
+//#region SetUpDialog
+class SetUpDialog extends React.Component {
+	render() {
+		const { classes, parameters, onClose, onStart, onChange, ...other } = this.props;
+		if (parameters) {
+			return (
+				<Dialog
+					onClose={onClose}
+					scroll="paper"
+					aria-labelledby="dialog-parameters"
+					{...other}
+				>
+					<DialogTitle id="dialog-parameters-title">
+						Parameters to setup experiment
+					</DialogTitle>
+					<DialogContent>
+						<TextField
+							id="initialFrequency"
+							label="Initial Frequency (Hz)"
+							value={parameters.initialFrequency}
+							type="number"
+							margin="dense"
+							//helperText="The starting point for frequency sweep"
+							className={classes.textField}
+							onChange={(e) => onChange(e, 'initialFrequency')}
+						/>
+						<TextField
+							id="finalFrequency"
+							label="Final Frequency (Hz)"
+							value={parameters.finalFrequency}
+							type="number"
+							margin="dense"
+							//helperText="The ending point for frequency sweep"
+							className={classes.textField}
+							onChange={(e) => onChange(e, 'finalFrequency')}
+						/>
+						<TextField
+							id="density"
+							label="Density (Pt/dec)"
+							value={parameters.density}
+							type="number"
+							margin="dense"
+							//helperText="The number of data points in each decade in frequency"
+							className={classes.textField}
+							onChange={(e) => onChange(e, 'density')}
+						/>
+						<TextField
+							id="iteration"
+							label="Iteration"
+							value={parameters.iteration}
+							type="number"
+							margin="dense"
+							className={classes.textField}
+							onChange={(e) => onChange(e, 'iteration')}
+						/>
+						<TextField
+							id="currentRange"
+							label="Current Range"
+							select
+							value={parameters.currentRange}
+							margin="dense"
+							className={classes.textField}
+							onChange={(e) => onChange(e, 'currentRange')}
+							SelectProps={{
+								MenuProps: {
+									className: classes.menu,
+								},
+							}}
+						>
+							{currentRanges.map(option => (
+								<MenuItem key={option.value} value={option.value}>
+									{option.label}
+								</MenuItem>
+							))}
+						</TextField>
+						<TextField
+							id="maxInitialDelay"
+							label="Max Initial Delay (s)"
+							value={parameters.maxInitialDelay}
+							type="number"
+							margin="dense"
+							className={classes.textField}
+							onChange={(e) => onChange(e, 'maxInitialDelay')}
+						/>
+					</DialogContent>				
+					<DialogActions>
+						<Button onClick={onStart} color="primary">
+							Start
+						</Button>
+						<Button onClick={onClose} color="primary">
+							Cancel
+						</Button>
+					</DialogActions>
+				</Dialog>
+			);
+		} else {
+			return (
+				<React.Fragment>
+				</React.Fragment>
+			);
+		}
+	};
+};
+SetUpDialog.propTypes = {
+	classes: PropTypes.object.isRequired,
+	onChange: PropTypes.func.isRequired,
+	onClose: PropTypes.func.isRequired,  
+	onStart: PropTypes.func.isRequired,
+	parameters: PropTypes.object.isRequired,
+};
+const SetUpDialogWrapped = withStyles(styles) (SetUpDialog);
+//#endregion SetUpDialog
+
+//#region ChartTooltipWrapped
+class ChartTooltip extends React.Component {
+	render() {
+		const { classes, chartProps, ...other } = this.props;
+		if (chartProps.active && chartProps.payload) {
+			const { payload } = chartProps;
+			const xName = payload[0].name;
+			const xValue = (xName == "Zphase")
+				? d3.format('.3')(payload[0].value) + payload[0].unit
+				: d3.format('.3s')(payload[0].value) + payload[0].unit;
+			const yName = payload[1].name;
+			const yValue = (yName == "Zphase")
+				? d3.format('.3')(payload[1].value) + payload[1].unit
+				: d3.format('.3s')(payload[1].value) + payload[1].unit
+		  return (
+				<Paper className={classes.paper} elevation={1} key="tooltip">
+					<Grid item container spacing={16} direction="row" justify="flex-start" alignItems="baseline">
+						<Grid item container xs={5} sm={5} md={5}>
+							<Grid item container direction="column" alignItems="flex-start">
+								<Typography gutterBottom variant="h6">
+									{yName} 
+								</Typography>
+								<Typography gutterBottom variant="h6">
+									{xName} 
+								</Typography>
+							</Grid>
+						</Grid>
+						<Grid item container xs={7} sm={7} md={7}>
+							<Grid item container direction="column" alignItems="flex-end">
+								<Typography gutterBottom variant="h6">
+									{yValue}
+								</Typography>
+								<Typography gutterBottom variant="h6">
+									{xValue}
+								</Typography>
+							</Grid>
+						</Grid>            
+					</Grid>
+		    </Paper>
+		  );
+		}
+		return null;
+	};
+};
+ChartTooltip.propTypes = {
+	classes: PropTypes.object.isRequired,
+	chartProps: PropTypes.object.isRequired,
+};
+const ChartTooltipWrapped = withStyles(styles) (ChartTooltip);
+
+function RenderChartTooltip(props) {
+	return (
+		<ChartTooltipWrapped chartProps={props}/> 
+	);
+};
+//#endregion ChartTooltipgWrapped
+
+//#region SparklineWrapped
+class Sparkline extends React.Component {
+	render() {
+		const { classes, data, scatter, xKey, xUnit, yKey, yUnit, plotStyle, ...other } = this.props;
+		if (!data) {
+			return null;
+		}
+		if (scatter) {
+			const scatterStyle = (plotStyle) ? plotStyle : classes.scatterPlotDefault;
+			return (
+				<React.Fragment>
+					<Recharts.ResponsiveContainer width='100%' height={50}>
+						<Recharts.ScatterChart>
+							{/*<Recharts.CartesianGrid/>*/}
+							<Recharts.XAxis type="number" dataKey={xKey} name={xKey} unit={xUnit}
+								tickFormatter={d3.format('.0s')}
+								domain={['auto', 'auto']} hide={true}>
+							</Recharts.XAxis>
+							<Recharts.YAxis type="number" dataKey={yKey} name={yKey} unit={yUnit}
+								tickFormatter={d3.format('.0s')}
+								domain={['auto', 'auto']} hide={true}>
+							</Recharts.YAxis>
+							<Recharts.Scatter data={data} type='monotone' fill={palette.bar[0]} line={false}/>
+						</Recharts.ScatterChart>
+					</Recharts.ResponsiveContainer>
+				</React.Fragment>
+			);
+		} else {
+			const areaStyle = (plotStyle) ? plotStyle : classes.areaPlotDefault;
+			return (
+				<React.Fragment>
+					<Recharts.ResponsiveContainer width='100%' height={60}>
+						<Recharts.AreaChart data={data}>
+							{/*<Recharts.CartesianGrid/>*/}
+							<Recharts.XAxis type="number" dataKey={xKey} name={xKey} unit={xUnit}
+								tickFormatter={d3.format('.0s')}
+								domain={['auto', 'auto']} hide={true}>
+							</Recharts.XAxis>
+							<Recharts.YAxis type="number" name={yKey} unit={yUnit}
+								tickFormatter={d3.format('.0s')}
+								domain={['auto', 'auto']} hide={true}>
+							</Recharts.YAxis>
+							<Recharts.Area type='monotone' dataKey={yKey} fill={palette.bar[2]} stroke={palette.bar[2]}/>
+						</Recharts.AreaChart>
+					</Recharts.ResponsiveContainer>
+				</React.Fragment>
+			);
+		}
+	}
+};
+Sparkline.propTypes = {
+	classes: PropTypes.object.isRequired,
+	data: PropTypes.object.isRequired,
+	plotStyle: PropTypes.object,
+	scatter: PropTypes.bool,
+	xKey: PropTypes.string.isRequired,  
+	xUnit: PropTypes.string.isRequired,  
+	yKey: PropTypes.string.isRequired,  
+	xUnit: PropTypes.string.isRequired,
+};
+const SparklineWrapped = withStyles(styles) (Sparkline);
+//#endregion SparklineWrapped
+
+//#region LissajousCurveWrapped
+class LissajousCurve extends React.Component {
+	render() {
+		const { classes, channel, cook, index, plotStyle, ...other } = this.props;
+		const lineStyle = (plotStyle) ? plotStyle : classes.linePlotDefault;
+		const isIdle = (channel) ? channel.isIdle : false;
+		const isRunning = (channel) ? channel.isRunning : false;
+		const samples = (isRunning)
+			? channel.stepSamples
+			: (isIdle && cook && cook.data && index >= 0 && index < cook.data.length) 
+				? cook.data[index].samples
+				: null;
+		if (!samples) {
+			return (
+				<React.Fragment>
+					<div className={classes.chartOuterContainer169}>
+						<div className={classes.chartInnerContainer}>
+						</div>
+					</div>
+				</React.Fragment>
+			);
+		}
+		return (
+			<React.Fragment>
+				<div className={classes.chartOuterContainer169}>
+					<div className={classes.chartInnerContainer}>
+						<Recharts.ResponsiveContainer>
+							<Recharts.LineChart data={samples}>
+								{/*<Recharts.CartesianGrid /> */}
+								<Recharts.XAxis type="number" dataKey="voltage" name="Voltage" unit="V"
+									tickFormatter={d3.format('.0s')}
+									domain={['auto', 'auto']} hide={true}>
+								</Recharts.XAxis>
+								<Recharts.YAxis type="number" name="Current" unit="A"
+									tickFormatter={d3.format('.0s')}
+									domain={['auto', 'auto']} hide={true}>
+								</Recharts.YAxis>
+								<Recharts.ReferenceLine x={0} className={classes.referenceLine}/>
+								<Recharts.ReferenceLine y={0} className={classes.referenceLine}/>
+								<Recharts.Line dataKey='current' type='basis' stroke={palette.line[1]} dot={false}/>
+							</Recharts.LineChart>
+						</Recharts.ResponsiveContainer>
+					</div>
+				</div>
+			</React.Fragment>
+		);
+	};
+};
+LissajousCurve.propTypes = {
+	classes: PropTypes.object.isRequired,
+	channel: PropTypes.object.isRequired,
+	cook: PropTypes.object.isRequired,
+	index: PropTypes.number.isRequired,	
+	plotStyle: PropTypes.object,
+};
+const LissajousCurveWrapped = withStyles(styles) (LissajousCurve);
+//#endregion LissajousCurveWrapped
+
+//#region HeaderWrapped
+class Header extends React.Component {
+	render() {
+		const { classes, themeName, openAbout, about, onOpenAbout, onClose, onToggleTheme, ...other } = this.props;
+		const themeIcon = (themeName == 'dark') ? <LightBulbIcon /> : <LightBulbOutlineIcon />;
+		return (
+			<React.Fragment>
+				<AppBar position="fixed" className={classes.appBar}>
+					<Toolbar>
+						{/* 
+						<IconButton className={classes.menuButton} color="inherit" aria-label="Menu" disabled={true}>
+							<Icon>menu</Icon>
+						</IconButton>
+						*/}
+						<Typography variant="h6" color="inherit" noWrap className={classes.appBarTitle}>
+							{(about) ? about.model : 'loading...'}
+						</Typography>
+						{/* About */}
+						<Tooltip title="About">
+							<IconButton color="inherit" disabled={!about} onClick={onOpenAbout}>
+								<Icon>info</Icon>
+							</IconButton>
+						</Tooltip>
+						<AboutDialogWrapped
+							about={about} 
+							open={openAbout}
+							onClose={onClose}						
+						/>
+						{/* Share */}
+						<IconButton color="inherit" aria-label="Share" disabled={true}>
+							<Icon>share</Icon>
+						</IconButton>
+						{/* Save */}
+						<IconButton color="inherit" aria-label="Save" disabled={true}>
+							<Icon>save_alt</Icon>
+						</IconButton>
+						{/* Email */}
+						<IconButton color="inherit" aria-label="Email" disabled={true}>
+							<Icon>email</Icon>
+						</IconButton>
+						{/* Theme */}
+						<Tooltip title="Toggle light/dark theme">
+							<IconButton color="inherit" aria-label="Theme" onClick={onToggleTheme}>
+								{themeIcon}
+							</IconButton>
+						</Tooltip>
+					</Toolbar>
+				</AppBar>
+			</React.Fragment>
+		);
+	};
+};
+Header.propTypes = {
+	classes: PropTypes.object.isRequired,
+	about: PropTypes.object.isRequired,
+	onClose: PropTypes.func.isRequired,
+	onOpenAbout: PropTypes.func.isRequired,
+	onToggleTheme: PropTypes.func.isRequired,
+	openAbout: PropTypes.bool.isRequired,
+	themeName: PropTypes.string.isRequired,
+};
+const HeaderWrapped = withStyles(styles) (Header);
+//#endregion HeaderWrapped
+
+//#region AuxConsoleWrapped
+class AuxConsole extends React.Component {
+	render() {
+		const { classes, auxData, channel, ...other } = this.props;
+		const auxVoltageExpression = (channel) 
+			? d3.format('.3f')(channel.auxVoltage ) + voltageSign
+			: "--" + voltageSign; 
+		const auxVoltageRangeExpression = (channel) 
+			? voltageRanges.find(x => x.value == channel.voltageRange).label + " range"
+			: "--V range";
+		const auxTemperatureExpression = (channel) 
+			? d3.format('.2f')(channel.auxTemperature) + degreeCelsiusSign
+			: "--" + degreeCelsiusSign; 
+		const auxTemperatureSensorType = (channel)
+			? "PT1000"
+			: "";
+		return (
+			<React.Fragment>
+				<Grid container spacing={16} direction="column" justify="flex-start" alignItems="stretch">
+					<Grid item container xs={12} sm={12} md={12}>
+						<Grid item xs={6} sm={6} md={6}>
+							<Typography gutterBottom variant="h6">
+								{auxVoltageExpression}
+							</Typography>
+							<Typography gutterBottom component="p">
+								{auxVoltageRangeExpression}
+							</Typography>
+						</Grid>
+						<Grid item xs={6} sm={6} md={6}>
+							<SparklineWrapped 
+								data={auxData} 
+								xKey="time" xUnit="s" 
+								yKey="voltage" yUnit={voltageSign} 
+							/>
+						</Grid>
+					</Grid>
+					{/*<Divider variant="middle"/>*/}
+					<Grid item container xs={12} sm={12} md={12}>
+						<Grid item xs={6} sm={6} md={6}>
+							<Typography gutterBottom variant="h6">
+								{auxTemperatureExpression}
+							</Typography>
+							<Typography gutterBottom component="p">
+								{auxTemperatureSensorType}
+							</Typography>
+						</Grid>
+						<Grid item xs={6} sm={6} md={6}>
+							<SparklineWrapped 
+								data={auxData} 
+								xKey="time" xUnit="s" 
+								yKey="temperature" yUnit={degreeCelsiusSign} 
+							/>
+						</Grid>
+					</Grid>
+				</Grid>
+			</React.Fragment>
+		);
+	};
+};
+AuxConsole.propTypes = {
+	classes: PropTypes.object.isRequired,
+	auxData: PropTypes.object.isRequired,
+	channel: PropTypes.object.isRequired,
+};
+const AuxConsoleWrapped = withStyles(styles) (AuxConsole);
+//#endregion AuxConsoleWrapped
+
+//#region AuxPanelWrapped
+class AuxPanel extends React.Component {
+	render() {
+		const { classes, auxData, channel, onClear, ...other } = this.props;
+		const auxVoltageExpression = (channel) 
+			? d3.format('.3f')(channel.auxVoltage ) + voltageSign
+			: "--" + voltageSign; 
+		const auxVoltageRangeExpression = (channel) 
+			? voltageRanges.find(x => x.value == channel.voltageRange).label + " range"
+			: "--V range";
+		const auxTemperatureExpression = (channel) 
+			? d3.format('.2f')(channel.auxTemperature) + degreeCelsiusSign
+			: "--" + degreeCelsiusSign; 
+		const auxTemperatureSensorType = (channel)
+			? "PT1000"
+			: "";
+		return (
+			<React.Fragment>
+				<Card>
+					<CardHeader 
+						//title="Aux. Readings"
+						subheader="Aux. Readings"
+						action={
+							<div className={classes.cardControls}>
+								<Tooltip title="Clear">
+									<IconButton aria-label="Clear" onClick={onClear} >
+										<Icon fontSize="large" color="primary">refresh</Icon>
+									</IconButton>
+								</Tooltip>
+							</div>
+						}
+					/>
+					<CardContent>
+						<AuxConsole
+							auxData={auxData}
+							channel={channel}
+						/>
+					</CardContent>
+				</Card>
+			</React.Fragment>
+		);
+	};
+};
+AuxPanel.propTypes = {
+	classes: PropTypes.object.isRequired,
+	auxData: PropTypes.object.isRequired,
+	channel: PropTypes.object.isRequired,
+	onClear: PropTypes.func.isRequired,
+};
+const AuxPanelWrapped = withStyles(styles) (AuxPanel);
+//#endregion AuxPanelWrapped
+
+//#region CookConsoleWrapped
+class CookConsole extends React.Component {
+	render() {
+		const { classes, channel, cook, activeIndex,   
+			onGoFirst,	onGoPrevious, onGoNext, onGoLast, ...other } = this.props;
+		const isIdle = (channel) ? channel.isIdle : false;
+		const isRunning = (channel) ? channel.isRunning : false;
+		const isRunningNoiseLevel = (channel) ? channel.isRunningNoiseLevel : false;		
+		const cooked = (cook) ? cook.data : null;
+
+		if (cooked && activeIndex < 0) {
+			onGoFirst();
+		} else if (cooked && activeIndex > cooked.length) {
+			onGoLast();
+		}
+		const zitem = (cooked) ? cooked[activeIndex] : null;
+
+		const frequncyExpression = (isRunning) 
+			? d3.format('.3s')(channel.lastFrequency) + frequencySign
+			: (zitem) 
+				? d3.format('.3s')(zitem.frequency) + frequencySign 
+				: "--" + frequencySign;
+		const zModulusExpression = (isRunning) 
+			? d3.format('.3s')(channel.lastZmod) + ohmSign
+			: (zitem) 
+				? d3.format('.3s')(zitem.zmod) + ohmSign 
+				: "--" + ohmSign;
+		const zPhaseExpression = (isRunning) 
+			? d3.format('.2f')(channel.lastZphase) + degreeSign
+			: (zitem) 
+				? d3.format('.2f')(zitem.zphase) + degreeSign 
+				: "--" + degreeSign;
+		const auxVExpression = (isRunning) 
+			? ""
+			: (zitem) 
+				? d3.format('.2f')(zitem.vdc) + voltageSign 
+				: "--" + voltageSign;
+		return (
+			<React.Fragment>
+				<Grid container spacing={16} direction="row" justify="flex-start" alignItems="center">          
+					<Grid item container spacing={16} direction="column" justify="flex-start" alignItems="stretch" xs={12} sm={6} md={6}>
+						<Grid item container direction="row" justify="flex-start" alignItems="baseline" xs={12} sm={12} md={12}>
+							<Grid item container xs={4} sm={4} md={4}>
+								<Grid item container direction="column" alignItems="flex-start">
+									<Typography gutterBottom variant="h6">
+										{frequncyExpression}
+									</Typography>
+									<Typography gutterBottom variant="h6">
+										{auxVExpression}
+									</Typography>
+								</Grid>
+							</Grid>
+							<Grid item container xs={8} sm={8} md={8}>
+								<Grid item container direction="column" alignItems="flex-end">
+									<Typography gutterBottom variant="h5">
+										{zModulusExpression}
+									</Typography>
+									<Typography gutterBottom variant="h5">
+										{zPhaseExpression}
+									</Typography>
+								</Grid>
+							</Grid>            
+						</Grid>
+						<Divider variant="middle"/>
+						{(isRunning)
+							? <Grid item container direction="row" justify="flex-start" alignItems="center" xs={12} sm={12} md={12}>
+									<Grid item container xs={6} sm={6} md={6}>
+										<Grid item container>
+											<Typography gutterBottom variant="h6">
+												{durationFormat(channel.elapsedTime)}
+											</Typography>
+										</Grid>
+									</Grid>
+									<Grid item container xs={6} sm={6} md={6}>
+										<Grid item container direction="column" justify="center" alignItems="stretch">
+											<div className={classes.root}>
+												<LinearProgress variant="determinate" value={channel.progress} />
+											</div>
+										</Grid>
+									</Grid>
+								</Grid>
+							: <Grid item container direction="row" justify="space-evenly" alignItems="center" xs={12} sm={12} md={12}>
+									<Tooltip title="Go first">
+										<IconButton aria-label="GoFirst" onClick={onGoFirst} 
+											disabled={!isIdle || activeIndex <= 0}>
+											<Icon fontSize="default">first_page</Icon>
+										</IconButton>
+									</Tooltip>
+									<Tooltip title="Go previous">
+										<IconButton aria-label="GoPrevious" onClick={onGoPrevious} 
+											disabled={!isIdle || activeIndex <= 0}>
+											<Icon fontSize="default">chevron_left</Icon>
+										</IconButton>
+									</Tooltip>
+									<Tooltip title="Go next">
+										<IconButton aria-label="GoNext" onClick={onGoNext} 
+											disabled={!isIdle || activeIndex < 0 || activeIndex >= cooked.length - 1}>
+											<Icon fontSize="default">chevron_right</Icon>
+										</IconButton>
+									</Tooltip>
+									<Tooltip title="Go last">
+										<IconButton aria-label="GoLast" onClick={onGoLast} 
+											disabled={!isIdle || activeIndex < 0 || activeIndex >= cooked.length - 1}>
+											<Icon fontSize="default">last_page</Icon>
+										</IconButton>
+									</Tooltip>
+								</Grid>
+						}
+					</Grid>
+					<Grid item xs={12} sm={6} md={6}>
+						<LissajousCurveWrapped
+							channel={channel}
+							cook={cook}
+							index={activeIndex}
+						/>
+					</Grid>
+				</Grid>						
+			</React.Fragment>
+		);	
+	};
+};
+CookConsole.propTypes = {
+	classes: PropTypes.object.isRequired,
+	activeIndex: PropTypes.number.isRequired,
+	channel: PropTypes.object.isRequired,
+	cook: PropTypes.object.isRequired,
+	onGoFirst: PropTypes.func.isRequired,
+	onGoLast: PropTypes.func.isRequired,
+	onGoNext: PropTypes.func.isRequired,	
+	onGoPrevious: PropTypes.func.isRequired,
+};
+const CookConsoleWrapped = withStyles(styles) (CookConsole);
+//#endregion CookConsoleWrapped
+
+//#region CookPanelWrapped
+class CookPanel extends React.Component {
+	render() {
+		const { classes, channel, cook, activeIndex, parameters, openSetUp, openSnackbar, messageInfo,
+			onChangeParameter, onClose, onOpenSetUp,
+			onGoFirst,	onGoPrevious, onGoNext, onGoLast, 
+			onStart, onStop, ...other } = this.props;
+		const isIdle = (channel) ? channel.isIdle : false;
+		const isRunning = (channel) ? channel.isRunning : false;
+		const isRunningNoiseLevel = (channel) ? channel.isRunningNoiseLevel : false;		
+		const started = (cook && cook.started && cook.started.moment) 
+			? cook.started.moment 
+			: null;  	
+		const stateExpression = (isRunning)
+			? "Measuring @ " + d3.format('.2s')(channel.stepFrequency) + frequencySign
+			: (isRunningNoiseLevel)
+				? "Measuring noise level..."
+				: (cook && cook.data)
+					? "Cooked, " + started.fromNow()
+					: "Loading...";
+		return (
+			<React.Fragment>
+				<Card>
+					<CardHeader
+						subheader={stateExpression}
+						action={
+							<div className={classes.cardControls}>
+								<Tooltip title="Start">
+									<IconButton aria-label="Start" onClick={onOpenSetUp} disabled={!isIdle}>
+										<Icon fontSize="large" color="primary">play_arrow</Icon>
+									</IconButton>
+								</Tooltip>
+								<SetUpDialogWrapped
+									open={openSetUp}
+									parameters={parameters}
+									onClose={onClose}						
+									onStart={onStart}
+									onChange={onChangeParameter}
+								/>
+								<Tooltip title="Stop">
+									<IconButton aria-label="Stop" onClick={onStop} disabled={!isRunning}>
+										<Icon fontSize="large">stop</Icon>
+									</IconButton>
+								</Tooltip>
+								<Snackbar
+									key={messageInfo.key}
+									anchorOrigin={{
+										vertical: 'bottom',
+										horizontal: 'left',
+									}}
+									open={openSnackbar}
+									autoHideDuration={3000}
+									onClose={onClose}
+									ContentProps={{
+										'aria-describedby': 'message-id',
+									}}
+									message={<span id="message-id">{messageInfo.message}</span>}
+									action={[									
+										<IconButton
+											key="close"
+											aria-label="Close"
+											color="inherit"
+											className={classes.close}
+											onClick={onClose}
+										>
+											<Icon>close</Icon>
+										</IconButton>,
+									]}
+								/>
+							</div>
+						}
+					/>
+					<CardContent>
+						<CookConsoleWrapped 
+							activeIndex={activeIndex}
+							channel={channel}
+							cook={cook}
+							onGoFirst={onGoFirst}
+							onGoLast={onGoLast}
+							onGoNext={onGoNext}
+							onGoPrevious={onGoPrevious}
+						/>
+					</CardContent>
+				</Card>
+			</React.Fragment>
+		);	
+	};
+};
+CookPanel.propTypes = {
+	classes: PropTypes.object.isRequired,
+	activeIndex: PropTypes.number.isRequired,
+	channel: PropTypes.object.isRequired,
+	cook: PropTypes.object.isRequired,
+	messageInfo: PropTypes.object.isRequired,
+	parameters: PropTypes.object.isRequired,
+	onChangeParameter: PropTypes.func.isRequired,
+	onClose	: PropTypes.func.isRequired,	
+	onGoFirst: PropTypes.func.isRequired,
+	onGoLast: PropTypes.func.isRequired,
+	onGoNext: PropTypes.func.isRequired,	
+	onGoPrevious: PropTypes.func.isRequired,
+	onOpenSetUp: PropTypes.func.isRequired,
+	onStart: PropTypes.func.isRequired,
+	onStop: PropTypes.func.isRequired,
+	openSetUp: PropTypes.bool.isRequired,
+	openSnackbar: PropTypes.bool.isRequired,	
+};
+const CookPanelWrapped = withStyles(styles) (CookPanel);
+//#endregion CookPanelWrapped
+
+//#region NyquistPanelWrapped
+class NyquistPanel extends React.Component {
+	render() {
+		const { classes, cook, ...other } = this.props;
+		const cooked = (cook) ? cook.data : null;		
+		if (!cooked) {
+			return null;
+		}
+		return (
+			<React.Fragment>
+				<Card>
+					{/*<CardHeader
+						subheader="Nyquist Plot"
+					/>*/}
+					<CardContent className={classes.cardChart}>
+						<Recharts.ResponsiveContainer width="100%" height={300}>
+							<Recharts.ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+								<Recharts.CartesianGrid />
+								<Recharts.XAxis type="number" dataKey="zreal" name="Zreal" unit="&#8486;"
+									tickFormatter={d3.format('.2s')}
+									domain={['auto', 'auto']}>
+									{/* <Recharts.Label value="Zreal" offset={-10} position="insideBottom" /> */}
+								</Recharts.XAxis>
+								<Recharts.YAxis type="number" dataKey="zimag" name="Zimag" unit="&#8486;"
+									tickFormatter={(tick) => d3.format('.2s')(-1 * tick)} 
+									domain={['auto', 'auto']} reversed={true}>
+									{/* <Recharts.Label value="-Zimag" offset={0} position="insideLeft" angle={-90}/> */}
+								</Recharts.YAxis>
+								<Recharts.Tooltip cursor={{ strokeDasharray: '3 3' }} content={<RenderChartTooltip />}/>
+								<Recharts.Scatter data={cooked} type='monotone' line={false} className={classes.scatterPlotPrimary}/>
+							</Recharts.ScatterChart>
+						</Recharts.ResponsiveContainer>
+					</CardContent>
+				</Card>
+			</React.Fragment>
+		);	
+	};
+};
+NyquistPanel.propTypes = {
+	classes: PropTypes.object.isRequired,
+	cook: PropTypes.object.isRequired,
+};
+const NyquistPanelWrapped = withStyles(styles) (NyquistPanel);
+//#endregion NyquistPanelWrapped
+
+//#region BodePanelWrapped
+class BodePanel extends React.Component {
+	render() {
+		const { classes, cook, ...other } = this.props;
+		const cooked = (cook) ? cook.data : null;		
+		if (!cooked) {
+			return null;
+		}
+		return (
+			<React.Fragment>
+				<Card>
+					{/*<CardHeader
+						subheader="Bode Plot"
+					/>*/}
+					<CardContent className={classes.cardChart}>
+						<Recharts.ResponsiveContainer width="100%" height={300}>	
+							<Recharts.ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+								<Recharts.CartesianGrid />
+								<Recharts.XAxis type="number" dataKey="frequency" name="Frequency" unit="Hz"
+									tickFormatter={d3.format('.2s')} scale="log"
+									domain={['auto', 'auto']} interval="preserveStartEnd">
+									{/* <Recharts.Label value="Frequency" offset={-10} position="insideBottom" /> */}
+								</Recharts.XAxis>
+								<Recharts.YAxis yAxisId="left" type="number" dataKey="zmod" name="Zmod" unit="&#8486;"
+									tickFormatter={d3.format('.2s')} 
+									domain={['auto', 'auto']}>
+									{/* <Recharts.Label value="Zmod" offset={0} position="insideLeft" angle={-90}/> */}
+								</Recharts.YAxis>
+								<Recharts.YAxis yAxisId="right" type="number" dataKey="zphase" name="Zphase" unit="&deg;"
+									tickFormatter={d3.format('.2')} 
+									domain={['auto', 'auto']} orientation="right">
+									{/* <Recharts.Label value="Zphase" offset={0} position="insideRight" angle={90}/> */}
+								</Recharts.YAxis>
+								<Recharts.Tooltip cursor={{ strokeDasharray: '3 3' }} content={<RenderChartTooltip />}/>
+								<Recharts.Scatter yAxisId="left" data={cooked} type='monotone' line={false} className={classes.scatterPlotPrimary}/>
+								<Recharts.Scatter yAxisId="right" data={cooked} type='monotone' line={false} className={classes.scatterPlotSecondary}/>
+							</Recharts.ScatterChart>
+						</Recharts.ResponsiveContainer>
+					</CardContent>
+				</Card>
+			</React.Fragment>
+		);			
+	};
+};
+BodePanel.propTypes = {
+	classes: PropTypes.object.isRequired,
+	cook: PropTypes.object.isRequired,
+};
+const BodePanelWrapped = withStyles(styles) (BodePanel);
+//#endregion BodePanelWrapped
+
+//#region CookTablePanelWrapped
+class CookTablePanel extends React.Component {
+	render() {
+		const { classes, cook, ...other } = this.props;
+		const cooked = (cook) ? cook.data : null;		
+		const started = (cook && cook.started) ? cook.started.moment : null;
+		const titleExpression = (started)
+			? "Impedance data, measured " + started.format("YYYY-MM-DD hh:mm:ss")
+			: "No data";	
+		if (!cooked) {
+			return null;
+		}
+		return (
+			<React.Fragment>
+				<ExpansionPanel>
+					<ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
+						<Typography className={classes.heading}>
+							{titleExpression}
+						</Typography>
+					</ExpansionPanelSummary>
+					<ExpansionPanelDetails>
+						<Paper className={classes.tableContainer}>
+							<Table className={classes.table} key="tbl">
+								<TableHead>
+									<TableRow key="thead">
+										{/*
+										{Object.keys(colHeaders).map((key, index) => (
+											<TableCell align="right" className={classes.tableCell}>{colHeaders[key]}</TableCell>	
+										))}
+										*/}
+										<TableCell align="right" className={classes.tableCell}>Pt</TableCell>
+										<TableCell align="right" className={classes.tableCell}>Time (s)</TableCell>
+										<TableCell align="right" className={classes.tableCell}>Freq (Hz)</TableCell>
+										<TableCell align="right" className={classes.tableCell}>Zreal ({ohmSign})</TableCell>
+										<TableCell align="right" className={classes.tableCell}>Zimag ({ohmSign})</TableCell>
+										<TableCell align="right" className={classes.tableCell}>Zmod ({ohmSign})</TableCell>
+										<TableCell align="right" className={classes.tableCell}>Zphase ({degreeSign})</TableCell>
+										<TableCell align="right" className={classes.tableCell}>Idc (A)</TableCell>
+										<TableCell align="right" className={classes.tableCell}>Vdc (V)</TableCell>
+										<TableCell align="right" className={classes.tableCell}>Temp ({degreeCelsiusSign})</TableCell>
+										<TableCell align="right" className={classes.tableCell}>IRange (A)</TableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{cooked.map((row, index) => (
+										<TableRow key={index.toString()}>
+											<TableCell component="th" scope="row">{row.pt}</TableCell>
+											<TableCell align="right" className={classes.tableCell}>{row.time}</TableCell>
+											<TableCell align="right" className={classes.tableCell}>{d3.format('.3s')(row.frequency)}</TableCell>
+											<TableCell align="right" className={classes.tableCell}>{d3.format('.3s')(row.zreal)}</TableCell>
+											<TableCell align="right" className={classes.tableCell}>{d3.format('.3s')(row.zimag)}</TableCell>
+											<TableCell align="right" className={classes.tableCell}>{d3.format('.3s')(row.zmod)}</TableCell>
+											<TableCell align="right" className={classes.tableCell}>{d3.format('.3')(row.zphase)}</TableCell>
+											<TableCell align="right" className={classes.tableCell}>{d3.format('.2s')(row.idc)}</TableCell>
+											<TableCell align="right" className={classes.tableCell}>{d3.format('.3')(row.vdc)}</TableCell>
+											<TableCell align="right" className={classes.tableCell}>{d3.format('.3')(row.temperature)}</TableCell>
+											<TableCell align="right" className={classes.tableCell}>{currentRanges.find(x => x.value == row.currentRange).label}</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</Paper>
+					</ExpansionPanelDetails>
+				</ExpansionPanel>
+			</React.Fragment>
+		);
+	};
+};
+CookTablePanel.propTypes = {
+	classes: PropTypes.object.isRequired,
+	cook: PropTypes.object.isRequired,
+};
+const CookTablePanelWrapped = withStyles(styles) (CookTablePanel);
+//#endregion CookTablePanelWrapped
+
+class Index extends React.Component {
+	constructor(props) {
+		super(props);
+		
+		this.state = {
+			themeName: "light",
+			overwrites: {},
+
+			openAbout: false, 
+			openSetUp: false,
+			openSnackbar: false,
+			messageInfo: {},
+
+			about: null,
+			channel: null,
+			cook: null,
+
+			parameters: defaultParameters,
+			activeIndex: -1,
+
+			auxData: []
+		};		
+	};
+
+	//#region Event handlers
+	processQueue = () => {
+		if (queue.length > 0) {
+			this.setState({
+				messageInfo: queue.shift(),
+				openSnackbar: true,
+			});
+		}
+	};
+	handleChangeParameter = (event, name) => {
+		const key = Object.keys(parameterLabels).find(key => key == name);
+		const parameter = parameterLabels[key];
+		let value = event.target.value ;
+		if (value < parameter.min) {
+			value = parameter.min;
+		} else if (value > parameter.max) {
+			value = parameter.max;
+		}
+		if (parameter == parameterLabels.initialFrequency) {
+			this.setState({ 
+				parameters: { 
+					...this.state.parameters,
+					initialFrequency: value,
+				}
+			});
+		} else if (parameter == parameterLabels.finalFrequency) {
+			this.setState({ 
+				parameters: { 
+					...this.state.parameters,
+					finalFrequency: value,
+				}
+			});
+		} else if (parameter == parameterLabels.density) {
+			this.setState({ 
+				parameters: { 
+					...this.state.parameters,
+					density: value,
+				}
+			});
+		} else if (parameter == parameterLabels.iteration) {
+			this.setState({ 
+				parameters: { 
+					...this.state.parameters,
+					iteration: value,
+				}
+			});
+		} else if (parameter == parameterLabels.currentRange) {
+			this.setState({ 
+				parameters: { 
+					...this.state.parameters,
+					currentRange: value,
+				}
+			});
+		} else if (parameter == parameterLabels.maxInitialDelay) {
+			this.setState({ 
+				parameters: { 
+					...this.state.parameters,
+					maxInitialDelay: value,
+				}
+			});
+		}
+	};
+	handleClearAuxData = () => {
+		this.setState({ 
+			auxData: [], 
+		});
+	};
+	handleClose = () => {
+		this.setState({ 
+			openAbout: false, 
+			openSetUp: false,
+			openSnackbar: false, 
+		});
+	};
+	handleOpenAbout = () => {
+		this.setState({ 
+			openAbout: true, 
+		});
+	};
+	handleOpenSetUp = () => {
+		this.setState({ 
+			openSetUp: true, 
+		});
+	};	
+	handleGoFirst = () => {
+		const index = 0;
+		this.setState({ 
+			activeIndex: index, 
+		});
+		if (this.state.cook 
+			&& this.state.cook.data 
+			&& index < this.state.cook.data.length
+			&& !this.state.cook.data[index].samples)
+			this.loadSamplesAsync(index);
+	};	
+	handleGoNext = () => {
+		const index = this.state.activeIndex + 1;
+		this.setState({ 
+			activeIndex: index, 
+		});
+		if (this.state.cook 
+			&& this.state.cook.data 
+			&& index < this.state.cook.data.length
+			&& !this.state.cook.data[index].samples)
+			this.loadSamplesAsync(index);
+	};
+	handleGoLast = () => {
+		const index = this.state.cook.data.length - 1;
+		this.setState({ 
+			activeIndex: index, 
+		});
+		if (this.state.cook && this.state.cook.data 
+			&& index < this.state.cook.data.length
+			&& !this.state.cook.data[index].samples) {
+			this.loadSamplesAsync(index);
+		}
+	};
+	handleGoPrevious = () => {
+		const index = this.state.activeIndex - 1;
+		this.setState({ 
+			activeIndex: index, 
+		});
+		if (this.state.cook 
+			&& this.state.cook.data 
+			&& index < this.state.cook.data.length
+			&& !this.state.cook.data[index].samples)
+			this.loadSamplesAsync(index);
+	};	
+	handleSnackBar = message => {
+		queue.push({
+			message,
+			key: new Date().getTime(),
+		});
+		if (this.state.openSnackbar) {
+			this.setState({ 
+				openSnackbar: false 
+			});
+		} else {
+			this.processQueue();
+		}
+		this.setState({ 
+			openSnackbar: true, 
+		});
+	};
+	handleStart = () => {
+		this.setState({ 
+			openSetUp: false, 
+		});
+		// Send a start signal to device
+		const parJSON = JSON.stringify(this.state.parameters);
+		console.log(parJSON);
+	};
+	handleStop = () => {
+		// Send a stop signal to device
+	};
+	handleToggleTheme = () => {
+		const themeName = (this.state.themeName == 'dark') ? 'light' : 'dark';
+		this.setState({ themeName });
+	};	
+	//#endregion Event handlers
+
+	componentDidMount() {
+		this.loadAboutAsync();
+		this.loadChannelAsync();
+		this.interval = setInterval(this.loadChannelAsync, 1000);
+	};
+	
+	//#region Fetch
+	async loadAboutAsync() {
+		try {
+			const aboutFetch = await fetch(aboutURL);
+			const aboutJson = await aboutFetch.json();
+			if (aboutJson) {
+				console.log('about.json loaded');
+				this.setState({ 
+					about: aboutJson, 
+				});			
+			};
+		} catch (e) {
+			console.log(e);
+		}
+	};
+	async loadChannelAsync() {
+		try {
+			const channelFetch = await fetch(channelURL);
+			const channelJson = await channelFetch.json();
+			if (channelJson) {
+				console.log('channel.json loaded');
+				const state = Object.keys(states).find(key => states[key] == channelJson.state);
+				channelJson.isIdle = (state == states.Idle);
+				channelJson.isRunning = (state == states.Running || state == states.Finished || state == states.Stopped );
+				channelJson.isRunningNoiseLevel = (state == states.RunningNoiseLevel);
+				
+				if (state == states.Running && this.state.channel.isIdle) {
+					this.handleSnackBar("Started");
+				} else if (state == states.Finished) {
+					this.handleSnackBar("Successfully finished");
+				} else if (state == states.Stopped) {
+					this.handleSnackBar("Manually stopped");
+				};
+
+				// Update state: channel and auxData
+				const newAuxItem = { 
+					time: new Date().getTime() - launched, 
+					voltage: channelJson.auxVoltage, 
+					temperature: channelJson.auxTemperature 
+				};	
+				if (this.state.auxData.length < 200) {
+					this.setState({ 
+						channel: channelJson,
+						auxData: [ ...this.state.auxData, newAuxItem ], 
+					});	
+				} else {
+					const [ first, ...rest ] = this.state.auxData;
+					this.setState({ 
+						channel: channelJson,
+						auxData: [ ...rest, newAuxItem ], 
+					});	
+				}
+
+				// If lastStarted does not equals to cook.started, update cook.
+				if (channelJson.lastStarted) {
+					const lastTicks = channelJson.lastStarted.ticks;
+					const lastCount = channelJson.lastStarted.count;
+					if (!this.state.cook || this.state.cook.started.ticks != lastTicks || this.state.cook.started.count != lastCount) {
+						this.loadCookAsync();
+					}
+				}
+			}
+		} catch (e) {
+			console.log(e);
+		}
+	};
+	async loadCookAsync() {
+		try {
+			const cookFetch = await fetch(cookURL);
+			const cookJson = await cookFetch.json();
+			if (cookJson) {
+				// Update state: cook
+				console.log('cook.json loaded');				
+				cookJson.started.moment = moment(cookJson.started.ticks - dateTimeOffset);
+				this.setState({ 
+					cook: cookJson,
+					parameters: { ...cookJson.parameters },
+				});
+			};
+		} catch (e) {
+			console.log(e);
+		}
+	};
+	async loadSamplesAsync(index) {
+		try {
+			//const url = samplesURL + "?" + index.toString();
+			const samplesFetch = await fetch(samplesURL);
+			const samplesJson = await samplesFetch.json();
+			if (samplesJson && this.state.cook && this.state.cook.data 
+				&& index >= 0 && index < this.state.cook.data.length) {
+				// Update state: cook[index].samples
+				console.log("cook[%d].samples loaded", index);
+				const data = this.state.cook.data.map((item, j) => {
+					if (j == index) {
+						return item.samples = samplesJson;
+					} else {
+						return item;
+					}
+				});
+				this.setState({ 
+					cook: { 
+						...this.state.cook,
+						[data]: data,
+					}
+				});
+			};
+		} catch (e) {
+			console.log(e);
+		}
+	};
+	//#endregion Fetch
+
+	componentWillUnmount() {
+		clearInterval(this.interval);
+	};
+	
+	render() {
+		const { classes } = this.props;
+		const muiTheme = this.state.themeName == 'dark' ? darkTheme : lightTheme;
+
+		{/* Binding functions */}
+		this.handleChangeParameter = this.handleChangeParameter.bind(this);
+		this.handleClearAuxData = this.handleClearAuxData.bind(this);
+		this.handleClose = this.handleClose.bind(this);
+		this.handleOpenAbout = this.handleOpenAbout.bind(this);		
+		this.handleOpenSetUp = this.handleOpenSetUp.bind(this);		
+		this.handleGoFirst = this.handleGoFirst.bind(this);		
+		this.handleGoNext = this.handleGoNext.bind(this);
+		this.handleGoLast = this.handleGoLast.bind(this);		
+		this.handleGoPrevious = this.handleGoPrevious.bind(this);
+		this.handleSnackBar = this.handleSnackBar.bind(this);
+		this.handleStart = this.handleStart.bind(this);
+		this.handleStop = this.handleStop.bind(this);
+		this.handleToggleTheme = this.handleToggleTheme.bind(this);
+		this.loadAboutAsync = this.loadAboutAsync.bind(this);
+		this.loadChannelAsync = this.loadChannelAsync.bind(this);
+		this.loadCookAsync = this.loadCookAsync.bind(this);
+		this.loadSamplesAsync = this.loadSamplesAsync.bind(this);
+		this.processQueue = this.processQueue.bind(this);
+		
+		return (
+			<MuiThemeProvider theme={muiTheme}>
+				<React.Fragment>
+					<CssBaseline />
+					
+					{/* Header */}
+					<HeaderWrapped
+						about={this.state.about}
+						onClose={this.handleClose}
+						onOpenAbout={this.handleOpenAbout}						
+						onToggleTheme={this.handleToggleTheme}
+						openAbout={this.state.openAbout}		
+						themeName={this.state.themeName}
+					/>
+
+					<main className={classes.layout}>	
+						<Grid container className={classes.gridContainer} spacing={40} layout="row" alignItems="stretch">
+							
+							{/* Aux Voltage/Temperature */}
+							<Grid item key="AuxCard" xs={12} sm={12} md={4}>
+								<AuxPanelWrapped
+									auxData={this.state.auxData}
+									channel={this.state.channel}
+									onClear={this.handleClearAuxData}
+								/>
+							</Grid>
+
+							{/* Cook */}
+							<Grid item key="CookCard" xs={12} sm={12} md={8}>
+								<CookPanelWrapped
+									activeIndex={this.state.activeIndex}
+									channel={this.state.channel}
+									cook={this.state.cook}
+									messageInfo={this.state.messageInfo}
+									onChangeParameter={this.handleChangeParameter}
+									onClose={this.handleClose}
+									onGoFirst={this.handleGoFirst}
+									onGoLast={this.handleGoLast}
+									onGoNext={this.handleGoNext}
+									onGoPrevious={this.handleGoPrevious}
+									onOpenSetUp={this.handleOpenSetUp}
+									onStart={this.handleStart}
+									onStop={this.handleStop}
+									openSetUp={this.state.openSetUp}
+									openSnackbar={this.state.openSnackbar}
+									parameters={this.state.parameters}
+								/>
+							</Grid>		
+							
+							{/* Nyquist*/}
+							<Grid item key="CookNyquistCard" xs={12} sm={12} md={6}>
+								<NyquistPanelWrapped 
+									cook={this.state.cook}
+								/>
+							</Grid>	
+
+							{/* Bode*/}
+							<Grid item key="CookBodeCard" xs={12} sm={12} md={6}>
+								<BodePanelWrapped 
+									cook={this.state.cook}
+								/>
+							</Grid>	
+
+							{/* Cook Table */}
+							<Grid item key="CookTable" xs={12} sm={12} md={12}>
+								<CookTablePanelWrapped 
+									cook={this.state.cook}
+								/>
+							</Grid>
+
+						</Grid>
+					</main> 
+
+				</React.Fragment>
+			</MuiThemeProvider>
+		);
+	};
+};
+
+const App = withStyles(styles)(Index);
+
+ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>
