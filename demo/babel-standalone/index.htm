@@ -330,16 +330,16 @@ const styles = theme => ({
 // https://developer.mozilla.org/en-US/docs/Web/API/Request
 const isDemo = true;
 const aboutURL = (isDemo)
-	?	new Request('https://zivelab.github.io/zivelab-channels/demo/json/about.json')
+	?	new Request('https://zivelab.github.io/zivelab-sif-server/json/about.json')
 	: new Request('/about');
 const channelURL = (isDemo)
-	? new Request('https://zivelab.github.io/zivelab-channels/demo/json/channel.json')
+	? new Request('https://zivelab.github.io/zivelab-sif-server/json/channel.json')
 	: new Request('/channel')
 const cookURL = (isDemo)
-	? new Request('https://zivelab.github.io/zivelab-channels/demo/json/cook.json')
+	? new Request('https://zivelab.github.io/zivelab-sif-server/json/cook.json')
 	: new Request('/cook');
 const samplesURL = (isDemo)
-	? new Request('https://zivelab.github.io/zivelab-channels/demo/json/samples.json')
+	? new Request('https://zivelab.github.io/zivelab-sif-server/json/samples.json')
 	: new Request('/samples?index=1');
 const startURL = new Request('/start');	// with parameters
 const stopURL = new Request('/stop');
