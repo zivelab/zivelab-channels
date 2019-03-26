@@ -1,12 +1,12 @@
 {
-  "main.js": "/zivelab-channels/static/js/main.b1b4e14c.chunk.js",
-  "main.js.map": "/zivelab-channels/static/js/main.b1b4e14c.chunk.js.map",
+  "main.js": "/zivelab-channels/static/js/main.44c7eb61.chunk.js",
+  "main.js.map": "/zivelab-channels/static/js/main.44c7eb61.chunk.js.map",
   "runtime~main.js": "/zivelab-channels/static/js/runtime~main.149fc12e.js",
   "runtime~main.js.map": "/zivelab-channels/static/js/runtime~main.149fc12e.js.map",
-  "static/js/2.f1859881.chunk.js": "/zivelab-channels/static/js/2.f1859881.chunk.js",
-  "static/js/2.f1859881.chunk.js.map": "/zivelab-channels/static/js/2.f1859881.chunk.js.map",
+  "static/js/2.0a54e55d.chunk.js": "/zivelab-channels/static/js/2.0a54e55d.chunk.js",
+  "static/js/2.0a54e55d.chunk.js.map": "/zivelab-channels/static/js/2.0a54e55d.chunk.js.map",
   "index.html": "/zivelab-channels/index.html",
-  "precache-manifest.d68f89c8b826fed5e288a8e5f2def5e4.js": "/zivelab-channels/precache-manifest.d68f89c8b826fed5e288a8e5f2def5e4.js",
+  "precache-manifest.058d56f55ef1415722749a869b3ee2d5.js": "/zivelab-channels/precache-manifest.058d56f55ef1415722749a869b3ee2d5.js",
   "service-worker.js": "/zivelab-channels/service-worker.js",
   "static/media/gettingStarted.md": "/zivelab-channels/static/media/gettingStarted.a7e56776.md"
 }
