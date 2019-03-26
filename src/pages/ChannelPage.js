@@ -296,7 +296,7 @@ class ChannelPage extends Component {
   }
 }
 
-ChannelPage.protoTypes = {
+ChannelPage.propTypes = {
   classes: PropTypes.object.isRequired,
   ipAddress: PropTypes.string.isRequired
 };

@@ -126,7 +126,7 @@ class FabAddDevice extends Component {
   }
 }
 
-FabAddDevice.protoTypes = {
+FabAddDevice.propTypes = {
   classes: PropTypes.object.isRequired,
   knownDevice: PropTypes.string.isRequired,
   onClick: PropTypes.func

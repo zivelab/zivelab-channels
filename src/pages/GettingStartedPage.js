@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import Markdown from "markdown-to-jsx";
+import Markdown from "../modules/components/Markdown";
+import PropTypes from "prop-types";
+
 import Page from "../docs/pages/gettingStarted/gettingStarted.md";
 
 class GettingStartedPage extends Component {
@@ -18,13 +20,19 @@ class GettingStartedPage extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+    console.log(this.props);
     let { md } = this.state;
     return (
-      <div className="post">
-        <Markdown children={md} />
-      </div>
+      <React.Fragment>
+        <Markdown className={classes.markdown}>{md}</Markdown>
+      </React.Fragment>
     );
   }
 }
+
+GettingStartedPage.propTypes = {
+  classes: PropTypes.object.isRequired
+};
 
 export default GettingStartedPage;

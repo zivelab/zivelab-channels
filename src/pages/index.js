@@ -45,9 +45,16 @@ import ChannelPage from "./ChannelPage";
 const drawerWidth = 240;
 
 const styles = theme => ({
+  "@global": {
+    strong: {
+      fontWeight: theme.typography.fontWeightMedium
+    }
+  },
+
   root: {
     display: "flex"
   },
+
   appBar: {
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
@@ -93,7 +100,8 @@ const styles = theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     }),
-    marginLeft: -drawerWidth
+    marginLeft: -drawerWidth,
+    marginTop: "32px"
   },
   contentShift: {
     transition: theme.transitions.create("margin", {
@@ -106,6 +114,11 @@ const styles = theme => ({
     position: "absolute",
     bottom: theme.spacing.unit * 2,
     right: theme.spacing.unit * 2
+  },
+  markdown: {
+    ...theme.typography.body1,
+    padding: "0 8px",
+    margin: "32px"
   }
 });
 
@@ -338,6 +351,15 @@ class Index extends React.Component {
 
   gettingStartedLink = props => <Link to="/" {...props} />;
 
+  gettingStartedPage = () => {
+    const { classes } = this.props;
+    return (
+      <React.Fragment>
+        <GettingStartedPage classes={this.props} />
+      </React.Fragment>
+    );
+  };
+
   componentDidMount = () => {
     this.getLocalIPAddressAsync();
   };
@@ -484,7 +506,7 @@ class Index extends React.Component {
           >
             <div className={classes.drawerHeader} />
             <Switch>
-              <Route path="/" exact component={GettingStartedPage} />
+              <Route path="/" exact component={this.gettingStartedPage} />
               <Route path="/device/:id" exact component={this.channelPage} />
             </Switch>
           </main>
