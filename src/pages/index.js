@@ -280,7 +280,7 @@ class Index extends React.Component {
     const linkTo = ip => "/device/" + ip;
     const deviceLink = ip => props => <Link to={linkTo(ip)} {...props} />;
     const listKey = ip => {
-      return "nav-ip-" + ip.split(".").join("-");
+      return "nav-device-" + ip.split(".").join("-");
     };
     const dividerKey = ip => {
       return "nav-divider-" + ip.split(".").join("-");
@@ -352,7 +352,6 @@ class Index extends React.Component {
   gettingStartedLink = props => <Link to="/" {...props} />;
 
   gettingStartedPage = () => {
-    const { classes } = this.props;
     return (
       <React.Fragment>
         <GettingStartedPage classes={this.props} />

@@ -5,17 +5,19 @@ import ReactJson from "react-json-view";
 import moment from "moment";
 
 // Special characters
+/*
 const voltageSign = "V";
 const currentSign = "A";
 const frequencySign = "Hz";
 const ohmSign = "\u2126";
 const degreeSign = "\u00B0";
 const degreeCelsiusSign = "\u00B0C";
+*/
 
 // Math Constatnts
 const dateTimeOffset = 62135596800000; // ticks from 0000-01-01 to 1970-01-01
 const launched = new Date().getTime();
-const queue = [];
+//const queue = [];
 
 // Device specfic constants
 const states = {
@@ -26,52 +28,52 @@ const states = {
   Stopped: "Stopped",
   RunningNoiseLevel: "RunningNoiseLevel"
 };
-const voltageRanges = [
-  { value: 0, label: "1000V" },
-  { value: 1, label: "100V" }
-];
-const currentRanges = [
-  { value: 0, label: "2A" },
-  { value: 1, label: "400mA" },
-  { value: 2, label: "200mA" },
-  { value: 3, label: "40mA" },
-  { value: 4, label: "20mA" },
-  { value: 5, label: "4mA" },
-  { value: 6, label: "2mA" },
-  { value: 7, label: "400uA" }
-];
-const aboutLabels = {
-  model: "Model",
-  description: "Description",
-  frequencyRanges: "Frequency Ranges",
-  voltageRanges: "Voltage Ranges",
-  currentRanges: "Current Ranges",
-  temperatureSensor: "Temperature Sensor",
-  macAddress: "Mac Address",
-  ipAddress: "IP Address",
-  subnetMask: "Subnet Mask",
-  router: "Router",
-  port: "Port",
-  sifBoard: "SIF Board",
-  sifFirmware: "SIF Firmware",
-  sifSerialNumber: "SIF Serial Number",
-  zimBoard: "ZIM Board",
-  zimFirmware: "ZIM Firmware",
-  zimSerialNumber: "ZIM Serial Number"
-};
-const colHeaders = {
-  pt: "Pt",
-  time: "Time [s]",
-  frequency: "Freq [Hz]",
-  zreal: "Zreal [" + { ohmSign } + "]",
-  zimag: "Zimag [" + { ohmSign } + "]",
-  zmod: "Zmod [" + { ohmSign } + "]",
-  zphase: "Zphase [" + { degreeSign } + "]",
-  idc: "Idc [A]",
-  vdc: "vdc [V]",
-  temperature: "Temperature [" + { degreeCelsiusSign } + "]",
-  currentRange: "IRange [A]"
-};
+//const voltageRanges = [
+//  { value: 0, label: "1000V" },
+//  { value: 1, label: "100V" }
+//];
+//const currentRanges = [
+//  { value: 0, label: "2A" },
+//  { value: 1, label: "400mA" },
+//  { value: 2, label: "200mA" },
+//  { value: 3, label: "40mA" },
+//  { value: 4, label: "20mA" },
+//  { value: 5, label: "4mA" },
+//  { value: 6, label: "2mA" },
+//  { value: 7, label: "400uA" }
+//];
+//const aboutLabels = {
+//  model: "Model",
+//  description: "Description",
+//  frequencyRanges: "Frequency Ranges",
+//  voltageRanges: "Voltage Ranges",
+//  currentRanges: "Current Ranges",
+//  temperatureSensor: "Temperature Sensor",
+//  macAddress: "Mac Address",
+//  ipAddress: "IP Address",
+//  subnetMask: "Subnet Mask",
+//  router: "Router",
+//  port: "Port",
+//  sifBoard: "SIF Board",
+//  sifFirmware: "SIF Firmware",
+//  sifSerialNumber: "SIF Serial Number",
+//  zimBoard: "ZIM Board",
+//  zimFirmware: "ZIM Firmware",
+//  zimSerialNumber: "ZIM Serial Number"
+//};
+//const colHeaders = {
+//  pt: "Pt",
+//  time: "Time [s]",
+//  frequency: "Freq [Hz]",
+//  zreal: "Zreal [" + { ohmSign } + "]",
+//  zimag: "Zimag [" + { ohmSign } + "]",
+//  zmod: "Zmod [" + { ohmSign } + "]",
+//  zphase: "Zphase [" + { degreeSign } + "]",
+//  idc: "Idc [A]",
+//  vdc: "vdc [V]",
+//  temperature: "Temperature [" + { degreeCelsiusSign } + "]",
+//  currentRange: "IRange [A]"
+//};
 const defaultParameters = {
   initialFrequency: 1000,
   finalFrequency: 1.0,
@@ -82,6 +84,7 @@ const defaultParameters = {
   skip: 1,
   cycles: 0
 };
+/*
 const parameterLabels = {
   initialFrequency: {
     label: "Initial Frequency",
@@ -102,6 +105,7 @@ const parameterLabels = {
   skip: { label: "skip", min: 1, max: 100, default: 1 },
   cycles: { label: "cycles", min: 0, max: 100, default: 0 }
 };
+*/
 
 class ChannelPage extends Component {
   constructor(props) {
@@ -190,6 +194,7 @@ class ChannelPage extends Component {
             auxData: [...this.state.auxData, newAuxItem]
           });
         } else {
+          // eslint-disable-next-line
           const [first, ...rest] = this.state.auxData;
           this.setState({
             channel: channelJson,
