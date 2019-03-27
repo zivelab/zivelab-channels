@@ -436,7 +436,7 @@ class Index extends React.Component {
                   )}
                 </IconButton>
               </Tooltip>
-              <Tooltip title="github" enterDelay={300}>
+              <Tooltip title="Github repository" enterDelay={300}>
                 <IconButton
                   edge="end"
                   component="a"

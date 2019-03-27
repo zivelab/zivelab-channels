@@ -156,7 +156,6 @@ class ChannelPage extends Component {
 
   async loadChannelAsync() {
     const { ipAddress } = this.props;
-    console.log("loadChannelAsync");
     try {
       const channelURL = "http://" + ipAddress + "/channel";
       const channelFetch = await fetch(channelURL);
