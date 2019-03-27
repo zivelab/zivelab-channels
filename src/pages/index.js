@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
-import withRoot from "../withRoot";
 import { HashRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { connect } from "react-redux";
 
 // controls
 import AppBar from "@material-ui/core/AppBar";
@@ -20,15 +20,19 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 
-// Pages
+// Icons
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import CloseIcon from "@material-ui/icons/Close";
 import DeviceHubIcon from "@material-ui/icons/DeviceHub";
+import GithubIcon from "@material-ui/docs/svgIcons/GitHub";
+import LightbulbOutlineIcon from "@material-ui/docs/svgIcons/LightbulbOutline";
+import LightbulbFullIcon from "@material-ui/docs/svgIcons/LightbulbFull";
 import MenuIcon from "@material-ui/icons/Menu";
 import TabletIcon from "@material-ui/icons/Tablet";
 
 // functions
+import compose from "../modules/utils/compose";
 import {
   getLocalIPAddress,
   getFullRange,
@@ -42,6 +46,8 @@ import FabAddDevice from "../modules/components/FabAddDevice";
 import GettingStartedPage from "./GettingStartedPage";
 import ChannelPage from "./ChannelPage";
 
+import { ACTION_TYPES } from "../modules/constants";
+
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -54,7 +60,9 @@ const styles = theme => ({
   root: {
     display: "flex"
   },
-
+  grow: {
+    flexGrow: 1
+  },
   appBar: {
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
@@ -145,6 +153,19 @@ class Index extends React.Component {
 
   toggleDrawer = open => () => {
     this.setState({ openDrawer: open });
+  };
+
+  handleTogglePaletteType = () => {
+    const paletteType =
+      this.props.reduxTheme.paletteType === "light" ? "dark" : "light";
+    document.cookie = `paletteType=${paletteType};path=/;max-age=31536000`;
+
+    this.props.dispatch({
+      type: ACTION_TYPES.THEME_CHANGE,
+      payload: {
+        paletteType
+      }
+    });
   };
 
   handleSnackbarClose = (event, reason) => {
@@ -364,7 +385,7 @@ class Index extends React.Component {
   };
 
   render() {
-    const { classes, theme } = this.props;
+    const { classes, reduxTheme } = this.props;
     const { openDrawer, openSnackbar, snackbarMessage } = this.state;
     const { localIP, localDevices, remoteDevices } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
@@ -386,6 +407,7 @@ class Index extends React.Component {
           >
             <Toolbar disableGutters={!openDrawer}>
               <IconButton
+                edge="start"
                 color="inherit"
                 aria-label="Open drawer"
                 onClick={this.toggleDrawer(true)}
@@ -400,6 +422,31 @@ class Index extends React.Component {
                 <Route path="/" exact component={this.GettingStartedTitle} />
                 <Route path="/device/:id" exact component={this.ChannelTitle} />
               </Switch>
+              <div className={classes.grow} />
+              <Tooltip title="Toggle theme" enterDelay={300}>
+                <IconButton
+                  color="inherit"
+                  onClick={this.handleTogglePaletteType}
+                  aria-label="toggleTheme"
+                >
+                  {reduxTheme.paletteType === "light" ? (
+                    <LightbulbOutlineIcon />
+                  ) : (
+                    <LightbulbFullIcon />
+                  )}
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="github" enterDelay={300}>
+                <IconButton
+                  edge="end"
+                  component="a"
+                  color="inherit"
+                  href="https://github.com/zivelab/zivelab-channels"
+                  aria-label="github"
+                >
+                  <GithubIcon />
+                </IconButton>
+              </Tooltip>
             </Toolbar>
           </AppBar>
           <Drawer
@@ -413,7 +460,7 @@ class Index extends React.Component {
           >
             <div className={classes.drawerHeader}>
               <IconButton onClick={this.toggleDrawer(false)}>
-                {theme.direction === "ltr" ? (
+                {reduxTheme.direction === "ltr" ? (
                   <ChevronLeftIcon />
                 ) : (
                   <ChevronRightIcon />
@@ -541,7 +588,13 @@ class Index extends React.Component {
 
 Index.propTypes = {
   classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired
+  dispatch: PropTypes.func.isRequired,
+  reduxTheme: PropTypes.object.isRequired
 };
 
-export default withRoot(withStyles(styles, { withTheme: true })(Index));
+export default compose(
+  connect(state => ({
+    reduxTheme: state.theme
+  })),
+  withStyles(styles)
+)(Index);

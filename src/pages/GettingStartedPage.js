@@ -21,7 +21,6 @@ class GettingStartedPage extends Component {
 
   render() {
     const { classes } = this.props;
-    console.log(this.props);
     let { md } = this.state;
     return (
       <React.Fragment>
