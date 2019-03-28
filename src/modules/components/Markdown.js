@@ -1,47 +1,45 @@
 import React from "react";
-import ReactMarkdown from "markdown-to-jsx";
+import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
+
+import compose from "../utils/compose";
+import MarkdownElement from "./MarkdownElement";
+import { getContents } from "../utils/parseMarkdown";
 
 const styles = theme => ({
-  listItem: {
-    marginTop: theme.spacing.unit
+  root: {
+    marginBottom: 100
+  },
+  markdownElement: {
+    marginTop: theme.spacing.unit * 2, //theme.spacing(2),
+    marginBottom: theme.spacing.unit * 2, //theme.spacing(2),
+    padding: "0px 8px" //theme.spacing(0, 1)
   }
 });
 
-const options = {
-  overrides: {
-    h1: {
-      component: props => <Typography gutterBottom variant="h2" {...props} />
-    },
-    h2: {
-      component: props => <Typography gutterBottom variant="h4" {...props} />
-    },
-    h3: {
-      component: props => (
-        <Typography gutterBottom variant="subtitle1" {...props} />
-      )
-    },
-    h4: {
-      component: props => (
-        <Typography gutterBottom variant="caption" paragraph {...props} />
-      )
-    },
-    p: { component: props => <Typography paragraph {...props} /> },
-    a: { component: Link },
-    li: {
-      component: withStyles(styles)(({ classes, ...props }) => (
-        <li className={classes.listItem}>
-          <Typography component="span" {...props} />
-        </li>
-      ))
-    }
-  }
-};
-
 function Markdown(props) {
-  return <ReactMarkdown options={options} {...props} />;
+  const { classes, markdown } = props;
+  const contents = markdown ? getContents(markdown) : [""];
+  console.log("contents");
+  console.log(contents);
+  return (
+    <div className={classes.root}>
+      {contents.map(content => {
+        return (
+          <MarkdownElement
+            className={classes.markdownElement}
+            key={content}
+            text={content}
+          />
+        );
+      })}
+    </div>
+  );
 }
 
-export default Markdown;
+Markdown.propTypes = {
+  classes: PropTypes.object.isRequired,
+  markdown: PropTypes.string
+};
+
+export default compose(withStyles(styles))(Markdown);

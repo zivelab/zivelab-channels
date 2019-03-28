@@ -8,7 +8,9 @@ class GettingStartedPage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { md: "" };
+    this.state = {
+      md: ""
+    };
   }
 
   componentWillMount() {
@@ -24,7 +26,7 @@ class GettingStartedPage extends Component {
     let { md } = this.state;
     return (
       <React.Fragment>
-        <Markdown className={classes.markdown}>{md}</Markdown>
+        <Markdown className={classes.markdown} markdown={md} />
       </React.Fragment>
     );
   }
