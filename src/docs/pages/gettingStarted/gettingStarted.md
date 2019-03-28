@@ -1,4 +1,6 @@
-## Getting Started
+# Getting Started
+
+<p class="description">How to find your Zive devices using this web application.</p>
 
 You can scan Zive devices connected to local network or your pc directly.
 

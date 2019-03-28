@@ -1,8 +1,24 @@
+import "../bootstrap";
+// --- Post bootstrap -----
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 
 import ReactJson from "react-json-view";
 import moment from "moment";
+
+import AppContent from "../modules/components/AppContent";
+
+const styles = theme => ({
+  root: {
+    marginBottom: 100
+  },
+  content: {
+    marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2,
+    padding: (0, theme.spacing.unit * 2)
+  }
+});
 
 // Special characters
 /*
@@ -274,28 +290,35 @@ class ChannelPage extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     const { about, channel, cook } = this.state;
     return (
-      <React.Fragment>
-        <h2>About</h2>
-        {about ? (
-          <ReactJson src={about} displayDataTypes={false} collapsed={true} />
-        ) : (
-          <div />
-        )}
-        <h2>Channel</h2>
-        {channel ? (
-          <ReactJson src={channel} displayDataTypes={false} collapsed={true} />
-        ) : (
-          <div />
-        )}
-        <h2>Cook</h2>
-        {cook ? (
-          <ReactJson src={cook} displayDataTypes={false} collapsed={true} />
-        ) : (
-          <div />
-        )}
-      </React.Fragment>
+      <AppContent className={classes.root}>
+        <div className={classes.content}>
+          <h2>About</h2>
+          {about ? (
+            <ReactJson src={about} displayDataTypes={false} collapsed={true} />
+          ) : (
+            <div />
+          )}
+          <h2>Channel</h2>
+          {channel ? (
+            <ReactJson
+              src={channel}
+              displayDataTypes={false}
+              collapsed={true}
+            />
+          ) : (
+            <div />
+          )}
+          <h2>Cook</h2>
+          {cook ? (
+            <ReactJson src={cook} displayDataTypes={false} collapsed={true} />
+          ) : (
+            <div />
+          )}
+        </div>
+      </AppContent>
     );
   }
 }
@@ -305,4 +328,4 @@ ChannelPage.propTypes = {
   ipAddress: PropTypes.string.isRequired
 };
 
-export default ChannelPage;
+export default withStyles(styles)(ChannelPage);

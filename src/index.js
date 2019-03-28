@@ -1,16 +1,17 @@
 import "./bootstrap";
+// --- Post bootstrap -----
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import store from "./modules/redux/store";
 import AppWrapper from "./modules/components/AppWrapper";
-import Index from "./pages/Index";
+import App from "./pages/App";
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
   <Provider store={store}>
     <AppWrapper>
-      <Index />
+      <App />
     </AppWrapper>
   </Provider>,
   document.querySelector("#root")

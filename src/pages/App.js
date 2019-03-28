@@ -1,3 +1,5 @@
+import "../bootstrap";
+// --- Post bootstrap -----
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -132,7 +134,25 @@ const styles = theme => ({
 
 const gettingStartedKey = "getting-started-nav";
 
-class Index extends React.Component {
+if (process.browser) {
+  // eslint-disable-next-line no-console
+  console.log(
+    `%c
+    
+    ███████╗██╗██╗   ██╗███████╗██╗      █████╗ ██████╗ 
+    ╚══███╔╝██║██║   ██║██╔════╝██║     ██╔══██╗██╔══██╗
+      ███╔╝ ██║██║   ██║█████╗  ██║     ███████║██████╔╝
+     ███╔╝  ██║╚██╗ ██╔╝██╔══╝  ██║     ██╔══██║██╔══██╗
+    ███████╗██║ ╚████╔╝ ███████╗███████╗██║  ██║██████╔╝
+    ╚══════╝╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝  ╚═╝╚═════╝ 
+
+    Tip: you can access the documentation \`theme\` object directly in the console.
+`,
+    "font-family:monospace;color:#1976d2;font-size:12px;"
+  );
+}
+
+class App extends React.Component {
   state = {
     openDrawer: false,
     openSnackbar: false,
@@ -308,7 +328,7 @@ class Index extends React.Component {
     };
     if (devices) {
       return devices.map(device => (
-        <React.Fragment>
+        <React.Fragment key={device.ipAddress}>
           <Divider variant="inset" key={dividerKey(device.ipAddress)} />
           <ListItem
             button
@@ -375,7 +395,7 @@ class Index extends React.Component {
   gettingStartedPage = () => {
     return (
       <React.Fragment>
-        <GettingStartedPage classes={this.props} />
+        <GettingStartedPage />
       </React.Fragment>
     );
   };
@@ -550,7 +570,7 @@ class Index extends React.Component {
               [classes.contentShift]: openDrawer
             })}
           >
-            <div className={classes.drawerHeader} />
+            {/*<div className={classes.drawerHeader} />*/}
             <Switch>
               <Route path="/" exact component={this.gettingStartedPage} />
               <Route path="/device/:id" exact component={this.channelPage} />
@@ -586,7 +606,7 @@ class Index extends React.Component {
   }
 }
 
-Index.propTypes = {
+App.propTypes = {
   classes: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   reduxTheme: PropTypes.object.isRequired
@@ -597,4 +617,4 @@ export default compose(
     reduxTheme: state.theme
   })),
   withStyles(styles)
-)(Index);
+)(App);

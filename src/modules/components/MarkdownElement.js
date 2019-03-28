@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import marked from "marked";
 import { withStyles } from "@material-ui/core/styles";
-import textToHash from "../utils/textToHash";
+//import textToHash from "../utils/textToHash";
 import prism from "./prism";
 
 // Monkey patch to preserve non-breaking spaces
@@ -18,6 +18,8 @@ marked.Lexer.prototype.lex = function lex(src) {
 };
 
 const renderer = new marked.Renderer();
+
+/*
 renderer.heading = (text, level) => {
   // Small title. No need for an anchor.
   // It's reducing the risk of duplicated id and it's fewer elements in the DOM.
@@ -37,6 +39,12 @@ renderer.heading = (text, level) => {
       </a></h${level}>
   `
   );
+};
+*/
+
+renderer.link = (href, title, text) => {
+  const more = ' target="_blank" rel="noopener nofollow"';
+  return `<a href="${href}"${more}>${text}</a>`;
 };
 
 const markedOptions = {

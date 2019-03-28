@@ -7,23 +7,18 @@ import MarkdownElement from "./MarkdownElement";
 import { getContents } from "../utils/parseMarkdown";
 
 const styles = theme => ({
-  root: {
-    marginBottom: 100
-  },
   markdownElement: {
     marginTop: theme.spacing.unit * 2, //theme.spacing(2),
     marginBottom: theme.spacing.unit * 2, //theme.spacing(2),
-    padding: "0px 8px" //theme.spacing(0, 1)
+    padding: (0, theme.spacing.unit) //theme.spacing(0, 1)
   }
 });
 
 function Markdown(props) {
   const { classes, markdown } = props;
   const contents = markdown ? getContents(markdown) : [""];
-  console.log("contents");
-  console.log(contents);
   return (
-    <div className={classes.root}>
+    <div>
       {contents.map(content => {
         return (
           <MarkdownElement
