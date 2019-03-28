@@ -142,6 +142,7 @@ class ChannelPage extends Component {
     this.loadChannelAsync = this.loadChannelAsync.bind(this);
     this.loadCookAsync = this.loadCookAsync.bind(this);
     this.loadSamplesAsync = this.loadSamplesAsync.bind(this);
+    this.getTitle = this.getTitle.bind(this);
   }
 
   componentWillMount() {
@@ -289,11 +290,27 @@ class ChannelPage extends Component {
     }
   }
 
+  getTitle = about => {
+    if (about) {
+      const model = about.model.startsWith("Zive")
+        ? about.model
+            .split(" ")
+            .slice(1)
+            .join(" ")
+        : about.model;
+      const ip = about.ipAddress;
+      return model + " (" + ip + ")";
+    } else {
+      return "";
+    }
+  };
+
   render() {
     const { classes } = this.props;
     const { about, channel, cook } = this.state;
+    const title = this.getTitle(about);
     return (
-      <AppContent className={classes.root}>
+      <AppContent className={classes.root} title={title}>
         <div className={classes.content}>
           <h2>About</h2>
           {about ? (

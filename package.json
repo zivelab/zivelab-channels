@@ -16,6 +16,7 @@
     "prismjs": "^1.16.0",
     "prop-types": "latest",
     "react": "latest",
+    "react-document-title": "^2.0.3",
     "react-dom": "latest",
     "react-json-view": "^1.19.1",
     "react-redux": "^6.0.1",
@@ -23,7 +24,8 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "latest",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "warning": "^4.0.3"
   },
   "scripts": {
     "start": "react-scripts start",

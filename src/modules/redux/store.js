@@ -2,10 +2,12 @@
 
 import { createStore, combineReducers } from "redux";
 import themeReducer from "./themeReducer";
+import titleReducer from "./titleReducer";
 
 const store = createStore(
   combineReducers({
-    theme: themeReducer
+    theme: themeReducer,
+    title: titleReducer
   })
 );
 

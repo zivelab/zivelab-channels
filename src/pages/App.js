@@ -65,6 +65,10 @@ const styles = theme => ({
   grow: {
     flexGrow: 1
   },
+  title: {
+    marginLeft: theme.spacing.unit * 2,
+    flex: "0 1 auto"
+  },
   appBar: {
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
@@ -175,7 +179,7 @@ class App extends React.Component {
     this.setState({ openDrawer: open });
   };
 
-  handleTogglePaletteType = () => {
+  togglePaletteType = () => {
     const paletteType =
       this.props.reduxTheme.paletteType === "light" ? "dark" : "light";
     document.cookie = `paletteType=${paletteType};path=/;max-age=31536000`;
@@ -360,28 +364,6 @@ class App extends React.Component {
     return matchedDevice.about;
   }
 
-  GettingStartedTitle = () => (
-    <Typography variant="h6" color="inherit" noWrap>
-      Zive Channels
-    </Typography>
-  );
-
-  ChannelTitle = ({ match: { params } }) => {
-    const about = this.getAbout(params.id);
-    const model = about.model.startsWith("Zive")
-      ? about.model
-          .split(" ")
-          .slice(1)
-          .join(" ")
-      : about.model;
-    const ip = about.ipAddress;
-    return (
-      <Typography variant="h6" color="inherit" noWrap>
-        {model} ({ip}) - Zive Channels
-      </Typography>
-    );
-  };
-
   channelPage = ({ match: { params } }) => {
     return (
       <React.Fragment>
@@ -405,10 +387,12 @@ class App extends React.Component {
   };
 
   render() {
-    const { classes, reduxTheme } = this.props;
+    const { classes, reduxTheme, reduxTitle } = this.props;
     const { openDrawer, openSnackbar, snackbarMessage } = this.state;
     const { localIP, localDevices, remoteDevices } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
+
+    const title = reduxTitle || document.title || "Zive Channels";
 
     // progress in scanning
     const isScanning = scanTotal > 0 && scanCompleted < scanTotal;
@@ -438,15 +422,21 @@ class App extends React.Component {
               >
                 <MenuIcon />
               </IconButton>
-              <Switch>
-                <Route path="/" exact component={this.GettingStartedTitle} />
-                <Route path="/device/:id" exact component={this.ChannelTitle} />
-              </Switch>
+              {title !== null && (
+                <Typography
+                  className={classes.title}
+                  variant="h6"
+                  color="inherit"
+                  noWrap
+                >
+                  {title}
+                </Typography>
+              )}
               <div className={classes.grow} />
               <Tooltip title="Toggle theme" enterDelay={300}>
                 <IconButton
                   color="inherit"
-                  onClick={this.handleTogglePaletteType}
+                  onClick={this.togglePaletteType}
                   aria-label="toggleTheme"
                 >
                   {reduxTheme.paletteType === "light" ? (
@@ -609,12 +599,14 @@ class App extends React.Component {
 App.propTypes = {
   classes: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  reduxTheme: PropTypes.object.isRequired
+  reduxTheme: PropTypes.object.isRequired,
+  reduxTitle: PropTypes.object.isRequired
 };
 
 export default compose(
   connect(state => ({
-    reduxTheme: state.theme
+    reduxTheme: state.theme,
+    reduxTitle: state.title
   })),
   withStyles(styles)
 )(App);

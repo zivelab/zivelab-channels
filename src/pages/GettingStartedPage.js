@@ -40,7 +40,7 @@ class GettingStartedPage extends Component {
     const { classes } = this.props;
     let { md } = this.state;
     return (
-      <AppContent className={classes.root}>
+      <AppContent className={classes.root} title="Getting Started">
         <Markdown className={classes.markdown} markdown={md} />
       </AppContent>
     );
