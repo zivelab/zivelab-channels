@@ -123,6 +123,14 @@ const parameterLabels = {
 };
 */
 
+// [TODO]
+// Warning: Can't perform a React state update on an unmounted component.
+// This is a no-op, but it indicates a memory leak in your application.
+// To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
+//
+// we have to find a way to handle async tasks
+let isMounted = false;
+
 class ChannelPage extends Component {
   constructor(props) {
     super(props);
@@ -147,9 +155,11 @@ class ChannelPage extends Component {
 
   componentWillMount() {
     clearInterval(this.timerID);
+    isMounted = false;
   }
 
   componentDidMount() {
+    isMounted = true;
     this.loadAboutAsync();
     this.loadChannelAsync();
     this.timerID = setInterval(() => this.loadChannelAsync, 1000);
@@ -161,7 +171,7 @@ class ChannelPage extends Component {
       const aboutURL = "http://" + ipAddress + "/about";
       const aboutFetch = await fetch(aboutURL);
       const aboutJson = await aboutFetch.json();
-      if (aboutJson) {
+      if (aboutJson && isMounted) {
         this.setState({
           about: aboutJson
         });
@@ -204,12 +214,12 @@ class ChannelPage extends Component {
           voltage: channelJson.auxVoltage,
           temperature: channelJson.auxTemperature
         };
-        if (this.state.auxData.length < 200) {
+        if (this.state.auxData.length < 200 && isMounted) {
           this.setState({
             channel: channelJson,
             auxData: [...this.state.auxData, newAuxItem]
           });
-        } else {
+        } else if (isMounted) {
           // eslint-disable-next-line
           const [first, ...rest] = this.state.auxData;
           this.setState({
@@ -243,7 +253,7 @@ class ChannelPage extends Component {
       const cookURL = "http://" + ipAddress + "/cook";
       const cookFetch = await fetch(cookURL);
       const cookJson = await cookFetch.json();
-      if (cookJson) {
+      if (cookJson && isMounted) {
         cookJson.started.moment = moment(
           cookJson.started.ticks - dateTimeOffset
         );
@@ -268,7 +278,8 @@ class ChannelPage extends Component {
         this.state.cook &&
         this.state.cook.data &&
         index >= 0 &&
-        index < this.state.cook.data.length
+        index < this.state.cook.data.length &&
+        isMounted
       ) {
         // Update state: cook[index].samples
         const data = this.state.cook.data.map((item, j) => {
@@ -305,6 +316,9 @@ class ChannelPage extends Component {
     }
   };
 
+  // [TODO]
+  // color of contents are not changed when theme changed.
+  // use Typography.
   render() {
     const { classes } = this.props;
     const { about, channel, cook } = this.state;

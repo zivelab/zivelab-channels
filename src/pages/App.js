@@ -392,7 +392,7 @@ class App extends React.Component {
     const { localIP, localDevices, remoteDevices } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
 
-    const title = reduxTitle || document.title || "Zive Channels";
+    const title = reduxTitle || "Zive Channels";
 
     // progress in scanning
     const isScanning = scanTotal > 0 && scanCompleted < scanTotal;
@@ -600,7 +600,7 @@ App.propTypes = {
   classes: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   reduxTheme: PropTypes.object.isRequired,
-  reduxTitle: PropTypes.object.isRequired
+  reduxTitle: PropTypes.string.isRequired
 };
 
 export default compose(

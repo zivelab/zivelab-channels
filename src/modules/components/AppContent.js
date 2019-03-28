@@ -21,7 +21,13 @@ const styles = theme => ({
   }
 });
 
-function dispatchTitle(title, props) {
+// [TODO]
+// Warning: Cannot update during an existing state transition (such as within `render`).
+// Render methods should be a pure function of props and state.
+//
+// We have to find a way how to handle this warning.
+// is it solved?
+function dispatchTitle(props, title) {
   props.dispatch({
     type: ACTION_TYPES.TITLE_CHANGE,
     payload: {
@@ -31,9 +37,11 @@ function dispatchTitle(title, props) {
 }
 
 function AppContent(props) {
-  const { className, classes, title, children } = props;
+  const { className, classes, title, children, reduxTitle } = props;
   const docTitle = title ? title + " - Zive Channels" : "Zive Channels";
-  dispatchTitle(docTitle, props);
+  if (docTitle !== reduxTitle) {
+    dispatchTitle(props, docTitle);
+  }
   return (
     <DocumentTitle title={docTitle}>
       <main className={clsx(classes.root, className)}>{children}</main>
@@ -45,8 +53,9 @@ AppContent.propTypes = {
   children: PropTypes.node.isRequired,
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
+  title: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired
+  reduxTitle: PropTypes.string.isRequired
 };
 
 export default compose(
