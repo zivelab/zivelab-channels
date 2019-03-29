@@ -19,7 +19,7 @@ async function getMessages() {
     if (!messages) {
       await sleep(1500); // Soften the pressure on the main thread.
       const result = await fetch(
-        "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/docs/notifications/notifications.json"
+        "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/docs/notifications.json"
       );
       messages = await result.json();
     }
