@@ -43,6 +43,7 @@ import {
 
 // Components
 import FabAddDevice from "../modules/components/FabAddDevice";
+import Notifications from "../modules/components/Notifications";
 
 // Pages
 import GettingStartedPage from "./GettingStartedPage";
@@ -403,6 +404,7 @@ class App extends React.Component {
       <Router>
         <div className={classes.root}>
           <CssBaseline />
+          <Notifications />
           <AppBar
             position="fixed"
             className={classNames(classes.appBar, {

@@ -11,6 +11,7 @@
     "classnames": "latest",
     "clsx": "^1.0.3",
     "connected-react-router": "^6.3.2",
+    "isomorphic-fetch": "^2.2.1",
     "marked": "^0.6.1",
     "moment": "^2.24.0",
     "prismjs": "^1.16.0",
