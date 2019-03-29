@@ -333,6 +333,7 @@ class ChannelPage extends React.Component {
 
   getTitle = about => {
     if (about) {
+      const hostName = about.hostName || "Untitled";
       const model = about.model.startsWith("Zive")
         ? about.model
             .split(" ")
@@ -340,7 +341,9 @@ class ChannelPage extends React.Component {
             .join(" ")
         : about.model;
       const ip = about.ipAddress;
-      return model + " (" + ip + ")";
+      return hostName === "Untitled"
+        ? model + " (" + ip + ")"
+        : hostName + " (" + model + ", " + ip + ")";
     } else {
       return "";
     }

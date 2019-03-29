@@ -224,7 +224,7 @@ class App extends React.Component {
   };
 
   async scanKnownDevice(ip) {
-    await this.loadAboutAsync(ip);
+    await this.loadDescriptionAsync(ip);
   }
 
   async findDevices(isLocal) {
@@ -245,7 +245,7 @@ class App extends React.Component {
         scanTotal: scanDevices.length
       });
       scanDevices.map(async ip => {
-        await this.loadAboutAsync(ip);
+        await this.loadDescriptionAsync(ip);
       });
     } catch (e) {
       console.log(e);
@@ -271,23 +271,23 @@ class App extends React.Component {
     }
   }
 
-  async loadAboutAsync(ip) {
+  async loadDescriptionAsync(ip) {
     // ip should be a valid IP address.
     const isLocal = ip.split(".").slice(0, 1) === "169";
     const devices = isLocal ? "localDevices" : "remoteDevices";
     try {
-      const aboutURL = "http://" + ip + "/about";
-      const aboutRequest = new Request(aboutURL);
-      const aboutFetch = await fetch(aboutRequest);
-      const aboutJson = await aboutFetch.json();
-      if (aboutJson) {
-        if (!isZiveDevice(aboutJson.macAddress)) return;
+      const descriptionURL = "http://" + ip + "/about";
+      const descriptionRequest = new Request(descriptionURL);
+      const descriptionFetch = await fetch(descriptionRequest);
+      const descriptionJson = await descriptionFetch.json();
+      if (descriptionJson) {
+        if (!isZiveDevice(descriptionJson.macAddress)) return;
         const validDevice = {
-          name: aboutJson.model,
-          serialNumber: aboutJson.serialNumber,
-          ipAddress: aboutJson.ipAddress,
-          macAddress: aboutJson.macAddress,
-          about: aboutJson
+          name: descriptionJson.hostName || "Untitled",
+          model: descriptionJson.model,
+          serialNumber: descriptionJson.serialNumber,
+          ipAddress: descriptionJson.ipAddress,
+          macAddress: descriptionJson.macAddress
         };
         if (
           this.state[devices].filter(device => device.ipAddress === ip)
@@ -337,6 +337,27 @@ class App extends React.Component {
     const dividerKey = ip => {
       return "nav-divider-" + ip.split(".").join("-");
     };
+    const deviceTitle = device => {
+      const name = device.name || "Untitled";
+      const model = device.model.startsWith("Zive")
+        ? device.model
+            .split(" ")
+            .slice(1)
+            .join(" ")
+        : device.model;
+      return name === "Untitled" ? model : name;
+    };
+    const deviceDesc = device => {
+      const name = device.name || "Untitled";
+      const model = device.model.startsWith("Zive")
+        ? device.model
+            .split(" ")
+            .slice(1)
+            .join(" ")
+        : device.model;
+      const ip = device.ipAddress;
+      return name === "Untitled" ? ip : model + " | " + ip;
+    };
     if (devices) {
       return devices.map(device => (
         <React.Fragment key={device.ipAddress}>
@@ -352,23 +373,16 @@ class App extends React.Component {
             <ListItemIcon>
               <TabletIcon />
             </ListItemIcon>
-            <ListItemText primary={device.name} secondary={device.ipAddress} />
+            <ListItemText
+              primary={deviceTitle(device)}
+              secondary={deviceDesc(device)}
+            />
           </ListItem>
         </React.Fragment>
       ));
     } else {
       return <React.Fragment />;
     }
-  }
-
-  getAbout(ip) {
-    if (!ip) return null;
-    const isLocal = ip.split(".").slice(0, 1) === "169";
-    const devices = isLocal ? "localDevices" : "remoteDevices";
-    const matchedDevice = this.state[devices].find(function(device) {
-      return device.ipAddress === ip;
-    });
-    return matchedDevice.about;
   }
 
   channelPage = ({ match: { params } }) => {
