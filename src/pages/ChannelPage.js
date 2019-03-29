@@ -1,6 +1,6 @@
 import "../bootstrap";
 // --- Post bootstrap -----
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
@@ -131,13 +131,14 @@ const parameterLabels = {
 // To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
 //
 // we have to find a way to handle async tasks
-let isMounted = false;
 
-class ChannelPage extends Component {
+class ChannelPage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      ipAddress: "",
+
       about: null,
       channel: null,
       cook: null,
@@ -157,23 +158,38 @@ class ChannelPage extends Component {
 
   componentWillMount() {
     clearInterval(this.timerID);
-    isMounted = false;
   }
 
   componentDidMount() {
-    isMounted = true;
-    this.loadAboutAsync();
-    this.loadChannelAsync();
-    this.timerID = setInterval(() => this.loadChannelAsync, 1000);
+    this.timerID = setInterval(() => this.loadChannelAsync(), 5000);
+  }
+
+  componentDidUpdate() {
+    if (!this.state.about) this.loadAboutAsync();
+    if (!this.state.channel) this.loadChannelAsync();
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.ipAddress !== nextProps.ipAddress) {
+      const ipAddress = nextProps.ipAddress;
+      return {
+        ipAddress: ipAddress,
+        about: null,
+        channel: null,
+        cook: null
+      };
+    } else {
+      return null;
+    }
   }
 
   async loadAboutAsync() {
-    const { ipAddress } = this.props;
+    const { ipAddress } = this.state;
     try {
       const aboutURL = "http://" + ipAddress + "/about";
       const aboutFetch = await fetch(aboutURL);
       const aboutJson = await aboutFetch.json();
-      if (aboutJson && isMounted) {
+      if (aboutJson) {
         this.setState({
           about: aboutJson
         });
@@ -184,7 +200,7 @@ class ChannelPage extends Component {
   }
 
   async loadChannelAsync() {
-    const { ipAddress } = this.props;
+    const { ipAddress } = this.state;
     try {
       const channelURL = "http://" + ipAddress + "/channel";
       const channelFetch = await fetch(channelURL);
@@ -216,12 +232,12 @@ class ChannelPage extends Component {
           voltage: channelJson.auxVoltage,
           temperature: channelJson.auxTemperature
         };
-        if (this.state.auxData.length < 200 && isMounted) {
+        if (this.state.auxData.length < 200) {
           this.setState({
             channel: channelJson,
             auxData: [...this.state.auxData, newAuxItem]
           });
-        } else if (isMounted) {
+        } else {
           // eslint-disable-next-line
           const [first, ...rest] = this.state.auxData;
           this.setState({
@@ -250,12 +266,12 @@ class ChannelPage extends Component {
   }
 
   async loadCookAsync() {
-    const { ipAddress } = this.props;
+    const { ipAddress } = this.state;
     try {
       const cookURL = "http://" + ipAddress + "/cook";
       const cookFetch = await fetch(cookURL);
       const cookJson = await cookFetch.json();
-      if (cookJson && isMounted) {
+      if (cookJson) {
         cookJson.started.moment = moment(
           cookJson.started.ticks - dateTimeOffset
         );
@@ -272,7 +288,7 @@ class ChannelPage extends Component {
   async loadSamplesAsync(index) {
     try {
       const samplesURL =
-        "http://" + this.props.ipAddress + "/sample?" + index.toString();
+        "http://" + this.state.ipAddress + "/sample?" + index.toString();
       const samplesFetch = await fetch(samplesURL);
       const samplesJson = await samplesFetch.json();
       if (
@@ -280,8 +296,7 @@ class ChannelPage extends Component {
         this.state.cook &&
         this.state.cook.data &&
         index >= 0 &&
-        index < this.state.cook.data.length &&
-        isMounted
+        index < this.state.cook.data.length
       ) {
         // Update state: cook[index].samples
         const data = this.state.cook.data.map((item, j) => {

@@ -362,27 +362,30 @@
       });
 
       // https://developer.mozilla.org/en-US/docs/Web/API/Request
-      const isDemo = true;
+      const isDemo = window.location.protocol === "file:";
       const aboutURL = isDemo
         ? new Request(
             "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/about.json"
           )
         : new Request("/about");
-      const channelURL = isDemo
-        ? new Request(
-            "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/channel.json"
-          )
-        : new Request("/channel");
-      const cookURL = isDemo
-        ? new Request(
-            "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/cook.json"
-          )
-        : new Request("/cook");
-      const samplesURL = isDemo
-        ? new Request(
-            "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/samples.json"
-          )
-        : new Request("/samples?index=1");
+      const channelURL =
+        isDemo || true
+          ? new Request(
+              "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/channel.json"
+            )
+          : new Request("/channel");
+      const cookURL =
+        isDemo || true
+          ? new Request(
+              "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/cook.json"
+            )
+          : new Request("/cook");
+      const samplesURL =
+        isDemo || true
+          ? new Request(
+              "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/samples.json"
+            )
+          : new Request("/samples?index=1");
       const startURL = new Request("/start"); // with parameters
       const stopURL = new Request("/stop");
 
@@ -445,6 +448,7 @@
         { value: 7, label: "400uA" }
       ];
       const aboutLabels = {
+        hostName: "Host Name",
         model: "Model",
         description: "Description",
         frequencyRanges: "Frequency Ranges",

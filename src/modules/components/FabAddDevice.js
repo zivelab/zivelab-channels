@@ -19,8 +19,8 @@ import { validateIPaddress } from "../utils/net";
 import { getCookie } from "../utils/helpers";
 
 function getLastKnownDevice(givenDevice) {
-  const device = getCookie("lastKnownDevice");
-  return device === "" ? givenDevice : device;
+  const lastKnwonDevice = getCookie("lastKnownDevice");
+  return lastKnwonDevice === "" ? givenDevice : lastKnwonDevice;
 }
 
 class FabAddDevice extends Component {
@@ -33,25 +33,25 @@ class FabAddDevice extends Component {
       validKnownDevice: false
     };
 
-    this.initialize = this.initialize.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
-  componentWillMount() {
-    this.initialize(this.props.knownDevice);
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.knownDevice !== nextProps.knownDevice) {
+      const givenDevice = nextProps.knownDevice;
+      const knownDevice = getLastKnownDevice(givenDevice);
+      const isValid = validateIPaddress(knownDevice);
+      return {
+        knownDevice: knownDevice,
+        validKnownDevice: isValid
+      };
+    } else {
+      return null;
+    }
   }
-
-  initialize = givenDevice => {
-    const knownDevice = getLastKnownDevice(givenDevice);
-    const isValid = validateIPaddress(knownDevice);
-    this.setState({
-      knownDevice: knownDevice,
-      validKnownDevice: isValid
-    });
-  };
 
   handleOpen = () => {
     this.setState({ open: true });
