@@ -169,9 +169,6 @@ class ChannelPage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("componentDidUpdate entered");
-    console.log("prevState: " + prevState.ipAddress);
-    console.log("currentIPAddress: " + this.state.ipAddress);
     if (prevState.ipAddress !== this.state.ipAddress) {
       this.loadAboutAsync();
       this.loadChannelAsync();
