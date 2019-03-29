@@ -151,10 +151,9 @@ class ChannelPage extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.ipAddress !== nextProps.ipAddress) {
-      const ipAddress = nextProps.ipAddress;
-      currentIPAddress = ipAddress;
+      currentIPAddress = nextProps.ipAddress;
       return {
-        ipAddress: ipAddress,
+        ipAddress: nextProps.ipAddress,
         about: null,
         channel: null,
         cook: null
@@ -170,10 +169,11 @@ class ChannelPage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.about === null) {
+    console.log("componentDidUpdate entered");
+    console.log("prevState: " + prevState.ipAddress);
+    console.log("currentIPAddress: " + this.state.ipAddress);
+    if (prevState.ipAddress !== this.state.ipAddress) {
       this.loadAboutAsync();
-    }
-    if (prevState.channel === null) {
       this.loadChannelAsync();
     }
   }

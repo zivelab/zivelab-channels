@@ -224,7 +224,7 @@ class App extends React.Component {
   };
 
   async scanKnownDevice(ip) {
-    await this.loadDescriptionAsync(ip);
+    await this.loadDescriptionAsync(ip, true);
   }
 
   async findDevices(isLocal) {
@@ -271,7 +271,7 @@ class App extends React.Component {
     }
   }
 
-  async loadDescriptionAsync(ip) {
+  async loadDescriptionAsync(ip, showMessage = false) {
     // ip should be a valid IP address.
     const isLocal = ip.split(".").slice(0, 1) === "169";
     const devices = isLocal ? "localDevices" : "remoteDevices";
@@ -308,6 +308,11 @@ class App extends React.Component {
           return device !== invalidDevice;
         })
       });
+      if (showMessage) {
+        const message =
+          "Can't find device. Make sure your device is turned on and connected to the network.";
+        this.setState({ openSnackbar: true, snackbarMessage: message });
+      }
     } finally {
       this.setState({ scanCompleted: this.state.scanCompleted + 1 });
     }
