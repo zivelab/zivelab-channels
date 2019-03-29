@@ -14,22 +14,24 @@ const styles = theme => ({
   }
 });
 
-function Markdown(props) {
-  const { classes, markdown } = props;
-  const contents = markdown ? getContents(markdown) : [""];
-  return (
-    <div>
-      {contents.map(content => {
-        return (
-          <MarkdownElement
-            className={classes.markdownElement}
-            key={content}
-            text={content}
-          />
-        );
-      })}
-    </div>
-  );
+class Markdown extends React.Component {
+  render() {
+    const { classes, markdown } = this.props;
+    const contents = markdown ? getContents(markdown) : [""];
+    return (
+      <div>
+        {contents.map(content => {
+          return (
+            <MarkdownElement
+              className={classes.markdownElement}
+              key={content}
+              text={content}
+            />
+          );
+        })}
+      </div>
+    );
+  }
 }
 
 Markdown.propTypes = {

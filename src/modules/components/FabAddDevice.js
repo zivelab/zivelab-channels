@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 import Button from "@material-ui/core/Button";
@@ -23,21 +23,12 @@ function getLastKnownDevice(givenDevice) {
   return lastKnwonDevice === "" ? givenDevice : lastKnwonDevice;
 }
 
-class FabAddDevice extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      open: false,
-      knownDevice: "",
-      validKnownDevice: false
-    };
-
-    this.handleOpen = this.handleOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
+class FabAddDevice extends React.Component {
+  state = {
+    open: false,
+    knownDevice: "",
+    validKnownDevice: false
+  };
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.knownDevice !== nextProps.knownDevice) {

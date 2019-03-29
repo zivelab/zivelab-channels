@@ -255,18 +255,20 @@ const styles = theme => ({
   }
 });
 
-function MarkdownElement(props) {
-  const { classes, className, text, ...other } = props;
+class MarkdownElement extends React.Component {
+  render() {
+    const { classes, className, text, ...other } = this.props;
 
-  /* eslint-disable react/no-danger */
-  return (
-    <div
-      className={clsx(classes.root, "markdown-body", className)}
-      dangerouslySetInnerHTML={{ __html: marked(text, markedOptions) }}
-      {...other}
-    />
-  );
-  /* eslint-enable */
+    /* eslint-disable react/no-danger */
+    return (
+      <div
+        className={clsx(classes.root, "markdown-body", className)}
+        dangerouslySetInnerHTML={{ __html: marked(text, markedOptions) }}
+        {...other}
+      />
+    );
+    /* eslint-enable */
+  }
 }
 
 MarkdownElement.propTypes = {
