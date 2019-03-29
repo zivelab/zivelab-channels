@@ -276,6 +276,7 @@ class App extends React.Component {
     const isLocal = ip.split(".").slice(0, 1) === "169";
     const devices = isLocal ? "localDevices" : "remoteDevices";
     try {
+      // [TODO] We really want to '/description', but we will do later
       const descriptionURL = "http://" + ip + "/about";
       const descriptionRequest = new Request(descriptionURL);
       const descriptionFetch = await fetch(descriptionRequest);

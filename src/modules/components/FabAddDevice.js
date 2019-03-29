@@ -27,17 +27,17 @@ class FabAddDevice extends React.Component {
   state = {
     open: false,
     knownDevice: "",
-    validKnownDevice: false
+    isValidDevice: false
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.knownDevice !== nextProps.knownDevice) {
+    if (!prevState.open && prevState.knownDevice !== nextProps.knownDevice) {
       const givenDevice = nextProps.knownDevice;
       const knownDevice = getLastKnownDevice(givenDevice);
       const isValid = validateIPaddress(knownDevice);
       return {
         knownDevice: knownDevice,
-        validKnownDevice: isValid
+        isValidDevice: isValid
       };
     } else {
       return null;
@@ -55,8 +55,10 @@ class FabAddDevice extends React.Component {
   handleChange = event => {
     const newValue = event.target.value;
     const isValid = validateIPaddress(newValue);
-    console.log(newValue);
-    this.setState({ knownDevice: newValue, validKnownDevice: isValid });
+    this.setState({
+      knownDevice: newValue,
+      isValidDevice: isValid
+    });
   };
 
   handleClick = () => {
@@ -70,7 +72,7 @@ class FabAddDevice extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { open, knownDevice, validKnownDevice } = this.state;
+    const { open, knownDevice, isValidDevice } = this.state;
     return (
       <React.Fragment>
         <Tooltip
@@ -100,7 +102,7 @@ class FabAddDevice extends React.Component {
               Please enter the known IP address of your device here.
             </DialogContentText>
             <br />
-            <FormControl required error={!validKnownDevice}>
+            <FormControl required error={!isValidDevice}>
               <InputLabel>IP address</InputLabel>
               <Input
                 autoFocus
@@ -117,7 +119,7 @@ class FabAddDevice extends React.Component {
             <Button
               onClick={this.handleClick}
               color="primary"
-              disabled={!validKnownDevice}
+              disabled={!isValidDevice}
             >
               Add
             </Button>
