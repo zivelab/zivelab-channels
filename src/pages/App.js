@@ -4,7 +4,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
-import { HashRouter as Router, Route, Link, Switch } from "react-router-dom";
+import {
+  HashRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect
+} from "react-router-dom";
 import { connect } from "react-redux";
 
 // controls
@@ -366,21 +372,13 @@ class App extends React.Component {
   }
 
   channelPage = ({ match: { params } }) => {
-    return (
-      <React.Fragment>
-        <ChannelPage ipAddress={params.id} />
-      </React.Fragment>
-    );
+    return <ChannelPage ipAddress={params.id} />;
   };
 
-  gettingStartedLink = props => <Link to="/" {...props} />;
+  gettingStartedLink = props => <Link to="/getting-started" {...props} />;
 
   gettingStartedPage = () => {
-    return (
-      <React.Fragment>
-        <GettingStartedPage />
-      </React.Fragment>
-    );
+    return <GettingStartedPage />;
   };
 
   componentDidMount = () => {
@@ -564,7 +562,12 @@ class App extends React.Component {
           >
             {/*<div className={classes.drawerHeader} />*/}
             <Switch>
-              <Route path="/" exact component={this.gettingStartedPage} />
+              <Redirect path="/" exact to="/getting-started" />
+              <Route
+                path="/getting-started"
+                exact
+                component={this.gettingStartedPage}
+              />
               <Route path="/device/:id" exact component={this.channelPage} />
             </Switch>
           </main>
