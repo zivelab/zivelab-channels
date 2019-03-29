@@ -16,7 +16,6 @@
     "prismjs": "^1.16.0",
     "prop-types": "latest",
     "react": "latest",
-    "react-document-title": "^2.0.3",
     "react-dom": "latest",
     "react-json-view": "^1.19.1",
     "react-redux": "^6.0.1",

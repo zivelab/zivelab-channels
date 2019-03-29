@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
-import DocumentTitle from "react-document-title";
 import { connect } from "react-redux";
 import { ACTION_TYPES } from "../constants";
 import compose from "../utils/compose";
@@ -21,32 +20,36 @@ const styles = theme => ({
   }
 });
 
-// [TODO]
-// Warning: Cannot update during an existing state transition (such as within `render`).
-// Render methods should be a pure function of props and state.
-//
-// We have to find a way how to handle this warning.
-// is it solved?
-function dispatchTitle(props, title) {
-  props.dispatch({
-    type: ACTION_TYPES.TITLE_CHANGE,
-    payload: {
-      title
-    }
-  });
-}
+class AppContent extends React.Component {
+  getDocTitle = title => {
+    return title ? title + " - Zive Channels" : "Zive Channels";
+  };
 
-function AppContent(props) {
-  const { className, classes, title, children, reduxTitle } = props;
-  const docTitle = title ? title + " - Zive Channels" : "Zive Channels";
-  if (docTitle !== reduxTitle) {
-    dispatchTitle(props, docTitle);
+  titleSideEffect = reduxTitle => {
+    document.title = reduxTitle;
+  };
+
+  dispatchTitle = title => {
+    this.props.dispatch({
+      type: ACTION_TYPES.TITLE_CHANGE,
+      payload: {
+        title
+      }
+    });
+  };
+
+  componentDidUpdate() {
+    const docTitle = this.getDocTitle(this.props.title);
+    if (this.props.reduxTitle !== docTitle) {
+      this.titleSideEffect(docTitle);
+      this.dispatchTitle(docTitle);
+    }
   }
-  return (
-    <DocumentTitle title={docTitle}>
-      <div className={clsx(classes.root, className)}>{children}</div>
-    </DocumentTitle>
-  );
+
+  render() {
+    const { className, classes, children } = this.props;
+    return <div className={clsx(classes.root, className)}>{children}</div>;
+  }
 }
 
 AppContent.propTypes = {
