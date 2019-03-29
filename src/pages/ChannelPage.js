@@ -3,7 +3,7 @@ import "../bootstrap";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-
+import Typography from "@material-ui/core/Typography";
 import ReactJson from "react-json-view";
 import moment from "moment";
 
@@ -317,8 +317,8 @@ class ChannelPage extends Component {
   };
 
   // [TODO]
-  // color of contents are not changed when theme changed.
-  // use Typography.
+  // Not yet aply theme on react-json-view.
+  //
   render() {
     const { classes } = this.props;
     const { about, channel, cook } = this.state;
@@ -326,13 +326,20 @@ class ChannelPage extends Component {
     return (
       <AppContent className={classes.root} title={title}>
         <div className={classes.content}>
-          <h2>About</h2>
+          <Typography variant="h4" gutterBottom>
+            About
+          </Typography>
+          <p />
           {about ? (
             <ReactJson src={about} displayDataTypes={false} collapsed={true} />
           ) : (
             <div />
           )}
-          <h2>Channel</h2>
+          <p />
+          <Typography variant="h4" gutterBottom>
+            Channel
+          </Typography>
+          <p />
           {channel ? (
             <ReactJson
               src={channel}
@@ -342,7 +349,11 @@ class ChannelPage extends Component {
           ) : (
             <div />
           )}
-          <h2>Cook</h2>
+          <p />
+          <Typography variant="h4" gutterBottom>
+            Cook
+          </Typography>
+          <p />
           {cook ? (
             <ReactJson src={cook} displayDataTypes={false} collapsed={true} />
           ) : (

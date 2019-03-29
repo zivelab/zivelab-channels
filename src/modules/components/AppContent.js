@@ -44,7 +44,7 @@ function AppContent(props) {
   }
   return (
     <DocumentTitle title={docTitle}>
-      <main className={clsx(classes.root, className)}>{children}</main>
+      <div className={clsx(classes.root, className)}>{children}</div>
     </DocumentTitle>
   );
 }
