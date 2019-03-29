@@ -16,6 +16,12 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 
 import { validateIPaddress } from "../utils/net";
+import { getCookie } from "../utils/helpers";
+
+function getLastKnownDevice(givenDevice) {
+  const device = getCookie("lastKnownDevice");
+  return device === "" ? givenDevice : device;
+}
 
 class FabAddDevice extends Component {
   constructor(props) {
@@ -23,8 +29,8 @@ class FabAddDevice extends Component {
 
     this.state = {
       open: false,
-      knownDevice: "192.168.0.15",
-      validKnownDevice: true
+      knownDevice: "",
+      validKnownDevice: false
     };
 
     this.initialize = this.initialize.bind(this);
@@ -38,7 +44,8 @@ class FabAddDevice extends Component {
     this.initialize(this.props.knownDevice);
   }
 
-  initialize = knownDevice => {
+  initialize = givenDevice => {
+    const knownDevice = getLastKnownDevice(givenDevice);
     const isValid = validateIPaddress(knownDevice);
     this.setState({
       knownDevice: knownDevice,
@@ -62,6 +69,10 @@ class FabAddDevice extends Component {
   };
 
   handleClick = () => {
+    document.cookie = `lastKnownDevice=${
+      this.state.knownDevice
+    };path=/;max-age=31536000`;
+
     this.handleClose();
     this.props.onClick(this.state.knownDevice);
   };

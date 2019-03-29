@@ -167,7 +167,7 @@ class App extends React.Component {
     localIP: null,
     localDevices: [],
     remoteDevices: [],
-    knownDevice: "192.168.0.15",
+    knownDevice: "",
 
     scanDevices: false,
     isLocalScan: false,
