@@ -3,11 +3,13 @@ import "../bootstrap";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
 import Typography from "@material-ui/core/Typography";
 import ReactJson from "react-json-view";
 import moment from "moment";
 
 import AppContent from "../modules/components/AppContent";
+import compose from "../modules/utils/compose";
 
 const styles = theme => ({
   root: {
@@ -320,9 +322,11 @@ class ChannelPage extends Component {
   // Not yet aply theme on react-json-view.
   //
   render() {
-    const { classes } = this.props;
+    const { classes, reduxTheme } = this.props;
     const { about, channel, cook } = this.state;
     const title = this.getTitle(about);
+    const theme =
+      reduxTheme.paletteType === "light" ? "rjv-default" : "monokai";
     return (
       <AppContent className={classes.root} title={title}>
         <div className={classes.content}>
@@ -331,7 +335,12 @@ class ChannelPage extends Component {
           </Typography>
           <p />
           {about ? (
-            <ReactJson src={about} displayDataTypes={false} collapsed={true} />
+            <ReactJson
+              src={about}
+              displayDataTypes={false}
+              collapsed={true}
+              theme={theme}
+            />
           ) : (
             <div />
           )}
@@ -345,6 +354,7 @@ class ChannelPage extends Component {
               src={channel}
               displayDataTypes={false}
               collapsed={true}
+              theme={theme}
             />
           ) : (
             <div />
@@ -355,7 +365,12 @@ class ChannelPage extends Component {
           </Typography>
           <p />
           {cook ? (
-            <ReactJson src={cook} displayDataTypes={false} collapsed={true} />
+            <ReactJson
+              src={cook}
+              displayDataTypes={false}
+              collapsed={true}
+              theme={theme}
+            />
           ) : (
             <div />
           )}
@@ -367,7 +382,13 @@ class ChannelPage extends Component {
 
 ChannelPage.propTypes = {
   classes: PropTypes.object.isRequired,
-  ipAddress: PropTypes.string.isRequired
+  ipAddress: PropTypes.string.isRequired,
+  reduxTheme: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ChannelPage);
+export default compose(
+  connect(state => ({
+    reduxTheme: state.theme
+  })),
+  withStyles(styles)
+)(ChannelPage);

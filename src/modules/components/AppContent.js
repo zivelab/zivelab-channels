@@ -38,9 +38,15 @@ class AppContent extends React.Component {
     });
   };
 
+  componentDidMount() {
+    const docTitle = this.getDocTitle(this.props.title);
+    this.titleSideEffect(docTitle);
+  }
+
   componentDidUpdate() {
     const docTitle = this.getDocTitle(this.props.title);
-    if (this.props.reduxTitle !== docTitle) {
+    const { reduxTitle } = this.props;
+    if (reduxTitle !== docTitle) {
       this.titleSideEffect(docTitle);
       this.dispatchTitle(docTitle);
     }
