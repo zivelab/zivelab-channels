@@ -136,28 +136,18 @@ const parameterLabels = {
 let currentIPAddress = null;
 
 class ChannelPage extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    ipAddress: "",
 
-    this.state = {
-      ipAddress: "",
+    about: null,
+    channel: null,
+    cook: null,
 
-      about: null,
-      channel: null,
-      cook: null,
+    parameters: defaultParameters,
+    activeIndex: -1,
 
-      parameters: defaultParameters,
-      activeIndex: -1,
-
-      auxData: []
-    };
-
-    this.loadAboutAsync = this.loadAboutAsync.bind(this);
-    this.loadChannelAsync = this.loadChannelAsync.bind(this);
-    this.loadCookAsync = this.loadCookAsync.bind(this);
-    this.loadSamplesAsync = this.loadSamplesAsync.bind(this);
-    this.getTitle = this.getTitle.bind(this);
-  }
+    auxData: []
+  };
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.ipAddress !== nextProps.ipAddress) {

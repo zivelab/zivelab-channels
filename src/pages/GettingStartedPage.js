@@ -20,13 +20,9 @@ const styles = theme => ({
 });
 
 class GettingStartedPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      md: ""
-    };
-  }
+  state = {
+    md: ""
+  };
 
   componentWillMount() {
     fetch(Page)
