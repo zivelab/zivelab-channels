@@ -61,6 +61,7 @@ const states = {
 //  { value: 7, label: "400uA" }
 //];
 //const aboutLabels = {
+//  hostname: "Host Name",
 //  model: "Model",
 //  description: "Description",
 //  frequencyRanges: "Frequency Ranges",
@@ -132,6 +133,8 @@ const parameterLabels = {
 //
 // we have to find a way to handle async tasks
 
+let currentIPAddress = null;
+
 class ChannelPage extends React.Component {
   constructor(props) {
     super(props);
@@ -156,22 +159,10 @@ class ChannelPage extends React.Component {
     this.getTitle = this.getTitle.bind(this);
   }
 
-  componentWillMount() {
-    clearInterval(this.timerID);
-  }
-
-  componentDidMount() {
-    this.timerID = setInterval(() => this.loadChannelAsync(), 5000);
-  }
-
-  componentDidUpdate() {
-    if (!this.state.about) this.loadAboutAsync();
-    if (!this.state.channel) this.loadChannelAsync();
-  }
-
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.ipAddress !== nextProps.ipAddress) {
       const ipAddress = nextProps.ipAddress;
+      currentIPAddress = ipAddress;
       return {
         ipAddress: ipAddress,
         about: null,
@@ -183,8 +174,27 @@ class ChannelPage extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.loadAboutAsync();
+    this.loadChannelAsync();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.about === null) {
+      this.loadAboutAsync();
+    }
+    if (prevState.channel === null) {
+      this.loadChannelAsync();
+    }
+  }
+
+  componentWillUnmount() {
+    currentIPAddress = null;
+  }
+
   async loadAboutAsync() {
     const { ipAddress } = this.state;
+    if (ipAddress !== currentIPAddress) return;
     try {
       const aboutURL = "http://" + ipAddress + "/about";
       const aboutFetch = await fetch(aboutURL);
@@ -201,6 +211,7 @@ class ChannelPage extends React.Component {
 
   async loadChannelAsync() {
     const { ipAddress } = this.state;
+    if (ipAddress !== currentIPAddress) return;
     try {
       const channelURL = "http://" + ipAddress + "/channel";
       const channelFetch = await fetch(channelURL);
@@ -267,6 +278,7 @@ class ChannelPage extends React.Component {
 
   async loadCookAsync() {
     const { ipAddress } = this.state;
+    if (ipAddress !== currentIPAddress) return;
     try {
       const cookURL = "http://" + ipAddress + "/cook";
       const cookFetch = await fetch(cookURL);
@@ -286,20 +298,21 @@ class ChannelPage extends React.Component {
   }
 
   async loadSamplesAsync(index) {
+    const { ipAddress, cook } = this.state;
+    if (ipAddress !== currentIPAddress) return;
     try {
-      const samplesURL =
-        "http://" + this.state.ipAddress + "/sample?" + index.toString();
+      const samplesURL = "http://" + ipAddress + "/sample?" + index.toString();
       const samplesFetch = await fetch(samplesURL);
       const samplesJson = await samplesFetch.json();
       if (
         samplesJson &&
-        this.state.cook &&
-        this.state.cook.data &&
+        cook &&
+        cook.data &&
         index >= 0 &&
-        index < this.state.cook.data.length
+        index < cook.data.length
       ) {
         // Update state: cook[index].samples
-        const data = this.state.cook.data.map((item, j) => {
+        const data = cook.data.map((item, j) => {
           if (j === index) {
             return (item.samples = samplesJson);
           } else {
@@ -353,7 +366,7 @@ class ChannelPage extends React.Component {
             <ReactJson
               src={about}
               displayDataTypes={false}
-              collapsed={true}
+              collapsed={false}
               theme={theme}
             />
           ) : (
@@ -361,7 +374,7 @@ class ChannelPage extends React.Component {
           )}
           <p />
           <Typography variant="h4" gutterBottom>
-            Channel
+            Channel (demo)
           </Typography>
           <p />
           {channel ? (
@@ -376,7 +389,7 @@ class ChannelPage extends React.Component {
           )}
           <p />
           <Typography variant="h4" gutterBottom>
-            Cook
+            Cook (demo)
           </Typography>
           <p />
           {cook ? (
