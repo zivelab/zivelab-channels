@@ -365,7 +365,18 @@ class App extends React.Component {
       return name === "Untitled" ? ip : model + " | " + ip;
     };
     if (devices) {
-      return devices.map(device => (
+      const sorted = devices.sort(function(a, b) {
+        const a_ip = a.ipAddress
+          .split(".")
+          .map(num => `000${num}`.slice(-3))
+          .join("");
+        const b_ip = b.ipAddress
+          .split(".")
+          .map(num => `000${num}`.slice(-3))
+          .join("");
+        return a_ip - b_ip;
+      });
+      return sorted.map(device => (
         <React.Fragment key={device.ipAddress}>
           <Divider variant="inset" key={dividerKey(device.ipAddress)} />
           <ListItem
