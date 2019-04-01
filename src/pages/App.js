@@ -96,9 +96,6 @@ const styles = theme => ({
     marginLeft: 12,
     marginRight: 20
   },
-  alertClose: {
-    padding: theme.spacing.unit / 2
-  },
   hide: {
     display: "none"
   },

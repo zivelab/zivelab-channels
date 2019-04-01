@@ -1,8 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
+import compose from "../utils/compose";
+
+const styles = theme => ({
+  close: {
+    padding: theme.spacing.unit / 2
+  }
+});
 
 class Alert extends React.Component {
   render() {
@@ -19,7 +27,7 @@ class Alert extends React.Component {
             aria-label="Close"
             size="small"
             color="inherit"
-            className={classes.alertClose}
+            className={classes.close}
             onClick={onClose}
           >
             <CloseIcon />
@@ -40,4 +48,4 @@ Alert.propTypes = {
   onClose: PropTypes.func.isRequired
 };
 
-export default Alert;
+export default compose(withStyles(styles))(Alert);
