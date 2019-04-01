@@ -88,7 +88,7 @@ class Notifications extends React.Component {
           </Button>
         }
         open={open}
-        autoHideDuration={20e3}
+        autoHideDuration={2000}
         onClose={this.handleClose}
         onExited={this.handleMessage}
       />

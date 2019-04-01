@@ -23,7 +23,6 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import Snackbar from "@material-ui/core/Snackbar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
@@ -31,7 +30,6 @@ import Typography from "@material-ui/core/Typography";
 // Icons
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import CloseIcon from "@material-ui/icons/Close";
 import DeviceHubIcon from "@material-ui/icons/DeviceHub";
 import GithubIcon from "@material-ui/docs/svgIcons/GitHub";
 import LightbulbOutlineIcon from "@material-ui/docs/svgIcons/LightbulbOutline";
@@ -48,6 +46,7 @@ import {
 } from "../modules/utils/net";
 
 // Components
+import Alerts from "../modules/components/Alerts";
 import FabAddDevice from "../modules/components/FabAddDevice";
 import Notifications from "../modules/components/Notifications";
 
@@ -96,6 +95,9 @@ const styles = theme => ({
   menuButton: {
     marginLeft: 12,
     marginRight: 20
+  },
+  alertsClose: {
+    padding: theme.spacing.unit / 2
   },
   hide: {
     display: "none"
@@ -199,7 +201,7 @@ class App extends React.Component {
     });
   };
 
-  handleSnackbarClose = (event, reason) => {
+  handleAlertsClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
@@ -602,29 +604,11 @@ class App extends React.Component {
               <Route path="/device/:id" exact component={this.channelPage} />
             </Switch>
           </main>
-          <Snackbar
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left"
-            }}
+          <Alerts
+            classes={classes}
             open={openSnackbar}
-            autoHideDuration={2000}
-            onClose={this.handleSnackbarClose}
-            ContentProps={{
-              "aria-describedby": "message-id"
-            }}
-            message={<span id="message-id">{snackbarMessage}</span>}
-            action={[
-              <IconButton
-                key="close"
-                aria-label="Close"
-                color="inherit"
-                className={classes.close}
-                onClick={this.handleSnackbarClose}
-              >
-                <CloseIcon />
-              </IconButton>
-            ]}
+            message={snackbarMessage}
+            onClose={this.handleAlertsClose}
           />
         </div>
       </Router>
