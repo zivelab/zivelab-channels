@@ -46,9 +46,9 @@ import {
 } from "../modules/utils/net";
 
 // Components
-import Alert from "../modules/components/Alert";
 import FabAddDevice from "../modules/components/FabAddDevice";
 import Notifications from "../modules/components/Notifications";
+import Toasts from "../modules/components/Toasts";
 
 // Pages
 import GettingStartedPage from "./GettingStartedPage";
@@ -163,10 +163,12 @@ if (process.browser) {
 }
 
 class App extends React.Component {
+  queue = [];
+
   state = {
     openDrawer: false,
-    openAlert: false,
-    alertMessage: "",
+    openMessage: false,
+    messageInfo: {},
     selectedKey: gettingStartedKey,
 
     localIP: null,
@@ -198,11 +200,37 @@ class App extends React.Component {
     });
   };
 
-  handleAlertClose = (event, reason) => {
+  processQueue = () => {
+    if (this.queue.length > 0) {
+      this.setState({
+        messageInfo: this.queue.shift(),
+        openMessage: true
+      });
+    }
+  };
+
+  sendMessage = message => {
+    this.queue.push({
+      message,
+      key: new Date().getTime()
+    });
+
+    if (this.state.openMessage) {
+      this.setState({ openMessage: false });
+    } else {
+      this.processQueue();
+    }
+  };
+
+  handleMessageClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    this.setState({ openAlert: false });
+    this.setState({ openMessage: false });
+  };
+
+  handleMessageExited = () => {
+    this.processQueue();
   };
 
   handleListItemClick = (event, key) => {
@@ -231,7 +259,8 @@ class App extends React.Component {
       const message = isLocal
         ? "Scanning local devices..."
         : "Scanning remote devices...";
-      this.setState({ openAlert: true, alertMessage: message });
+      this.sendMessage(message);
+
       if (!isLocal && !this.state.localIP) {
         await this.getLocalIPAddressAsync();
       }
@@ -247,7 +276,7 @@ class App extends React.Component {
         await this.loadDescriptionAsync(ip);
       });
     } catch (e) {
-      console.log(e);
+      //console.log(e);
     }
   }
 
@@ -266,7 +295,7 @@ class App extends React.Component {
         });
       }
     } catch (e) {
-      console.log(e);
+      //console.log(e);
     }
   }
 
@@ -310,7 +339,7 @@ class App extends React.Component {
       if (showMessage) {
         const message =
           "Can't find device. Make sure your device is turned on and connected to the network.";
-        this.setState({ openAlert: true, alertMessage: message });
+        this.sendMessage(message);
       }
     } finally {
       this.setState({ scanCompleted: this.state.scanCompleted + 1 });
@@ -417,7 +446,7 @@ class App extends React.Component {
 
   render() {
     const { classes, reduxTheme, reduxTitle } = this.props;
-    const { openDrawer, openAlert, alertMessage } = this.state;
+    const { openDrawer, openMessage, messageInfo } = this.state;
     const { localIP, localDevices, remoteDevices } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
 
@@ -601,11 +630,11 @@ class App extends React.Component {
               <Route path="/device/:id" exact component={this.channelPage} />
             </Switch>
           </main>
-          <Alert
-            classes={classes}
-            open={openAlert}
-            message={alertMessage}
-            onClose={this.handleAlertClose}
+          <Toasts
+            open={openMessage}
+            messageInfo={messageInfo}
+            onClose={this.handleMessageClose}
+            onExited={this.handleMessageExited}
           />
         </div>
       </Router>

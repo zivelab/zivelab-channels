@@ -11,15 +11,19 @@ const styles = theme => ({
   }
 });
 
-class Alert extends React.Component {
+class Toasts extends React.Component {
   render() {
-    const { classes, message, open, onClose } = this.props;
+    const { classes, messageInfo, open, onClose, onExited } = this.props;
     return (
       <Snackbar
-        key="alerts"
+        key={messageInfo.key}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        open={open}
+        autoHideDuration={1000}
+        onClose={onClose}
+        onExited={onExited}
         ContentProps={{ "aria-describedby": "alert-message" }}
-        message={<span id="message-id">{message}</span>}
+        message={<span id="message-id">{messageInfo.message}</span>}
         action={[
           <IconButton
             key="close"
@@ -32,19 +36,17 @@ class Alert extends React.Component {
             <CloseIcon />
           </IconButton>
         ]}
-        open={open}
-        autoHideDuration={2000}
-        onClose={onClose}
       />
     );
   }
 }
 
-Alert.propTypes = {
+Toasts.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
-  message: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired
+  messageInfo: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onExited: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(Alert);
+export default withStyles(styles)(Toasts);
