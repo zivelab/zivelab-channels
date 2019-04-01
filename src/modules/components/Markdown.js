@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
-import compose from "../utils/compose";
 import MarkdownElement from "./MarkdownElement";
 import { getContents } from "../utils/parseMarkdown";
 
@@ -39,4 +38,4 @@ Markdown.propTypes = {
   markdown: PropTypes.string
 };
 
-export default compose(withStyles(styles))(Markdown);
+export default withStyles(styles)(Markdown);

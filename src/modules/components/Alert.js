@@ -4,7 +4,6 @@ import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
-import compose from "../utils/compose";
 
 const styles = theme => ({
   close: {
@@ -48,4 +47,4 @@ Alert.propTypes = {
   onClose: PropTypes.func.isRequired
 };
 
-export default compose(withStyles(styles))(Alert);
+export default withStyles(styles)(Alert);
