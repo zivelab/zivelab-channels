@@ -46,9 +46,9 @@ import {
 } from "../modules/utils/net";
 
 // Components
+import Banners from "../modules/components/Banners";
 import FabAddDevice from "../modules/components/FabAddDevice";
 import Notifications from "../modules/components/Notifications";
-import Toasts from "../modules/components/Toasts";
 
 // Pages
 import GettingStartedPage from "./GettingStartedPage";
@@ -461,7 +461,7 @@ class App extends React.Component {
       <Router>
         <div className={classes.root}>
           <CssBaseline />
-          <Notifications />
+          <Banners />
           <AppBar
             position="fixed"
             className={classNames(classes.appBar, {
@@ -630,7 +630,7 @@ class App extends React.Component {
               <Route path="/device/:id" exact component={this.channelPage} />
             </Switch>
           </main>
-          <Toasts
+          <Notifications
             open={openMessage}
             messageInfo={messageInfo}
             onClose={this.handleMessageClose}

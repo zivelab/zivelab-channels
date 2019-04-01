@@ -1,99 +1,52 @@
-/* eslint-disable react/no-danger */
-
-import "isomorphic-fetch";
 import React from "react";
-import Button from "@material-ui/core/Button";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
-import sleep from "../waterfall/sleep";
-import { getCookie } from "../utils/helpers";
+import CloseIcon from "@material-ui/icons/Close";
 
-function getLastSeenNotification() {
-  const seen = getCookie("lastSeenNotification");
-  return seen === "" ? 0 : parseInt(seen, 10);
-}
-
-let messages = null;
-
-async function getMessages() {
-  try {
-    if (!messages) {
-      await sleep(1500); // Soften the pressure on the main thread.
-      const result = await fetch(
-        "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/docs/notifications.json"
-      );
-      messages = await result.json();
-    }
-  } catch (err) {
-    // Swallow the exceptions.
+const styles = theme => ({
+  close: {
+    padding: theme.spacing.unit / 2
   }
-
-  messages = messages || [];
-}
+});
 
 class Notifications extends React.Component {
-  mounted = false;
-
-  state = {
-    open: false,
-    message: {}
-  };
-
-  async componentDidMount() {
-    this.mounted = true;
-    await getMessages();
-    this.handleMessage();
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  handleMessage = () => {
-    const lastSeen = getLastSeenNotification();
-    const unseenMessages = messages.filter(message => {
-      if (message.id <= lastSeen) {
-        return false;
-      }
-      return true;
-    });
-    if (unseenMessages.length > 0 && this.mounted) {
-      this.setState({ message: unseenMessages[0], open: true });
-    }
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-    document.cookie = `lastSeenNotification=${
-      this.state.message.id
-    };path=/;max-age=31536000`;
-  };
-
   render() {
-    const { message, open } = this.state;
-
+    const { classes, messageInfo, open, onClose, onExited } = this.props;
     return (
       <Snackbar
-        key={message.id}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        ContentProps={{ "aria-describedby": "notification-message" }}
-        message={
-          <span
-            id="notification-message"
-            dangerouslySetInnerHTML={{ __html: message.text }}
-          />
-        }
-        action={
-          <Button size="small" color="secondary" onClick={this.handleClose}>
-            Close
-          </Button>
-        }
+        key={messageInfo.key}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         open={open}
-        autoHideDuration={2000}
-        onClose={this.handleClose}
-        onExited={this.handleMessage}
+        autoHideDuration={1000}
+        onClose={onClose}
+        onExited={onExited}
+        ContentProps={{ "aria-describedby": "alert-message" }}
+        message={<span id="message-id">{messageInfo.message}</span>}
+        action={[
+          <IconButton
+            key="close"
+            aria-label="Close"
+            size="small"
+            color="inherit"
+            className={classes.close}
+            onClick={onClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        ]}
       />
     );
   }
 }
 
-export default Notifications;
+Notifications.propTypes = {
+  classes: PropTypes.object.isRequired,
+  open: PropTypes.bool.isRequired,
+  messageInfo: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onExited: PropTypes.func.isRequired
+};
+
+export default withStyles(styles)(Notifications);
