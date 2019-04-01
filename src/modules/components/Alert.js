@@ -4,7 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 
-class Alerts extends React.Component {
+class Alert extends React.Component {
   render() {
     const { classes, message, open, onClose } = this.props;
     return (
@@ -19,7 +19,7 @@ class Alerts extends React.Component {
             aria-label="Close"
             size="small"
             color="inherit"
-            className={classes.alertsClose}
+            className={classes.alertClose}
             onClick={onClose}
           >
             <CloseIcon />
@@ -33,11 +33,11 @@ class Alerts extends React.Component {
   }
 }
 
-Alerts.propTypes = {
+Alert.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
   message: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired
 };
 
-export default Alerts;
+export default Alert;

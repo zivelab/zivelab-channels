@@ -46,7 +46,7 @@ import {
 } from "../modules/utils/net";
 
 // Components
-import Alerts from "../modules/components/Alerts";
+import Alert from "../modules/components/Alert";
 import FabAddDevice from "../modules/components/FabAddDevice";
 import Notifications from "../modules/components/Notifications";
 
@@ -96,7 +96,7 @@ const styles = theme => ({
     marginLeft: 12,
     marginRight: 20
   },
-  alertsClose: {
+  alertClose: {
     padding: theme.spacing.unit / 2
   },
   hide: {
@@ -168,8 +168,8 @@ if (process.browser) {
 class App extends React.Component {
   state = {
     openDrawer: false,
-    openSnackbar: false,
-    snackbarMessage: "",
+    openAlert: false,
+    alertMessage: "",
     selectedKey: gettingStartedKey,
 
     localIP: null,
@@ -201,11 +201,11 @@ class App extends React.Component {
     });
   };
 
-  handleAlertsClose = (event, reason) => {
+  handleAlertClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    this.setState({ openSnackbar: false });
+    this.setState({ openAlert: false });
   };
 
   handleListItemClick = (event, key) => {
@@ -234,7 +234,7 @@ class App extends React.Component {
       const message = isLocal
         ? "Scanning local devices..."
         : "Scanning remote devices...";
-      this.setState({ openSnackbar: true, snackbarMessage: message });
+      this.setState({ openAlert: true, alertMessage: message });
       if (!isLocal && !this.state.localIP) {
         await this.getLocalIPAddressAsync();
       }
@@ -313,7 +313,7 @@ class App extends React.Component {
       if (showMessage) {
         const message =
           "Can't find device. Make sure your device is turned on and connected to the network.";
-        this.setState({ openSnackbar: true, snackbarMessage: message });
+        this.setState({ openAlert: true, alertMessage: message });
       }
     } finally {
       this.setState({ scanCompleted: this.state.scanCompleted + 1 });
@@ -420,7 +420,7 @@ class App extends React.Component {
 
   render() {
     const { classes, reduxTheme, reduxTitle } = this.props;
-    const { openDrawer, openSnackbar, snackbarMessage } = this.state;
+    const { openDrawer, openAlert, alertMessage } = this.state;
     const { localIP, localDevices, remoteDevices } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
 
@@ -604,11 +604,11 @@ class App extends React.Component {
               <Route path="/device/:id" exact component={this.channelPage} />
             </Switch>
           </main>
-          <Alerts
+          <Alert
             classes={classes}
-            open={openSnackbar}
-            message={snackbarMessage}
-            onClose={this.handleAlertsClose}
+            open={openAlert}
+            message={alertMessage}
+            onClose={this.handleAlertClose}
           />
         </div>
       </Router>
