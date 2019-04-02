@@ -553,6 +553,7 @@ class App extends React.Component {
             <Tooltip
               title="Click to scan local devices"
               aria-label="Click to scan local devices"
+              enterDelay={300}
             >
               <ListItem
                 button
@@ -582,6 +583,7 @@ class App extends React.Component {
             <Tooltip
               title="Click to scan remote devices"
               aria-label="Click to scan remote devices"
+              enterDelay={300}
             >
               <ListItem
                 button

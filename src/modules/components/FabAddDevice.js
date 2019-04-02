@@ -78,6 +78,7 @@ class FabAddDevice extends React.Component {
         <Tooltip
           title="Click to add known device"
           aria-label="Click to add known device"
+          enterDelay={300}
         >
           <Fab
             aria-label="Add"
