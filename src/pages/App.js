@@ -190,8 +190,9 @@ class App extends React.Component {
     const { classes, reduxTheme, reduxTitle } = this.props;
     const { openDrawer, openMessage, messageInfo } = this.state;
     const title = reduxTitle || "Zive Channels";
+    console.log("v0.1.0");
     return (
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <div className={classes.root}>
           <CssBaseline />
           <Banners />
@@ -263,13 +264,13 @@ class App extends React.Component {
           >
             {/*<div className={classes.drawerHeader} />*/}
             <Switch>
-              <Redirect path="/" exact to="/getting-started" />
               <Route
-                path="/getting-started"
                 exact
+                path="/getting-started"
                 component={this.gettingStartedPage}
               />
-              <Route path="/device/:id" exact component={this.channelPage} />
+              <Route exact path="/device/:id" component={this.channelPage} />
+              <Redirect path="*" exact to="/getting-started" />
             </Switch>
           </main>
           <Notifications
