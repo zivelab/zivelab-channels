@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -17,6 +18,14 @@ import AddIcon from "@material-ui/icons/Add";
 
 import { validateIPaddress } from "../utils/net";
 import { getCookie } from "../utils/helpers";
+
+const styles = theme => ({
+  fab: {
+    position: "absolute",
+    bottom: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2
+  }
+});
 
 function getLastKnownDevice(givenDevice) {
   const lastKnwonDevice = getCookie("lastKnownDevice");
@@ -137,4 +146,4 @@ FabAddDevice.propTypes = {
   onClick: PropTypes.func
 };
 
-export default FabAddDevice;
+export default withStyles(styles)(FabAddDevice);
