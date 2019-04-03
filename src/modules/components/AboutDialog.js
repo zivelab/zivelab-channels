@@ -9,6 +9,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
+import copy from "clipboard-copy";
 
 // functions
 import { isEmpty } from "../utils/object";
@@ -22,7 +23,7 @@ const styles = theme => ({
 });
 
 const aboutLabels = {
-  hostName: "Host Name",
+  hostName: "Name",
   model: "Model",
   description: "Description",
   frequencyRanges: "Frequency Ranges",
@@ -43,6 +44,10 @@ const aboutLabels = {
 };
 
 class AboutDialog extends React.Component {
+  handleCopy = async () => {
+    await copy(JSON.stringify(this.props.about, undefined, 3));
+  };
+
   render() {
     const { classes, about, onClose, ...other } = this.props;
     if (!isEmpty(about)) {
@@ -71,7 +76,7 @@ class AboutDialog extends React.Component {
             ))}
           </DialogContent>
           <DialogActions>
-            <Button disabled={true} color="primary">
+            <Button color="primary" onClick={this.handleCopy}>
               Copy to Clipboard
             </Button>
           </DialogActions>
