@@ -24,7 +24,7 @@ import { getLocalIPAddress, getFullRange, isZiveDevice } from "../utils/net";
 
 // Pages
 import GettingStartedPage from "../../pages/GettingStartedPage";
-import ChannelPage from "../../pages/ChannelPage";
+import ChannelPage from "../../pages/DevicePage";
 
 const gettingStartedKey = "getting-started-nav";
 

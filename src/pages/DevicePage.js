@@ -136,7 +136,7 @@ const parameterLabels = {
 
 let currentIPAddress = null;
 
-class ChannelPage extends React.Component {
+class DevicePage extends React.Component {
   state = {
     ipAddress: "",
 
@@ -407,7 +407,7 @@ class ChannelPage extends React.Component {
   }
 }
 
-ChannelPage.propTypes = {
+DevicePage.propTypes = {
   classes: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   ipAddress: PropTypes.string.isRequired,
@@ -422,4 +422,4 @@ export default compose(
     reduxTheme: state.theme
   })),
   withStyles(styles)
-)(ChannelPage);
+)(DevicePage);

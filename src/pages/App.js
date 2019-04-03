@@ -39,7 +39,7 @@ import Notifications from "../modules/components/Notifications";
 
 // Pages
 import GettingStartedPage from "./GettingStartedPage";
-import ChannelPage from "./ChannelPage";
+import DevicePage from "./DevicePage";
 import NotFoundPage from "./NotFoundPage";
 
 import { ACTION_TYPES } from "../modules/constants";
@@ -201,8 +201,8 @@ class App extends React.Component {
     }
   };
 
-  channelPage = ({ match: { params } }) => {
-    return <ChannelPage ipAddress={params.id} sendMessage={this.sendMessage} />;
+  devicePage = ({ match: { params } }) => {
+    return <DevicePage ipAddress={params.id} sendMessage={this.sendMessage} />;
   };
 
   gettingStartedPage = () => {
@@ -292,7 +292,7 @@ class App extends React.Component {
                 path="/getting-started"
                 component={this.gettingStartedPage}
               />
-              <Route exact path="/device/:id" component={this.channelPage} />
+              <Route exact path="/device/:id" component={this.devicePage} />
               <Route component={NotFoundPage} />
             </Switch>
           </main>
