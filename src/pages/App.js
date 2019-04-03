@@ -209,6 +209,10 @@ class App extends React.Component {
     return <GettingStartedPage />;
   };
 
+  notFoundPage = () => {
+    return <NotFoundPage />;
+  };
+
   render() {
     const { classes, reduxAbout, reduxTheme, reduxTitle } = this.props;
     const { openDrawer, openMessage, messageInfo } = this.state;
@@ -293,7 +297,7 @@ class App extends React.Component {
                 component={this.gettingStartedPage}
               />
               <Route exact path="/device/:id" component={this.devicePage} />
-              <Route component={NotFoundPage} />
+              <Route component={this.notFoundPage} />
             </Switch>
           </main>
           <Notifications
