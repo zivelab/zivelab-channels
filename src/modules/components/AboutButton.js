@@ -15,13 +15,7 @@ import AboutDialog from "./AboutDialog";
 // functions
 import { isEmpty } from "../utils/object";
 
-const styles = theme => ({
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200
-  }
-});
+const styles = theme => ({});
 
 class AboutButton extends React.Component {
   state = {

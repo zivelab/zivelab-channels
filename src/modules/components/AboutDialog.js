@@ -57,7 +57,8 @@ class AboutDialog extends React.Component {
           <DialogContent>
             {Object.keys(about).map((key, index) => (
               <TextField
-                id={aboutLabels[key]}
+                id={key}
+                key={key}
                 label={aboutLabels[key]}
                 className={classes.textField}
                 value={about[key] ? about[key] : "Not assigned"}
