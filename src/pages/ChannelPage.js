@@ -4,6 +4,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import { ACTION_TYPES } from "../modules/constants";
 import Typography from "@material-ui/core/Typography";
 import ReactJson from "react-json-view";
 import moment from "moment";
@@ -149,6 +150,15 @@ class ChannelPage extends React.Component {
     auxData: []
   };
 
+  dispatchAbout = about => {
+    this.props.dispatch({
+      type: ACTION_TYPES.ABOUT_CHANGE,
+      payload: {
+        about
+      }
+    });
+  };
+
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.ipAddress !== nextProps.ipAddress) {
       currentIPAddress = nextProps.ipAddress;
@@ -172,6 +182,10 @@ class ChannelPage extends React.Component {
     if (prevState.ipAddress !== this.state.ipAddress) {
       this.loadAboutAsync();
       this.loadChannelAsync();
+    }
+    const { reduxAbout } = prevProps;
+    if (this.state.about && reduxAbout !== this.state.about) {
+      this.dispatchAbout(this.state.about);
     }
   }
 
@@ -334,9 +348,6 @@ class ChannelPage extends React.Component {
     }
   };
 
-  // [TODO]
-  // Not yet aply theme on react-json-view.
-  //
   render() {
     const { classes, reduxTheme } = this.props;
     const { about, channel, cook } = this.state;
@@ -398,13 +409,16 @@ class ChannelPage extends React.Component {
 
 ChannelPage.propTypes = {
   classes: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
   ipAddress: PropTypes.string.isRequired,
+  reduxAbout: PropTypes.object.isRequired,
   reduxTheme: PropTypes.object.isRequired,
   sendMessage: PropTypes.func
 };
 
 export default compose(
   connect(state => ({
+    reduxAbout: state.about,
     reduxTheme: state.theme
   })),
   withStyles(styles)

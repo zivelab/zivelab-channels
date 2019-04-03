@@ -22,14 +22,17 @@ import Typography from "@material-ui/core/Typography";
 
 // Icons
 import GithubIcon from "@material-ui/docs/svgIcons/GitHub";
+import InfoIcon from "@material-ui/icons/Info";
 import LightbulbOutlineIcon from "@material-ui/docs/svgIcons/LightbulbOutline";
 import LightbulbFullIcon from "@material-ui/docs/svgIcons/LightbulbFull";
 import MenuIcon from "@material-ui/icons/Menu";
 
 // functions
 import compose from "../modules/utils/compose";
+import { isEmpty } from "../modules/utils/object";
 
 // Components
+import AboutButton from "../modules/components/AboutButton";
 import AppDrawer from "../modules/components/AppDrawer";
 import Banners from "../modules/components/Banners";
 import Notifications from "../modules/components/Notifications";
@@ -48,7 +51,6 @@ const styles = theme => ({
       fontWeight: theme.typography.fontWeightMedium
     }
   },
-
   root: {
     display: "flex"
   },
@@ -179,6 +181,26 @@ class App extends React.Component {
     this.processQueue();
   };
 
+  renderInfoButton = about => {
+    if (isEmpty(about)) {
+      return <React.Fragment />;
+    } else {
+      return (
+        <Tooltip title="Show about" enterDelay={300}>
+          <IconButton
+            edge="end"
+            component="a"
+            color="inherit"
+            href="https://github.com/zivelab/zivelab-channels"
+            aria-label="about"
+          >
+            <InfoIcon />
+          </IconButton>
+        </Tooltip>
+      );
+    }
+  };
+
   channelPage = ({ match: { params } }) => {
     return <ChannelPage ipAddress={params.id} sendMessage={this.sendMessage} />;
   };
@@ -188,7 +210,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { classes, reduxTheme, reduxTitle } = this.props;
+    const { classes, reduxAbout, reduxTheme, reduxTitle } = this.props;
     const { openDrawer, openMessage, messageInfo } = this.state;
     const title = reduxTitle || "Zive Channels";
     return (
@@ -226,6 +248,7 @@ class App extends React.Component {
                 </Typography>
               )}
               <div className={classes.grow} />
+              <AboutButton about={reduxAbout} />
               <Tooltip title="Toggle theme" enterDelay={300}>
                 <IconButton
                   color="inherit"
@@ -288,12 +311,14 @@ class App extends React.Component {
 App.propTypes = {
   classes: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
+  reduxAbout: PropTypes.object.isRequired,
   reduxTheme: PropTypes.object.isRequired,
   reduxTitle: PropTypes.string.isRequired
 };
 
 export default compose(
   connect(state => ({
+    reduxAbout: state.about,
     reduxTheme: state.theme,
     reduxTitle: state.title
   })),
