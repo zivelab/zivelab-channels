@@ -116,7 +116,6 @@ if (process.browser) {
     ███████╗██║ ╚████╔╝ ███████╗███████╗██║  ██║██████╔╝
     ╚══════╝╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝  ╚═╝╚═════╝ 
 
-    Tip: you can access the documentation \`theme\` object directly in the console.
 `,
     "font-family:monospace;color:#1976d2;font-size:12px;"
   );
