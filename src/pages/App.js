@@ -37,6 +37,7 @@ import Notifications from "../modules/components/Notifications";
 // Pages
 import GettingStartedPage from "./GettingStartedPage";
 import ChannelPage from "./ChannelPage";
+import NotFoundPage from "./NotFoundPage";
 
 import { ACTION_TYPES } from "../modules/constants";
 
@@ -262,13 +263,14 @@ class App extends React.Component {
             })}
           >
             <Switch>
-              <Redirect path="/" to="/getting-started" />
+              <Redirect exact path="/" to="/getting-started" />
               <Route
                 exact
                 path="/getting-started"
                 component={this.gettingStartedPage}
               />
               <Route exact path="/device/:id" component={this.channelPage} />
+              <Route component={NotFoundPage} />
             </Switch>
           </main>
           <Notifications
