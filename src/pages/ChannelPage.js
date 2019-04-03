@@ -214,15 +214,13 @@ class ChannelPage extends React.Component {
           state === states.Stopped;
         channelJson.isRunningNoiseLevel = state === states.RunningNoiseLevel;
 
-        /*
         if (state === states.Running && this.state.channel.isIdle) {
-          this.handleSnackBar("Started");
+          this.props.sendMessage("Started");
         } else if (state === states.Finished) {
-          this.handleSnackBar("Successfully finished");
+          this.props.sendMessage("Successfully finished");
         } else if (state === states.Stopped) {
-          this.handleSnackBar("Manually stopped");
+          this.props.sendMessage("Manually stopped");
         }
-        */
 
         // Update state: channel and auxData
         const newAuxItem = {
@@ -401,7 +399,8 @@ class ChannelPage extends React.Component {
 ChannelPage.propTypes = {
   classes: PropTypes.object.isRequired,
   ipAddress: PropTypes.string.isRequired,
-  reduxTheme: PropTypes.object.isRequired
+  reduxTheme: PropTypes.object.isRequired,
+  sendMessage: PropTypes.func
 };
 
 export default compose(

@@ -180,7 +180,7 @@ class App extends React.Component {
   };
 
   channelPage = ({ match: { params } }) => {
-    return <ChannelPage ipAddress={params.id} />;
+    return <ChannelPage ipAddress={params.id} sendMessage={this.sendMessage} />;
   };
 
   gettingStartedPage = () => {
