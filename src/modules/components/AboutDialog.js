@@ -30,11 +30,12 @@ const aboutLabels = {
   voltageRanges: "Voltage Ranges",
   currentRanges: "Current Ranges",
   temperatureSensor: "Temperature Sensor",
-  macAddress: "Mac Address",
-  ipAddress: "IP Address",
+  configureIPv4: "Configure IPv4",
+  ipAddress: "IPv4 Address",
   subnetMask: "Subnet Mask",
   router: "Router",
   port: "Port",
+  macAddress: "Mac Address",
   sifBoard: "SIF Board",
   sifFirmware: "SIF Firmware",
   sifSerialNumber: "SIF Serial Number",
@@ -46,6 +47,7 @@ const aboutLabels = {
 class AboutDialog extends React.Component {
   handleCopy = async () => {
     await copy(JSON.stringify(this.props.about, undefined, 3));
+    this.props.sendMessage("Copied");
   };
 
   render() {
@@ -93,7 +95,8 @@ class AboutDialog extends React.Component {
 AboutDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   about: PropTypes.object.isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  sendMessage: PropTypes.func
 };
 
 export default withStyles(styles)(AboutDialog);

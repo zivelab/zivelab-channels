@@ -7,17 +7,17 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 
 // Icons
-import InfoIcon from "@material-ui/icons/Info";
+import SettingsEthernet from "@material-ui/icons/SettingsEthernet";
 
 // components
-import AboutDialog from "./AboutDialog";
+import ConfigureDialog from "./ConfigureDialog";
 
 // functions
 import { isEmpty } from "../utils/object";
 
 const styles = theme => ({});
 
-class AboutButton extends React.Component {
+class ConfigureButton extends React.Component {
   state = {
     open: false
   };
@@ -40,17 +40,17 @@ class AboutButton extends React.Component {
 
     if (!isEmpty(about)) {
       return (
-        <React.Fragment key="section-to-show-about">
-          <Tooltip title="Show about" enterDelay={300}>
+        <React.Fragment key="section-to-configure-ethernet">
+          <Tooltip title="Configure Ethernet settings" enterDelay={300}>
             <IconButton
               color="inherit"
               onClick={this.handleClick}
               aria-label="about"
             >
-              <InfoIcon />
+              <SettingsEthernet />
             </IconButton>
           </Tooltip>
-          <AboutDialog
+          <ConfigureDialog
             about={about}
             open={open}
             onClose={this.handleClose}
@@ -59,15 +59,15 @@ class AboutButton extends React.Component {
         </React.Fragment>
       );
     } else {
-      return <React.Fragment key="section-to-show-about-disabled" />;
+      return <React.Fragment key="section-to-configure-ethernet" />;
     }
   }
 }
 
-AboutButton.propTypes = {
+ConfigureButton.propTypes = {
   classes: PropTypes.object.isRequired,
   about: PropTypes.object.isRequired,
   sendMessage: PropTypes.func
 };
 
-export default withStyles(styles)(AboutButton);
+export default withStyles(styles)(ConfigureButton);

@@ -20,7 +20,7 @@ class Notifications extends React.Component {
           key={messageInfo.key}
           anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
           open={open}
-          autoHideDuration={1000}
+          autoHideDuration={3000}
           onClose={onClose}
           onExited={onExited}
           ContentProps={{ "aria-describedby": "alert-message" }}

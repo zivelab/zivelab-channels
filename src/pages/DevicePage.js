@@ -201,6 +201,8 @@ class DevicePage extends React.Component {
       const aboutFetch = await fetch(aboutURL);
       const aboutJson = await aboutFetch.json();
       if (aboutJson) {
+        aboutJson.hostName = aboutJson.hostName || "Untitled";
+        aboutJson.configureIPv4 = aboutJson.configureIPv4 || "Using DHCP";
         this.setState({
           about: aboutJson
         });

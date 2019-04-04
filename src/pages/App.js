@@ -35,6 +35,7 @@ import { isEmpty } from "../modules/utils/object";
 import AboutButton from "../modules/components/AboutButton";
 import AppDrawer from "../modules/components/AppDrawer";
 import Banners from "../modules/components/Banners";
+import ConfigureButton from "../modules/components/ConfigureButton";
 import Notifications from "../modules/components/Notifications";
 
 // Pages
@@ -115,7 +116,8 @@ if (process.browser) {
      ███╔╝  ██║╚██╗ ██╔╝██╔══╝  ██║     ██╔══██║██╔══██╗
     ███████╗██║ ╚████╔╝ ███████╗███████╗██║  ██║██████╔╝
     ╚══════╝╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝  ╚═╝╚═════╝ 
-
+    
+    ZiveLab-Channels
 `,
     "font-family:monospace;color:#1976d2;font-size:12px;"
   );
@@ -251,7 +253,11 @@ class App extends React.Component {
                 </Typography>
               )}
               <div className={classes.grow} />
-              <AboutButton about={reduxAbout} />
+              <AboutButton about={reduxAbout} sendMessage={this.sendMessage} />
+              <ConfigureButton
+                about={reduxAbout}
+                sendMessage={this.sendMessage}
+              />
               <Tooltip title="Toggle theme" enterDelay={300}>
                 <IconButton
                   color="inherit"
