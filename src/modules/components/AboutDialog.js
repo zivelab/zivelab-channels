@@ -52,38 +52,40 @@ class AboutDialog extends React.Component {
     const { classes, about, onClose, ...other } = this.props;
     if (!isEmpty(about)) {
       return (
-        <Dialog
-          onClose={onClose}
-          scroll="paper"
-          aria-labelledby="dialog-about"
-          {...other}
-        >
-          <DialogTitle id="dialog-about">About</DialogTitle>
-          <DialogContent>
-            {Object.keys(about).map((key, index) => (
-              <TextField
-                id={key}
-                key={key}
-                label={aboutLabels[key]}
-                className={classes.textField}
-                value={about[key] ? about[key] : "Not assigned"}
-                margin="normal"
-                multiline={true}
-                InputProps={{
-                  readOnly: true
-                }}
-              />
-            ))}
-          </DialogContent>
-          <DialogActions>
-            <Button color="primary" onClick={this.handleCopy}>
-              Copy to Clipboard
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <React.Fragment key="section-to-open-dialog-about">
+          <Dialog
+            onClose={onClose}
+            scroll="paper"
+            aria-labelledby="dialog-about"
+            {...other}
+          >
+            <DialogTitle id="dialog-about">About</DialogTitle>
+            <DialogContent>
+              {Object.keys(about).map((key, index) => (
+                <TextField
+                  id={key}
+                  key={key}
+                  label={aboutLabels[key]}
+                  className={classes.textField}
+                  value={about[key] ? about[key] : "Not assigned"}
+                  margin="normal"
+                  multiline={true}
+                  InputProps={{
+                    readOnly: true
+                  }}
+                />
+              ))}
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary" onClick={this.handleCopy}>
+                Copy to Clipboard
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </React.Fragment>
       );
     } else {
-      return <React.Fragment />;
+      return <React.Fragment key="section-to-open-dialog-about-disabled" />;
     }
   }
 }

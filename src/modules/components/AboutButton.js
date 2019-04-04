@@ -40,7 +40,7 @@ class AboutButton extends React.Component {
 
     if (!isEmpty(about)) {
       return (
-        <React.Fragment>
+        <React.Fragment key="section-to-show-about">
           <Tooltip title="Show about" enterDelay={300}>
             <IconButton
               color="inherit"
@@ -54,7 +54,7 @@ class AboutButton extends React.Component {
         </React.Fragment>
       );
     } else {
-      return <React.Fragment />;
+      return <React.Fragment key="section-to-show-about-disabled" />;
     }
   }
 }

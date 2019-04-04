@@ -72,26 +72,28 @@ class Banners extends React.Component {
     const { message, open } = this.state;
 
     return (
-      <Snackbar
-        key={message.id}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        ContentProps={{ "aria-describedby": "notification-message" }}
-        message={
-          <span
-            id="notification-message"
-            dangerouslySetInnerHTML={{ __html: message.text }}
-          />
-        }
-        action={
-          <Button size="small" color="secondary" onClick={this.handleClose}>
-            Close
-          </Button>
-        }
-        open={open}
-        autoHideDuration={2000}
-        onClose={this.handleClose}
-        onExited={this.handleMessage}
-      />
+      <React.Fragment key="section-to-display-banner">
+        <Snackbar
+          key={message.id}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          ContentProps={{ "aria-describedby": "notification-message" }}
+          message={
+            <span
+              id="notification-message"
+              dangerouslySetInnerHTML={{ __html: message.text }}
+            />
+          }
+          action={
+            <Button size="small" color="secondary" onClick={this.handleClose}>
+              Close
+            </Button>
+          }
+          open={open}
+          autoHideDuration={5000}
+          onClose={this.handleClose}
+          onExited={this.handleMessage}
+        />
+      </React.Fragment>
     );
   }
 }

@@ -266,7 +266,7 @@ class AppDrawerContents extends React.Component {
     const isRemoteScanning = isRemoteScan && isScanning;
     const completed = isScanning ? (scanCompleted * 100) / scanTotal : 0;
     return (
-      <React.Fragment>
+      <React.Fragment key="section-to-list-nav-contents">
         <Divider key="nav-first-divider" />
         <ListItem
           button

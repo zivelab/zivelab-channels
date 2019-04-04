@@ -15,28 +15,30 @@ class Notifications extends React.Component {
   render() {
     const { classes, messageInfo, open, onClose, onExited } = this.props;
     return (
-      <Snackbar
-        key={messageInfo.key}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        open={open}
-        autoHideDuration={1000}
-        onClose={onClose}
-        onExited={onExited}
-        ContentProps={{ "aria-describedby": "alert-message" }}
-        message={<span id="message-id">{messageInfo.message}</span>}
-        action={[
-          <IconButton
-            key="close"
-            aria-label="Close"
-            size="small"
-            color="inherit"
-            className={classes.close}
-            onClick={onClose}
-          >
-            <CloseIcon />
-          </IconButton>
-        ]}
-      />
+      <React.Fragment key="section-to-display-message">
+        <Snackbar
+          key={messageInfo.key}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          open={open}
+          autoHideDuration={1000}
+          onClose={onClose}
+          onExited={onExited}
+          ContentProps={{ "aria-describedby": "alert-message" }}
+          message={<span id="message-id">{messageInfo.message}</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              size="small"
+              color="inherit"
+              className={classes.close}
+              onClick={onClose}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
+      </React.Fragment>
     );
   }
 }

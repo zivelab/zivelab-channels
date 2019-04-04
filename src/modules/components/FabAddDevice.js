@@ -83,7 +83,7 @@ class FabAddDevice extends React.Component {
     const { classes } = this.props;
     const { open, knownDevice, isValidDevice } = this.state;
     return (
-      <React.Fragment>
+      <React.Fragment key="section-to-add-known-device">
         <Tooltip
           title="Click to add known device"
           aria-label="Click to add known device"
