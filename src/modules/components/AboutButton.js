@@ -67,7 +67,7 @@ class AboutButton extends React.Component {
 AboutButton.propTypes = {
   classes: PropTypes.object.isRequired,
   about: PropTypes.object.isRequired,
-  sendMessage: PropTypes.func
+  sendMessage: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(AboutButton);

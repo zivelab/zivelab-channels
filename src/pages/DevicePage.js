@@ -203,7 +203,7 @@ class DevicePage extends React.Component {
       this.loadChannelAsync();
     }
     const { reduxAbout } = prevProps;
-    if (this.state.about && reduxAbout !== this.state.about) {
+    if (reduxAbout !== this.state.about) {
       this.dispatchAbout(this.state.about);
     }
   }
@@ -472,7 +472,7 @@ DevicePage.propTypes = {
   ipAddress: PropTypes.string.isRequired,
   reduxAbout: PropTypes.object.isRequired,
   reduxTheme: PropTypes.object.isRequired,
-  sendMessage: PropTypes.func
+  sendMessage: PropTypes.func.isRequired
 };
 
 export default compose(

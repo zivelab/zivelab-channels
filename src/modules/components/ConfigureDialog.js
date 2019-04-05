@@ -29,7 +29,7 @@ const styles = theme => ({
 
 const configureIPv4s = {
   UsingDHCP: "Using DHCP",
-  Manually: "Mamually",
+  Manually: "Manually",
   Automatically: "Automatically"
 };
 
@@ -92,7 +92,7 @@ class ConfigureDialog extends React.Component {
       message += "hostName=" + hostName.trim().replace(" ", "+");
     if (configureIPv4 !== about.configureIPv4) {
       message += message.length > 0 ? "&" : "";
-      message += "hostName=" + configureIPv4.replace(" ", "+");
+      message += "configureIP=" + configureIPv4.replace(" ", "+");
     }
     if (configureIPv4 !== configureIPv4s.UsingDHCP) {
       if (ipAddress !== about.ipAddress) {
