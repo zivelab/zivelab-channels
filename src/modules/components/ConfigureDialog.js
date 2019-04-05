@@ -89,18 +89,21 @@ class ConfigureDialog extends React.Component {
       subnetMask,
       router
     } = this.state;
-    let message = {};
+    let message = "";
     if (hostName.trim() !== reduxAbout.hostName)
-      message.hostName = hostName.trim();
+      message += "hostName=" + hostName.trim().replace(" ", "+");
     if (configureIPv4 !== reduxAbout.configureIPv4) {
-      message.configureIP = configureIPv4;
+      message += message.length > 0 ? "&" : "";
+      message += "configureIP=" + configureIPv4.replace(" ", "+");
     }
     if (configureIPv4 !== configureIPv4s.UsingDHCP) {
       if (ipAddress !== reduxAbout.ipAddress) {
-        message.ipAddress = ipAddress;
+        message += message.length > 0 ? "&" : "";
+        message += "ipAddress=" + ipAddress;
       }
       if (subnetMask !== reduxAbout.subnetMask) {
-        message.subnetMask = subnetMask;
+        message += message.length > 0 ? "&" : "";
+        message += "subnetMask=" + subnetMask;
       }
       if (router !== reduxAbout.router) {
         message += message.length > 0 ? "&" : "";
@@ -115,10 +118,10 @@ class ConfigureDialog extends React.Component {
       const settings = {
         method: "POST",
         headers: {
-          Accept: "application/json, text/plain, */*",
-          "Content-Type": "application/json"
+          Accept: "application/x-www-form-urlencoded",
+          "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: JSON.stringify(message)
+        body: message
       };
       const configureURL = "http://" + ipAddress + "/configure";
       const response = await fetch(configureURL, settings);
