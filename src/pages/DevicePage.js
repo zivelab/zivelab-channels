@@ -156,17 +156,16 @@ class DevicePage extends React.Component {
     cookIndex: 0,
 
     parameters: defaultParameters,
-    activeIndex: -1,
 
     auxData: []
   };
 
   handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
+    this.setState({ [name]: Number(event.target.value) });
   };
 
   handleSamples = async () => {
-    await loadSamplesAsync(this.state.cookIndex);
+    await this.loadSamplesAsync(this.state.cookIndex);
   };
 
   dispatchAbout = about => {
@@ -322,7 +321,7 @@ class DevicePage extends React.Component {
     const { ipAddress, cook } = this.state;
     if (ipAddress !== currentIPAddress) return;
     try {
-      const samplesURL = "http://" + ipAddress + "/sample?" + index.toString();
+      const samplesURL = "http://" + ipAddress + "/samples?index=" + index;
       const samplesFetch = await fetch(samplesURL);
       const samplesJson = await samplesFetch.json();
       if (
@@ -332,18 +331,17 @@ class DevicePage extends React.Component {
         index >= 0 &&
         index < cook.data.length
       ) {
-        // Update state: cook[index].samples
+        // Update state: cook.data[index].samples
         const data = cook.data.map((item, j) => {
           if (j === index) {
-            return (item.samples = samplesJson);
-          } else {
-            return item;
+            item.samples = samplesJson;
           }
+          return item;
         });
         this.setState({
           cook: {
             ...this.state.cook,
-            [data]: data
+            data: data
           }
         });
       }
@@ -373,6 +371,10 @@ class DevicePage extends React.Component {
   render() {
     const { classes, reduxTheme } = this.props;
     const { about, channel, cook, cookIndex } = this.state;
+    const samples =
+      cook && cook.data && cook.data[cookIndex] && cook.data[cookIndex].samples
+        ? cook.data[cookIndex].samples
+        : null;
     const title = this.getTitle(about);
     const theme =
       reduxTheme.paletteType === "light" ? "rjv-default" : "monokai";
@@ -424,16 +426,13 @@ class DevicePage extends React.Component {
             <div />
           )}
           <p />
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={this.handleSamples()}
-          >
-            Get Samples
-          </Button>
+          <Typography variant="h4" gutterBottom>
+            Samples (demo)
+          </Typography>
+          <p />
           <TextField
             id="standard-number"
-            label="Number"
+            label="Index"
             value={cookIndex}
             onChange={this.handleChange("cookIndex")}
             type="number"
@@ -443,6 +442,24 @@ class DevicePage extends React.Component {
             }}
             margin="normal"
           />
+          <Button
+            variant="contained"
+            className={classes.button}
+            onClick={this.handleSamples}
+          >
+            Get Samples
+          </Button>
+          <p />
+          {samples ? (
+            <ReactJson
+              src={samples}
+              displayDataTypes={false}
+              collapsed={true}
+              theme={theme}
+            />
+          ) : (
+            <div />
+          )}
         </div>
       </AppContent>
     );

@@ -95,7 +95,6 @@ class AppDrawerContents extends React.Component {
     try {
       const ip = await getLocalIPAddress();
       if (ip) {
-        console.log(ip);
         const knownDevice =
           ip
             .split(".")

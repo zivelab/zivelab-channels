@@ -294,7 +294,7 @@ ConfigureDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   about: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
-  sendMessage: PropTypes.func
+  sendMessage: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(ConfigureDialog);

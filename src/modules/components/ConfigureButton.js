@@ -67,7 +67,7 @@ class ConfigureButton extends React.Component {
 ConfigureButton.propTypes = {
   classes: PropTypes.object.isRequired,
   about: PropTypes.object.isRequired,
-  sendMessage: PropTypes.func
+  sendMessage: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(ConfigureButton);

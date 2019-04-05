@@ -2228,15 +2228,14 @@
               console.log("cook[%d].samples loaded", index);
               const data = this.state.cook.data.map((item, j) => {
                 if (j == index) {
-                  return (item.samples = samplesJson);
-                } else {
-                  return item;
+                  item.samples = samplesJson;
                 }
+                return item;
               });
               this.setState({
                 cook: {
                   ...this.state.cook,
-                  [data]: data
+                  data: data
                 }
               });
             }
