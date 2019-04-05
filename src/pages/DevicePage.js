@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { ACTION_TYPES } from "../modules/constants";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import ReactJson from "react-json-view";
 import moment from "moment";
@@ -20,6 +22,14 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2,
     padding: (0, theme.spacing.unit * 2)
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200
+  },
+  button: {
+    margin: theme.spacing.unit
   }
 });
 
@@ -143,11 +153,20 @@ class DevicePage extends React.Component {
     about: null,
     channel: null,
     cook: null,
+    cookIndex: 0,
 
     parameters: defaultParameters,
     activeIndex: -1,
 
     auxData: []
+  };
+
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.value });
+  };
+
+  handleSamples = async () => {
+    await loadSamplesAsync(this.state.cookIndex);
   };
 
   dispatchAbout = about => {
@@ -166,7 +185,8 @@ class DevicePage extends React.Component {
         ipAddress: nextProps.ipAddress,
         about: null,
         channel: null,
-        cook: null
+        cook: null,
+        cookIndex: 0
       };
     } else {
       return null;
@@ -352,7 +372,7 @@ class DevicePage extends React.Component {
 
   render() {
     const { classes, reduxTheme } = this.props;
-    const { about, channel, cook } = this.state;
+    const { about, channel, cook, cookIndex } = this.state;
     const title = this.getTitle(about);
     const theme =
       reduxTheme.paletteType === "light" ? "rjv-default" : "monokai";
@@ -403,6 +423,26 @@ class DevicePage extends React.Component {
           ) : (
             <div />
           )}
+          <p />
+          <Button
+            variant="contained"
+            className={classes.button}
+            onClick={this.handleSamples()}
+          >
+            Get Samples
+          </Button>
+          <TextField
+            id="standard-number"
+            label="Number"
+            value={cookIndex}
+            onChange={this.handleChange("cookIndex")}
+            type="number"
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true
+            }}
+            margin="normal"
+          />
         </div>
       </AppContent>
     );
