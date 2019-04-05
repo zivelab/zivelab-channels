@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
 
 // controls
 import Button from "@material-ui/core/Button";
@@ -13,6 +14,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
 // functions
+import compose from "../utils/compose";
 import { isEmpty } from "../utils/object";
 import { validateIPaddress } from "../utils/net";
 
@@ -65,7 +67,7 @@ class ConfigureDialog extends React.Component {
   };
 
   handleClick = async () => {
-    const ipAddress = this.props.about.ipAddress;
+    const ipAddress = this.props.reduxAbout.ipAddress;
     const message = this.getMessage();
     const success = await this.setConfigureToDevice(message, ipAddress);
     if (!success) {
@@ -79,7 +81,7 @@ class ConfigureDialog extends React.Component {
   };
 
   getMessage = () => {
-    const { about } = this.props;
+    const { reduxAbout } = this.props;
     const {
       hostName,
       configureIPv4,
@@ -87,23 +89,20 @@ class ConfigureDialog extends React.Component {
       subnetMask,
       router
     } = this.state;
-    let message = "";
-    if (hostName.trim() !== about.hostName)
-      message += "hostName=" + hostName.trim().replace(" ", "+");
-    if (configureIPv4 !== about.configureIPv4) {
-      message += message.length > 0 ? "&" : "";
-      message += "configureIP=" + configureIPv4.replace(" ", "+");
+    let message = {};
+    if (hostName.trim() !== reduxAbout.hostName)
+      message.hostName = hostName.trim();
+    if (configureIPv4 !== reduxAbout.configureIPv4) {
+      message.configureIP = configureIPv4;
     }
     if (configureIPv4 !== configureIPv4s.UsingDHCP) {
-      if (ipAddress !== about.ipAddress) {
-        message += message.length > 0 ? "&" : "";
-        message += "ipAddress=" + ipAddress;
+      if (ipAddress !== reduxAbout.ipAddress) {
+        message.ipAddress = ipAddress;
       }
-      if (subnetMask !== about.subnetMask) {
-        message += message.length > 0 ? "&" : "";
-        message += "subnetMask=" + subnetMask;
+      if (subnetMask !== reduxAbout.subnetMask) {
+        message.subnetMask = subnetMask;
       }
-      if (router !== about.router) {
+      if (router !== reduxAbout.router) {
         message += message.length > 0 ? "&" : "";
         message += "router=" + router;
       }
@@ -116,10 +115,10 @@ class ConfigureDialog extends React.Component {
       const settings = {
         method: "POST",
         headers: {
-          Accept: "application/x-www-form-urlencoded",
-          "Content-Type": "application/x-www-form-urlencoded"
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json"
         },
-        body: message
+        body: JSON.stringify(message)
       };
       const configureURL = "http://" + ipAddress + "/configure";
       const response = await fetch(configureURL, settings);
@@ -135,18 +134,30 @@ class ConfigureDialog extends React.Component {
   };
 
   componentDidMount() {
-    const { about } = this.props;
+    const { reduxAbout } = this.props;
     this.setState({
-      hostName: about.hostName,
-      configureIPv4: about.configureIPv4,
-      ipAddress: about.ipAddress,
-      subnetMask: about.subnetMask,
-      router: about.router
+      hostName: reduxAbout.hostName,
+      configureIPv4: reduxAbout.configureIPv4,
+      ipAddress: reduxAbout.ipAddress,
+      subnetMask: reduxAbout.subnetMask,
+      router: reduxAbout.router
     });
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.reduxAbout !== prevProps.reduxAbout) {
+      this.setState({
+        hostName: this.props.reduxAbout.hostName,
+        configureIPv4: this.props.reduxAbout.configureIPv4,
+        ipAddress: this.props.reduxAbout.ipAddress,
+        subnetMask: this.props.reduxAbout.subnetMask,
+        router: this.props.reduxAbout.router
+      });
+    }
+  }
+
   render() {
-    const { classes, about, onClose, ...other } = this.props;
+    const { classes, reduxAbout, onClose, ...other } = this.props;
     const {
       hostName,
       configureIPv4,
@@ -163,12 +174,12 @@ class ConfigureDialog extends React.Component {
           validateIPaddress(subnetMask) &&
           validateIPaddress(router)));
     const isChanged =
-      hostName.trim() !== about.hostName ||
-      configureIPv4 !== about.configureIPv4 ||
-      ipAddress !== about.ipAddress ||
-      subnetMask !== about.subnetMask ||
-      router !== about.router;
-    if (!isEmpty(about)) {
+      hostName.trim() !== reduxAbout.hostName ||
+      configureIPv4 !== reduxAbout.configureIPv4 ||
+      ipAddress !== reduxAbout.ipAddress ||
+      subnetMask !== reduxAbout.subnetMask ||
+      router !== reduxAbout.router;
+    if (!isEmpty(reduxAbout)) {
       return (
         <React.Fragment key="section-to-open-dialog-configure">
           <Dialog
@@ -292,9 +303,14 @@ class ConfigureDialog extends React.Component {
 
 ConfigureDialog.propTypes = {
   classes: PropTypes.object.isRequired,
-  about: PropTypes.object.isRequired,
+  reduxAbout: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   sendMessage: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(ConfigureDialog);
+export default compose(
+  connect(state => ({
+    reduxAbout: state.about
+  })),
+  withStyles(styles)
+)(ConfigureDialog);

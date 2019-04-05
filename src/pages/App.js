@@ -215,7 +215,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { classes, reduxAbout, reduxTheme, reduxTitle } = this.props;
+    const { classes, reduxTheme, reduxTitle } = this.props;
     const { openDrawer, openMessage, messageInfo } = this.state;
     const title = reduxTitle || "Zive Channels";
     return (
@@ -253,11 +253,8 @@ class App extends React.Component {
                 </Typography>
               )}
               <div className={classes.grow} />
-              <AboutButton about={reduxAbout} sendMessage={this.sendMessage} />
-              <ConfigureButton
-                about={reduxAbout}
-                sendMessage={this.sendMessage}
-              />
+              <AboutButton sendMessage={this.sendMessage} />
+              <ConfigureButton sendMessage={this.sendMessage} />
               <Tooltip title="Toggle theme" enterDelay={300}>
                 <IconButton
                   color="inherit"

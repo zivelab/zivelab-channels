@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
 
 // controls
 import IconButton from "@material-ui/core/IconButton";
@@ -13,6 +14,7 @@ import InfoIcon from "@material-ui/icons/Info";
 import AboutDialog from "./AboutDialog";
 
 // functions
+import compose from "../utils/compose";
 import { isEmpty } from "../utils/object";
 
 const styles = theme => ({});
@@ -35,10 +37,10 @@ class AboutButton extends React.Component {
   };
 
   render() {
-    const { about, sendMessage } = this.props;
+    const { reduxAbout, sendMessage } = this.props;
     const { open } = this.state;
 
-    if (!isEmpty(about)) {
+    if (!isEmpty(reduxAbout)) {
       return (
         <React.Fragment key="section-to-show-about">
           <Tooltip title="Show about" enterDelay={300}>
@@ -51,7 +53,6 @@ class AboutButton extends React.Component {
             </IconButton>
           </Tooltip>
           <AboutDialog
-            about={about}
             open={open}
             onClose={this.handleClose}
             sendMessage={sendMessage}
@@ -66,8 +67,13 @@ class AboutButton extends React.Component {
 
 AboutButton.propTypes = {
   classes: PropTypes.object.isRequired,
-  about: PropTypes.object.isRequired,
+  reduxAbout: PropTypes.object.isRequired,
   sendMessage: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(AboutButton);
+export default compose(
+  connect(state => ({
+    reduxAbout: state.about
+  })),
+  withStyles(styles)
+)(AboutButton);
