@@ -1,15 +1,15 @@
 {
-  "main.js": "/zivelab-channels/static/js/main.f06edbd7.chunk.js",
-  "main.js.map": "/zivelab-channels/static/js/main.f06edbd7.chunk.js.map",
+  "main.js": "/zivelab-channels/static/js/main.7d8966ea.chunk.js",
+  "main.js.map": "/zivelab-channels/static/js/main.7d8966ea.chunk.js.map",
   "runtime~main.js": "/zivelab-channels/static/js/runtime~main.149fc12e.js",
   "runtime~main.js.map": "/zivelab-channels/static/js/runtime~main.149fc12e.js.map",
-  "static/css/2.24554e6e.chunk.css": "/zivelab-channels/static/css/2.24554e6e.chunk.css",
-  "static/js/2.7b371962.chunk.js": "/zivelab-channels/static/js/2.7b371962.chunk.js",
-  "static/js/2.7b371962.chunk.js.map": "/zivelab-channels/static/js/2.7b371962.chunk.js.map",
+  "static/css/2.ac9ad68d.chunk.css": "/zivelab-channels/static/css/2.ac9ad68d.chunk.css",
+  "static/js/2.827b99fd.chunk.js": "/zivelab-channels/static/js/2.827b99fd.chunk.js",
+  "static/js/2.827b99fd.chunk.js.map": "/zivelab-channels/static/js/2.827b99fd.chunk.js.map",
   "index.html": "/zivelab-channels/index.html",
-  "precache-manifest.d2d38c2397813e39ee7f9fa9ecd35aaf.js": "/zivelab-channels/precache-manifest.d2d38c2397813e39ee7f9fa9ecd35aaf.js",
+  "precache-manifest.22171d4e127daf46325cfed0f7db06b2.js": "/zivelab-channels/precache-manifest.22171d4e127daf46325cfed0f7db06b2.js",
   "service-worker.js": "/zivelab-channels/service-worker.js",
-  "static/css/2.24554e6e.chunk.css.map": "/zivelab-channels/static/css/2.24554e6e.chunk.css.map",
+  "static/css/2.ac9ad68d.chunk.css.map": "/zivelab-channels/static/css/2.ac9ad68d.chunk.css.map",
   "static/media/gettingStarted.md": "/zivelab-channels/static/media/gettingStarted.f8ec3117.md",
   "static/media/notFound.md": "/zivelab-channels/static/media/notFound.4faf7044.md"
 }
