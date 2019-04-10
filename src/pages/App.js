@@ -254,7 +254,7 @@ class App extends React.Component {
               )}
               <div className={classes.grow} />
               <AboutButton sendMessage={this.sendMessage} />
-              <ConfigureButton sendMessage={this.sendMessage} />
+              <ConfigureButton />
               <Tooltip title="Toggle theme" enterDelay={300}>
                 <IconButton
                   color="inherit"

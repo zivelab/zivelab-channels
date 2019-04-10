@@ -37,7 +37,7 @@ class ConfigureButton extends React.Component {
   };
 
   render() {
-    const { reduxAbout, sendMessage } = this.props;
+    const { reduxAbout } = this.props;
     const { open } = this.state;
 
     if (!isEmpty(reduxAbout)) {
@@ -52,11 +52,7 @@ class ConfigureButton extends React.Component {
               <SettingsEthernet />
             </IconButton>
           </Tooltip>
-          <ConfigureDialog
-            open={open}
-            onClose={this.handleClose}
-            sendMessage={sendMessage}
-          />
+          <ConfigureDialog open={open} onClose={this.handleClose} />
         </React.Fragment>
       );
     } else {
@@ -67,8 +63,7 @@ class ConfigureButton extends React.Component {
 
 ConfigureButton.propTypes = {
   classes: PropTypes.object.isRequired,
-  reduxAbout: PropTypes.object.isRequired,
-  sendMessage: PropTypes.func.isRequired
+  reduxAbout: PropTypes.object.isRequired
 };
 
 export default compose(

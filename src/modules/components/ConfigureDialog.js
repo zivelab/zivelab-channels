@@ -69,11 +69,11 @@ class ConfigureDialog extends React.Component {
   handleClick = async () => {
     const success = await this.postConfigureAsync();
     if (success) {
-      this.props.sendMessage(
+      alert(
         "The device's Ethernet settings have changed. \n Please restart it for the applied changes to take effect."
       );
     } else {
-      this.props.sendMessage("Fail to change the device's Ethernet settings.");
+      alert("Fail to change the device's Ethernet settings.");
     }
     this.props.onClose();
   };
@@ -288,8 +288,7 @@ class ConfigureDialog extends React.Component {
 ConfigureDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   reduxAbout: PropTypes.object.isRequired,
-  onClose: PropTypes.func.isRequired,
-  sendMessage: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired
 };
 
 export default compose(

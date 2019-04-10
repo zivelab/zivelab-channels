@@ -6,7 +6,7 @@ function aboutReducer(state = initialAbout, action) {
   let newState = state;
 
   if (action.type === ACTION_TYPES.ABOUT_CHANGE) {
-    newState = action.payload.about || state.about;
+    newState = action.payload.about || state;
   }
 
   return newState;

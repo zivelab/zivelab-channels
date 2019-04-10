@@ -21,6 +21,7 @@ import FabAddDevice from "./FabAddDevice";
 // functions
 import compose from "../utils/compose";
 import { getLocalIPAddress, getFullRange, isZiveDevice } from "../utils/net";
+import { timeoutPromise } from "../utils/promise";
 
 // Pages
 import GettingStartedPage from "../../pages/GettingStartedPage";
@@ -118,7 +119,10 @@ class AppDrawerContents extends React.Component {
       // [TODO] We really want to '/description', but we will do later
       const descriptionURL = "http://" + ip + "/about";
       const descriptionRequest = new Request(descriptionURL);
-      const descriptionFetch = await fetch(descriptionRequest);
+      const descriptionFetch = await timeoutPromise(
+        1000,
+        fetch(descriptionRequest)
+      );
       const descriptionJson = await descriptionFetch.json();
       if (descriptionJson) {
         // Temporarily do not check MacAddress.
