@@ -203,7 +203,7 @@ class DevicePage extends React.Component {
       this.loadChannelAsync();
     }
     const { reduxAbout } = prevProps;
-    if (reduxAbout !== this.state.about) {
+    if (this.state.about && reduxAbout !== this.state.about) {
       this.dispatchAbout(this.state.about);
     }
   }

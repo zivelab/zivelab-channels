@@ -67,71 +67,51 @@ class ConfigureDialog extends React.Component {
   };
 
   handleClick = async () => {
-    const ipAddress = this.props.reduxAbout.ipAddress;
-    const message = this.getMessage();
-    const success = await this.setConfigureToDevice(message, ipAddress);
-    if (!success) {
+    const success = await this.postConfigureAsync();
+    if (success) {
       this.props.sendMessage(
         "The device's Ethernet settings have changed. \n Please restart it for the applied changes to take effect."
       );
     } else {
-      alert("Fail to change the device's Ethernet settings.");
+      this.props.sendMessage("Fail to change the device's Ethernet settings.");
     }
     this.props.onClose();
   };
 
-  getMessage = () => {
+  handleClose = () => {
+    // set default values
     const { reduxAbout } = this.props;
-    const {
-      hostName,
-      configureIPv4,
-      ipAddress,
-      subnetMask,
-      router
-    } = this.state;
-    let message = "";
-    if (hostName.trim() !== reduxAbout.hostName)
-      message += "hostName=" + hostName.trim().replace(" ", "+");
-    if (configureIPv4 !== reduxAbout.configureIPv4) {
-      message += message.length > 0 ? "&" : "";
-      message += "configureIP=" + configureIPv4.replace(" ", "+");
-    }
-    if (configureIPv4 !== configureIPv4s.UsingDHCP) {
-      if (ipAddress !== reduxAbout.ipAddress) {
-        message += message.length > 0 ? "&" : "";
-        message += "ipAddress=" + ipAddress;
-      }
-      if (subnetMask !== reduxAbout.subnetMask) {
-        message += message.length > 0 ? "&" : "";
-        message += "subnetMask=" + subnetMask;
-      }
-      if (router !== reduxAbout.router) {
-        message += message.length > 0 ? "&" : "";
-        message += "router=" + router;
-      }
-    }
-    return message;
+    this.setState({
+      hostName: reduxAbout.hostName,
+      configureIPv4: reduxAbout.configureIPv4,
+      ipAddress: reduxAbout.ipAddress,
+      subnetMask: reduxAbout.subnetMask,
+      router: reduxAbout.router
+    });
+    this.props.onClose();
   };
 
-  setConfigureToDevice = async (message, ipAddress) => {
+  postConfigureAsync = async () => {
+    const ip = this.props.reduxAbout.ipAddress;
     try {
+      const payload = new URLSearchParams();
+      payload.append("hostName", this.state.hostName);
+      payload.append("configureIPv4", this.state.configureIPv4);
+      payload.append("ipAddress", this.state.ipAddress);
+      payload.append("subnetMask", this.state.subnetMask);
+      payload.append("router", this.state.router);
       const settings = {
         method: "POST",
         headers: {
-          Accept: "application/x-www-form-urlencoded",
-          "Content-Type": "application/x-www-form-urlencoded"
+          "Content-Length": payload.toString().length.toString()
         },
-        body: message
+        body: payload.toString()
       };
-      const configureURL = "http://" + ipAddress + "/configure";
+      const configureURL = "http://" + ip + "/configure";
       const response = await fetch(configureURL, settings);
-      if (response.ok) {
-        return true;
-      } else {
-        return false;
-      }
+      return response.ok;
     } catch (e) {
-      console.log(e);
+      //console.log(e);
       return false;
     }
   };
@@ -148,13 +128,14 @@ class ConfigureDialog extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.reduxAbout !== prevProps.reduxAbout) {
+    const { reduxAbout } = this.props;
+    if (JSON.stringify(reduxAbout) !== JSON.stringify(prevProps.reduxAbout)) {
       this.setState({
-        hostName: this.props.reduxAbout.hostName,
-        configureIPv4: this.props.reduxAbout.configureIPv4,
-        ipAddress: this.props.reduxAbout.ipAddress,
-        subnetMask: this.props.reduxAbout.subnetMask,
-        router: this.props.reduxAbout.router
+        hostName: reduxAbout.hostName,
+        configureIPv4: reduxAbout.configureIPv4,
+        ipAddress: reduxAbout.ipAddress,
+        subnetMask: reduxAbout.subnetMask,
+        router: reduxAbout.router
       });
     }
   }
@@ -186,7 +167,7 @@ class ConfigureDialog extends React.Component {
       return (
         <React.Fragment key="section-to-open-dialog-configure">
           <Dialog
-            onClose={onClose}
+            onClose={this.handleClose}
             scroll="paper"
             aria-labelledby="dialog-configure"
             {...other}
