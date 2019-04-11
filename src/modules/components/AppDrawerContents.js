@@ -125,13 +125,12 @@ class AppDrawerContents extends React.Component {
       );
       const descriptionJson = await descriptionFetch.json();
       if (descriptionJson) {
-        // Temporarily do not check MacAddress.
-        //if (!isZiveDevice(descriptionJson.macAddress)) return;
+        if (!isZiveDevice(descriptionJson.macAddress)) return;
         const validDevice = {
           name: descriptionJson.hostName || "Untitled",
           model: descriptionJson.model,
           serialNumber: descriptionJson.serialNumber,
-          ipAddress: ip, //descriptionJson.ipAddress,
+          ipAddress: descriptionJson.ipAddress,
           macAddress: descriptionJson.macAddress
         };
         if (
