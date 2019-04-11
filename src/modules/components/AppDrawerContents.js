@@ -351,6 +351,7 @@ class AppDrawerContents extends React.Component {
         <FabAddDevice
           knownDevice={knownDevice}
           onClick={this.handleAddKnownDevice}
+          disabled={isScanning}
         />
       </React.Fragment>
     );

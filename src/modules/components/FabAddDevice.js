@@ -80,7 +80,7 @@ class FabAddDevice extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, disabled } = this.props;
     const { open, knownDevice, isValidDevice } = this.state;
     return (
       <React.Fragment key="section-to-add-known-device">
@@ -95,6 +95,7 @@ class FabAddDevice extends React.Component {
             color="primary"
             size="medium"
             onClick={this.handleOpen}
+            disabled={disabled}
           >
             <AddIcon />
           </Fab>
@@ -142,6 +143,7 @@ class FabAddDevice extends React.Component {
 
 FabAddDevice.propTypes = {
   classes: PropTypes.object.isRequired,
+  disabled: PropTypes.bool,
   knownDevice: PropTypes.string.isRequired,
   onClick: PropTypes.func
 };
