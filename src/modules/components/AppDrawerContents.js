@@ -133,7 +133,7 @@ class AppDrawerContents extends React.Component {
 
   async loadDescriptionAsync(ip, showMessage = false) {
     // ip should be a valid IP address.
-    const isLocal = ip.split(".").slice(0, 1) === "169";
+    const isLocal = ip.split(".").slice(0, 1)[0] === "169";
     const devices = isLocal ? "localDevices" : "remoteDevices";
     try {
       // [TODO] We really want to '/description', but we will do later
@@ -286,6 +286,7 @@ class AppDrawerContents extends React.Component {
   };
 
   render() {
+    const { classes } = this.props;
     const { selectedKey, knownDevice } = this.state;
     const { localIP, localDevices, remoteDevices } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
@@ -381,12 +382,13 @@ class AppDrawerContents extends React.Component {
           <ListItemText inset primary="Utilities" />
           {openUtilities ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <Divider key="nav-utilities-divider" />
         <Collapse in={openUtilities} timeout="auto" unmountOnExit>
+          <Divider variant="inset" key="nav-utilities-regression" />
           <List component="div" disablePadding>
             <ListItem
               button
               dense
+              className={classes.nested}
               key={regressionKey}
               component={this.regressionLink}
               selected={selectedKey === regressionKey}

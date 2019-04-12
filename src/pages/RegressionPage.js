@@ -78,7 +78,7 @@ class RegressionPage extends Component {
     const content = {
       Offset: this.state.offset,
       Slope: this.state.slope,
-      "R-Squre": this.state.rSquare
+      "R-Square": this.state.rSquare
     };
     await copy(JSON.stringify(content, undefined, 3));
   };
