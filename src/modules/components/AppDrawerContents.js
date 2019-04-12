@@ -15,11 +15,12 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Tooltip from "@material-ui/core/Tooltip";
 
 // Icons
+import DashboardIcon from "@material-ui/icons/Dashboard";
 import DeviceHubIcon from "@material-ui/icons/DeviceHub";
-import TabletIcon from "@material-ui/icons/Tablet";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import DashboardIcon from "@material-ui/icons/Dashboard";
+import HubSpotIcon from "../icons/HubSpot";
+import TabletIcon from "@material-ui/icons/Tablet";
 
 // Components
 import FabAddDevice from "./FabAddDevice";
@@ -356,7 +357,7 @@ class AppDrawerContents extends React.Component {
             disabled={isScanning}
           >
             <ListItemIcon>
-              <DeviceHubIcon />
+              <HubSpotIcon />
             </ListItemIcon>
             <ListItemText
               primary="Scan Remote Devices"

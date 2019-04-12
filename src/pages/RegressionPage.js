@@ -10,12 +10,12 @@ import regression from "regression";
 import copy from "clipboard-copy";
 
 import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
@@ -94,39 +94,13 @@ class RegressionPage extends Component {
       rows.length > 1 ? regression.linear(rows, { precision: 16 }) : null;
     const offset = result ? result.equation[1] : Number.NaN;
     const slope = result ? result.equation[0] : Number.NaN;
-    const rSquare = result ? this.getRSquare(rows, result) : Number.NaN;
-
+    const rSquare = result ? result.r2 : Number.NaN;
     this.setState({
       rows: rows,
       offset: offset,
       slope: slope,
       rSquare: rSquare
     });
-  };
-
-  getRSquare = (rows, result) => {
-    const offset = result.equation[1];
-    const slope = result.equation[0];
-    let sum = 0,
-      sse = 0,
-      ssyy = 0,
-      mean = 0;
-    let i;
-    const length = rows.length;
-    for (i = 0; i < length; i++) {
-      sum += rows[i][1];
-    }
-    mean = sum / length;
-    for (i = 0; i < length; i++) {
-      const best = offset + slope * rows[i][0];
-      ssyy += Math.pow(rows[i][1] - mean, 2);
-      sse += Math.pow(rows[i][1] - best, 2);
-    }
-    if (ssyy !== 0) {
-      return 1 - sse / ssyy;
-    }
-
-    return 0;
   };
 
   toPrettyString = (num, precision = null) => {
@@ -165,6 +139,19 @@ class RegressionPage extends Component {
     return (
       <AppContent className={classes.root} title="Linear Regression">
         <div className={classes.content}>
+          <Typography variant="h4" gutterBottom>
+            Model
+          </Typography>
+          <p />
+          <Typography
+            component="h2"
+            variant="headline"
+            color="textSecondary"
+            gutterBottom
+          >
+            y = offset + slope &#x2219; x + &epsilon;
+          </Typography>
+          <p />
           <Typography variant="h4" gutterBottom>
             Input Values
           </Typography>
@@ -271,7 +258,7 @@ class RegressionPage extends Component {
           />
           <p />
           <Typography variant="h4" gutterBottom>
-            Input Data
+            Data Set
           </Typography>
           <p />
           <Paper>
@@ -285,8 +272,8 @@ class RegressionPage extends Component {
               </TableHead>
               <TableBody>
                 {rows.map((row, index) => (
-                  <TableRow key={index.toString()}>
-                    <TableCell>{index}</TableCell>
+                  <TableRow key={(index + 1).toString()}>
+                    <TableCell>{index + 1}</TableCell>
                     <TableCell>{row[0]}</TableCell>
                     <TableCell>{row[1]}</TableCell>
                   </TableRow>
