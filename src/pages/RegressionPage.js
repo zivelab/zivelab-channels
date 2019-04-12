@@ -149,7 +149,11 @@ class RegressionPage extends Component {
             color="textSecondary"
             gutterBottom
           >
-            y = offset + slope &#x2219; x + &epsilon;
+            y = &beta;0 + &beta;1 x + &epsilon;
+          </Typography>
+          <Typography variant="subheading" gutterBottom>
+            where &beta;0 is the offset, &beta;1 is the slope, and &epsilon; is
+            the error term.
           </Typography>
           <p />
           <Typography variant="h4" gutterBottom>
