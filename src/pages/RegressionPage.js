@@ -237,11 +237,11 @@ class RegressionPage extends Component {
             Statistics
           </Typography>
           <TextField
-            id="result-Ns"
-            key="result-Ns"
-            label="Number of Points"
+            id="result-dof"
+            key="result-dof"
+            label="Degrees of Freedom"
             className={classes.textField}
-            value={rows.length > 0 ? rows.length : ""}
+            value={rows.length > 1 ? rows.length - 2 : ""}
             margin="normal"
             InputLabelProps={{ shrink: true }}
             inputProps={{
