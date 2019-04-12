@@ -45,7 +45,7 @@ class GettingStartedPage extends Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     fetch(Page)
       .then(res => res.text())
       .then(md => {

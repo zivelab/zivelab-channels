@@ -1,11 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 // controls
+import Collapse from "@material-ui/core/Collapse";
 import Divider from "@material-ui/core/Divider";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -14,6 +17,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 // Icons
 import DeviceHubIcon from "@material-ui/icons/DeviceHub";
 import TabletIcon from "@material-ui/icons/Tablet";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import DashboardIcon from "@material-ui/icons/Dashboard";
 
 // Components
 import FabAddDevice from "./FabAddDevice";
@@ -26,8 +32,16 @@ import { timeoutPromise } from "../utils/promise";
 // Pages
 import GettingStartedPage from "../../pages/GettingStartedPage";
 import ChannelPage from "../../pages/DevicePage";
+import RegressionPage from "../../pages/RegressionPage";
 
 const gettingStartedKey = "getting-started-nav";
+const regressionKey = "regression-nav";
+
+const styles = theme => ({
+  nested: {
+    paddingLeft: theme.spacing.unit * 4
+  }
+});
 
 class AppDrawerContents extends React.Component {
   state = {
@@ -42,7 +56,13 @@ class AppDrawerContents extends React.Component {
     isLocalScan: false,
     isRemoteScan: false,
     scanCompleted: 0,
-    scanTotal: 0
+    scanTotal: 0,
+
+    openUtilities: false
+  };
+
+  handleUtilitiesClick = () => {
+    this.setState(state => ({ openUtilities: !state.openUtilities }));
   };
 
   handleListItemClick = (event, key) => {
@@ -107,7 +127,7 @@ class AppDrawerContents extends React.Component {
         });
       }
     } catch (e) {
-      console.log(e);
+      //console.log(e);
     }
   }
 
@@ -255,6 +275,12 @@ class AppDrawerContents extends React.Component {
     return <GettingStartedPage />;
   };
 
+  regressionLink = props => <Link to="/regression" {...props} />;
+
+  regressionPage = () => {
+    return <RegressionPage />;
+  };
+
   componentDidMount = () => {
     this.getLocalIPAddressAsync();
   };
@@ -263,6 +289,7 @@ class AppDrawerContents extends React.Component {
     const { selectedKey, knownDevice } = this.state;
     const { localIP, localDevices, remoteDevices } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
+    const { openUtilities } = this.state;
 
     // progress in scanning
     const isScanning = scanTotal > 0 && scanCompleted < scanTotal;
@@ -346,6 +373,29 @@ class AppDrawerContents extends React.Component {
         </Tooltip>
         {this.ScanProgress(!isRemoteScanning, completed)}
         {this.RenderDevices(remoteDevices)}
+        <Divider key="nav-end-devices-divider" />
+        <ListItem button dense onClick={this.handleUtilitiesClick}>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText inset primary="Utilities" />
+          {openUtilities ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Divider key="nav-utilities-divider" />
+        <Collapse in={openUtilities} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem
+              button
+              dense
+              key={regressionKey}
+              component={this.regressionLink}
+              selected={selectedKey === regressionKey}
+              onClick={event => this.handleListItemClick(event, regressionKey)}
+            >
+              <ListItemText primary="Linear Regression" />
+            </ListItem>
+          </List>
+        </Collapse>
         <Divider key="nav-last-divider" />
         <FabAddDevice
           knownDevice={knownDevice}
@@ -364,5 +414,6 @@ AppDrawerContents.propTypes = {
 export default compose(
   connect(state => ({
     reduxTitle: state.title
-  }))
+  })),
+  withStyles(styles)
 )(AppDrawerContents);

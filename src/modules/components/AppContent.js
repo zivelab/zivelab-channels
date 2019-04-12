@@ -25,8 +25,8 @@ class AppContent extends React.Component {
     return title ? title + " - Zive Channels" : "Zive Channels";
   };
 
-  titleSideEffect = reduxTitle => {
-    document.title = reduxTitle;
+  titleSideEffect = title => {
+    document.title = title;
   };
 
   dispatchTitle = title => {
