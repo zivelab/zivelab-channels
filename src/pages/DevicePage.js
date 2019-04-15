@@ -14,6 +14,9 @@ import moment from "moment";
 import AppContent from "../modules/components/AppContent";
 import compose from "../modules/utils/compose";
 
+import StartExpButton from "../modules/components/StartExpButton";
+import StopExpButton from "../modules/components/StopExpButton";
+
 const styles = theme => ({
   root: {
     marginBottom: 100
@@ -57,6 +60,7 @@ const states = {
   Stopped: "Stopped",
   RunningNoiseLevel: "RunningNoiseLevel"
 };
+
 //const voltageRanges = [
 //  { value: 0, label: "1000V" },
 //  { value: 1, label: "100V" }
@@ -104,6 +108,7 @@ const states = {
 //  temperature: "Temperature [" + { degreeCelsiusSign } + "]",
 //  currentRange: "IRange [A]"
 //};
+
 const defaultParameters = {
   initialFrequency: 1000,
   finalFrequency: 1.0,
@@ -114,7 +119,7 @@ const defaultParameters = {
   skip: 1,
   cycles: 0
 };
-/*
+
 const parameterLabels = {
   initialFrequency: {
     label: "Initial Frequency",
@@ -135,7 +140,6 @@ const parameterLabels = {
   skip: { label: "skip", min: 1, max: 100, default: 1 },
   cycles: { label: "cycles", min: 0, max: 100, default: 0 }
 };
-*/
 
 // [TODO]
 // Warning: Can't perform a React state update on an unmounted component.
@@ -160,12 +164,41 @@ class DevicePage extends React.Component {
     auxData: []
   };
 
-  handleChange = name => event => {
-    this.setState({ [name]: Number(event.target.value) });
-  };
-
   handleSamples = async () => {
     await this.loadSamplesAsync(this.state.cookIndex);
+  };
+
+  handleChannel = async () => {
+    await this.loadChannelAsync();
+  };
+
+  handleChange = (event, name) => {
+    if (name === "cookIndex") {
+      this.setState({ [name]: Number(event.target.value) });
+      return;
+    }
+    const key = Object.keys(parameterLabels).find(key => key === name);
+    const parameter = parameterLabels[key];
+    let value = event.target.value;
+    if (value < parameter.min) {
+      value = parameter.min;
+    } else if (value > parameter.max) {
+      value = parameter.max;
+    }
+    this.setState({
+      parameters: {
+        ...this.state.parameters,
+        [key]: value
+      }
+    });
+  };
+
+  handleStartExp = async () => {
+    await this.startExpAsync();
+  };
+
+  handleStopExp = async () => {
+    await this.stopExpAsync();
   };
 
   dispatchAbout = about => {
@@ -202,8 +235,10 @@ class DevicePage extends React.Component {
       this.loadAboutAsync();
       this.loadChannelAsync();
     }
-    const { reduxAbout } = prevProps;
-    if (this.state.about && reduxAbout !== this.state.about) {
+    if (
+      this.state.about &&
+      JSON.stringify(prevProps.reduxAbout) !== JSON.stringify(this.state.about)
+    ) {
       this.dispatchAbout(this.state.about);
     }
   }
@@ -350,6 +385,61 @@ class DevicePage extends React.Component {
     }
   }
 
+  async startExpAsync() {
+    const { ipAddress } = this.state;
+    if (ipAddress !== currentIPAddress) return;
+    try {
+      const ticks = new Date().getTime() + dateTimeOffset; // miliiseconds since 0000-01-01
+      const payload = new URLSearchParams();
+      payload.append(
+        "initialFrequency",
+        this.state.parameters.initialFrequency
+      );
+      payload.append("finalFrequency", this.state.parameters.finalFrequency);
+      payload.append("density", this.state.parameters.density);
+      payload.append("iteration", this.state.parameters.iteration);
+      payload.append("currentRange", this.state.parameters.currentRange);
+      payload.append("maxInitialDelay", this.state.parameters.maxInitialDelay);
+      payload.append("skip", this.state.parameters.skip);
+      payload.append("cycles", 0);
+      payload.append("started", ticks);
+      const settings = {
+        method: "POST",
+        headers: {
+          "Content-Length": payload.toString().length.toString()
+        },
+        body: payload.toString()
+      };
+      const startURL = "http://" + ipAddress + "/start";
+      const response = await fetch(startURL, settings);
+      if (response.ok) {
+        this.props.sendMessage("Started");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async stopExpAsync() {
+    const { ipAddress } = this.state;
+    if (ipAddress !== currentIPAddress) return;
+    try {
+      const stopURL = "http://" + ipAddress + "/stop";
+      const settings = {
+        method: "POST",
+        headers: {
+          "Content-Length": 0
+        }
+      };
+      const response = await fetch(stopURL, settings);
+      if (response.ok) {
+        this.props.sendMessage("Manually Stopped");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   getTitle = about => {
     if (about) {
       const hostName = about.hostName || "Untitled";
@@ -370,7 +460,7 @@ class DevicePage extends React.Component {
 
   render() {
     const { classes, reduxTheme } = this.props;
-    const { about, channel, cook, cookIndex } = this.state;
+    const { about, channel, cook, cookIndex, parameters } = this.state;
     const samples =
       cook && cook.data && cook.data[cookIndex] && cook.data[cookIndex].samples
         ? cook.data[cookIndex].samples
@@ -399,6 +489,13 @@ class DevicePage extends React.Component {
           <Typography variant="h4" gutterBottom>
             Channel (demo)
           </Typography>
+          <Button
+            variant="contained"
+            className={classes.button}
+            onClick={this.handleChannel}
+          >
+            Refresh
+          </Button>
           <p />
           {channel ? (
             <ReactJson
@@ -414,6 +511,16 @@ class DevicePage extends React.Component {
           <Typography variant="h4" gutterBottom>
             Cook (demo)
           </Typography>
+          <StartExpButton
+            disabled={!channel || !channel.isIdle}
+            parameters={parameters}
+            onChange={this.handleChange}
+            onStart={this.handleStartExp}
+          />
+          <StopExpButton
+            disabled={!channel || !channel.isRunning}
+            onStop={this.handleStopExp}
+          />
           <p />
           {cook ? (
             <ReactJson
@@ -434,7 +541,7 @@ class DevicePage extends React.Component {
             id="standard-number"
             label="Index"
             value={cookIndex}
-            onChange={this.handleChange("cookIndex")}
+            onChange={e => this.handleChange(e, "cookIndex")}
             type="number"
             className={classes.textField}
             InputLabelProps={{
