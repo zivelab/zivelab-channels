@@ -145,13 +145,13 @@ class LinearRegressionPage extends Component {
           <p />
           <Typography
             component="h2"
-            variant="headline"
+            variant="h5"
             color="textSecondary"
             gutterBottom
           >
             y = &beta;0 + &beta;1 x + &epsilon;
           </Typography>
-          <Typography variant="subheading" gutterBottom>
+          <Typography variant="subtitle1" gutterBottom>
             where &beta;0 is the offset, &beta;1 is the slope, and &epsilon; is
             the error term.
           </Typography>
