@@ -8,7 +8,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import store from "./modules/redux/store";
 import AppWrapper from "./modules/components/AppWrapper";
-import App from "./pages/App";
+import App from "./modules/components/App";
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(

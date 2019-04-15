@@ -1,4 +1,4 @@
-import "../bootstrap";
+import "../../bootstrap";
 // --- Post bootstrap -----
 import React from "react";
 import PropTypes from "prop-types";
@@ -28,23 +28,23 @@ import LightbulbFullIcon from "@material-ui/docs/svgIcons/LightbulbFull";
 import MenuIcon from "@material-ui/icons/Menu";
 
 // functions
-import compose from "../modules/utils/compose";
-import { isEmpty } from "../modules/utils/object";
+import compose from "../utils/compose";
+import { isEmpty } from "../utils/object";
 
 // Components
-import AboutButton from "../modules/components/AboutButton";
-import AppDrawer from "../modules/components/AppDrawer";
-import Banners from "../modules/components/Banners";
-import ConfigureButton from "../modules/components/ConfigureButton";
-import Notifications from "../modules/components/Notifications";
+import AboutButton from "./AboutButton";
+import AppDrawer from "./AppDrawer";
+import Banners from "./Banners";
+import ConfigureButton from "./ConfigureButton";
+import Notifications from "./Notifications";
 
 // Pages
-import GettingStartedPage from "./GettingStartedPage";
-import DevicePage from "./DevicePage";
-import LinearRegressionPage from "./LinearRegressionPage";
-import NotFoundPage from "./NotFoundPage";
+import GettingStartedPage from "../../pages/GettingStartedPage";
+import DevicePage from "../../pages/DevicePage";
+import LinearRegressionPage from "../../pages/LinearRegressionPage";
+import NotFoundPage from "../../pages/NotFoundPage";
 
-import { ACTION_TYPES } from "../modules/constants";
+import { ACTION_TYPES } from "../constants";
 
 const drawerWidth = 240;
 const styles = theme => ({
