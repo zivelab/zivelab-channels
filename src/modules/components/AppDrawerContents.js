@@ -5,24 +5,20 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 // controls
-import Collapse from "@material-ui/core/Collapse";
 import Divider from "@material-ui/core/Divider";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Tooltip from "@material-ui/core/Tooltip";
 
 // Icons
-import DashboardIcon from "@material-ui/icons/Dashboard";
 import DeviceHubIcon from "@material-ui/icons/DeviceHub";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
 import HubSpotIcon from "../icons/HubSpot";
 import TabletIcon from "@material-ui/icons/Tablet";
 
 // Components
+import UtilityContents from "./UtilityContents";
 import FabAddDevice from "./FabAddDevice";
 
 // functions
@@ -33,10 +29,8 @@ import { timeoutPromise } from "../utils/promise";
 // Pages
 import GettingStartedPage from "../../pages/GettingStartedPage";
 import ChannelPage from "../../pages/DevicePage";
-import LinearRegressionPage from "../../pages/LinearRegressionPage";
 
 const gettingStartedKey = "getting-started-nav";
-const linearRegressionKey = "linear-regression-nav";
 
 const styles = theme => ({
   nested: {
@@ -57,13 +51,7 @@ class AppDrawerContents extends React.Component {
     isLocalScan: false,
     isRemoteScan: false,
     scanCompleted: 0,
-    scanTotal: 0,
-
-    openUtilities: false
-  };
-
-  handleUtilitiesClick = () => {
-    this.setState(state => ({ openUtilities: !state.openUtilities }));
+    scanTotal: 0
   };
 
   handleListItemClick = (event, key) => {
@@ -276,12 +264,6 @@ class AppDrawerContents extends React.Component {
     return <GettingStartedPage />;
   };
 
-  linearRegressionLink = props => <Link to="/linear-regression" {...props} />;
-
-  linearRegressionPage = () => {
-    return <LinearRegressionPage />;
-  };
-
   componentDidMount = () => {
     this.getLocalIPAddressAsync();
   };
@@ -291,7 +273,6 @@ class AppDrawerContents extends React.Component {
     const { selectedKey, knownDevice } = this.state;
     const { localIP, localDevices, remoteDevices } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
-    const { openUtilities } = this.state;
 
     // progress in scanning
     const isScanning = scanTotal > 0 && scanCompleted < scanTotal;
@@ -376,35 +357,11 @@ class AppDrawerContents extends React.Component {
         {this.ScanProgress(!isRemoteScanning, completed)}
         {this.RenderDevices(remoteDevices)}
         <Divider key="nav-end-devices-divider" />
-        <ListItem button dense onClick={this.handleUtilitiesClick}>
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText inset primary="Utilities" />
-          {openUtilities ? (
-            <ExpandLess color="action" />
-          ) : (
-            <ExpandMore color="action" />
-          )}
-        </ListItem>
-        <Collapse in={openUtilities} timeout="auto" unmountOnExit>
-          <Divider variant="inset" key="nav-utilities-regression" />
-          <List component="div" disablePadding>
-            <ListItem
-              button
-              dense
-              className={classes.nested}
-              key={linearRegressionKey}
-              component={this.linearRegressionLink}
-              selected={selectedKey === linearRegressionKey}
-              onClick={event =>
-                this.handleListItemClick(event, linearRegressionKey)
-              }
-            >
-              <ListItemText primary="Linear Regression" />
-            </ListItem>
-          </List>
-        </Collapse>
+        <UtilityContents
+          classes={classes}
+          selectedKey={selectedKey}
+          onClick={this.handleListItemClick}
+        />
         <Divider key="nav-last-divider" />
         <FabAddDevice
           knownDevice={knownDevice}
@@ -417,6 +374,7 @@ class AppDrawerContents extends React.Component {
 }
 
 AppDrawerContents.propTypes = {
+  classes: PropTypes.object.isRequired,
   sendMessage: PropTypes.func.isRequired
 };
 
