@@ -98,7 +98,7 @@ class AppDrawerContents extends React.Component {
         await this.getLocalIPAddressAsync();
       }
       const baseIP = isLocal ? "169.254.17.1" : this.state.localIP;
-      const scanDevices = getFullRange(baseIP);
+      const scanDevices = getFullRange(baseIP, isLocal);
       this.setState({
         isLocalScan: isLocal,
         isRemoteScan: !isLocal,
