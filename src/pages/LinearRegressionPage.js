@@ -46,7 +46,7 @@ const styles = theme => ({
   }
 });
 
-class RegressionPage extends Component {
+class LinearRegressionPage extends Component {
   state = {
     itemX: Number.NaN,
     itemY: Number.NaN,
@@ -291,7 +291,7 @@ class RegressionPage extends Component {
   }
 }
 
-RegressionPage.propTypes = {
+LinearRegressionPage.propTypes = {
   classes: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   reduxAbout: PropTypes.object.isRequired
@@ -302,4 +302,4 @@ export default compose(
     reduxAbout: state.about
   })),
   withStyles(styles)
-)(RegressionPage);
+)(LinearRegressionPage);

@@ -33,10 +33,10 @@ import { timeoutPromise } from "../utils/promise";
 // Pages
 import GettingStartedPage from "../../pages/GettingStartedPage";
 import ChannelPage from "../../pages/DevicePage";
-import RegressionPage from "../../pages/RegressionPage";
+import LinearRegressionPage from "../../pages/LinearRegressionPage";
 
 const gettingStartedKey = "getting-started-nav";
-const regressionKey = "regression-nav";
+const linearRegressionKey = "linear-regression-nav";
 
 const styles = theme => ({
   nested: {
@@ -276,10 +276,10 @@ class AppDrawerContents extends React.Component {
     return <GettingStartedPage />;
   };
 
-  regressionLink = props => <Link to="/regression" {...props} />;
+  linearRegressionLink = props => <Link to="/linear-regression" {...props} />;
 
-  regressionPage = () => {
-    return <RegressionPage />;
+  linearRegressionPage = () => {
+    return <LinearRegressionPage />;
   };
 
   componentDidMount = () => {
@@ -381,7 +381,11 @@ class AppDrawerContents extends React.Component {
             <DashboardIcon />
           </ListItemIcon>
           <ListItemText inset primary="Utilities" />
-          {openUtilities ? <ExpandLess /> : <ExpandMore />}
+          {openUtilities ? (
+            <ExpandLess color="action" />
+          ) : (
+            <ExpandMore color="action" />
+          )}
         </ListItem>
         <Collapse in={openUtilities} timeout="auto" unmountOnExit>
           <Divider variant="inset" key="nav-utilities-regression" />
@@ -390,10 +394,12 @@ class AppDrawerContents extends React.Component {
               button
               dense
               className={classes.nested}
-              key={regressionKey}
-              component={this.regressionLink}
-              selected={selectedKey === regressionKey}
-              onClick={event => this.handleListItemClick(event, regressionKey)}
+              key={linearRegressionKey}
+              component={this.linearRegressionLink}
+              selected={selectedKey === linearRegressionKey}
+              onClick={event =>
+                this.handleListItemClick(event, linearRegressionKey)
+              }
             >
               <ListItemText primary="Linear Regression" />
             </ListItem>

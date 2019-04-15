@@ -41,7 +41,7 @@ import Notifications from "../modules/components/Notifications";
 // Pages
 import GettingStartedPage from "./GettingStartedPage";
 import DevicePage from "./DevicePage";
-import RegressionPage from "./RegressionPage";
+import LinearRegressionPage from "./LinearRegressionPage";
 import NotFoundPage from "./NotFoundPage";
 
 import { ACTION_TYPES } from "../modules/constants";
@@ -211,8 +211,8 @@ class App extends React.Component {
     return <GettingStartedPage />;
   };
 
-  regressionPage = () => {
-    return <RegressionPage />;
+  linearRegressionPage = () => {
+    return <LinearRegressionPage />;
   };
 
   notFoundPage = () => {
@@ -304,7 +304,11 @@ class App extends React.Component {
                 component={this.gettingStartedPage}
               />
               <Route exact path="/device/:id" component={this.devicePage} />
-              <Route exact path="/regression" component={this.regressionPage} />
+              <Route
+                exact
+                path="/linear-regression"
+                component={this.linearRegressionPage}
+              />
               <Route component={this.notFoundPage} />
             </Switch>
           </main>
