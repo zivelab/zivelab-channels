@@ -15,7 +15,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 // Icons
 import DeviceHubIcon from "@material-ui/icons/DeviceHub";
 import HubSpotIcon from "../icons/HubSpot";
-import TabletIcon from "@material-ui/icons/Tablet";
 
 // Components
 import UtilityContents from "./UtilityContents";
@@ -123,7 +122,9 @@ class AppDrawerContents extends React.Component {
     try {
       // [TODO] We really want to '/description', but we will do later
       const descriptionURL = "http://" + ip + "/about";
-      const descriptionRequest = new Request(descriptionURL);
+      const descriptionRequest = new Request(descriptionURL, {
+        cache: "no-cache"
+      });
       const descriptionFetch = await timeoutPromise(
         1000,
         fetch(descriptionRequest)
@@ -148,17 +149,13 @@ class AppDrawerContents extends React.Component {
         }
       }
     } catch (e) {
-      const invalidDevice = this.state[devices].filter(
-        device => device.ipAddress === ip
-      );
       this.setState({
-        [devices]: this.state[devices].filter(function(device) {
-          return device !== invalidDevice;
+        [devices]: this.state[devices].filter(device => {
+          return device.ipAddress !== ip;
         })
       });
       if (showMessage) {
-        const message =
-          "Can't find device. Make sure your device is turned on and connected to the network.";
+        const message = "Can't find device.";
         this.props.sendMessage(message);
       }
     } finally {
@@ -183,6 +180,7 @@ class AppDrawerContents extends React.Component {
   }
 
   RenderDevices(devices) {
+    const { classes } = this.props;
     const linkTo = ip => "/device/" + ip;
     const deviceLink = ip => props => <Link to={linkTo(ip)} {...props} />;
     const listKey = ip => {
@@ -234,10 +232,8 @@ class AppDrawerContents extends React.Component {
             component={deviceLink(device.ipAddress)}
             selected={this.state.selectedKey === device.ipAddress}
             onClick={event => this.handleListItemClick(event, device.ipAddress)}
+            className={classes.nested}
           >
-            <ListItemIcon>
-              <TabletIcon />
-            </ListItemIcon>
             <ListItemText
               primary={deviceTitle(device)}
               secondary={deviceDesc(device)}
