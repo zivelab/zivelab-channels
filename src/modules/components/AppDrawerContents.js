@@ -26,17 +26,13 @@ import compose from "../utils/compose";
 import { getLocalIPAddress, getFullRange, isZiveDevice } from "../utils/net";
 import { timeoutPromise } from "../utils/promise";
 
-// Pages
-import GettingStartedPage from "../../pages/GettingStartedPage";
-import ChannelPage from "../../pages/DevicePage";
-
-const gettingStartedKey = "getting-started-nav";
-
 const styles = theme => ({
   nested: {
     paddingLeft: theme.spacing.unit * 4
   }
 });
+
+const gettingStartedKey = "getting-started-nav";
 
 class AppDrawerContents extends React.Component {
   state = {
@@ -58,24 +54,24 @@ class AppDrawerContents extends React.Component {
     this.setState({ selectedKey: key });
   };
 
-  handleLocalClick = () => {
-    this.findDevices(true);
+  handleLocalClick = async () => {
+    await this.findDevices(true);
   };
 
-  handleRemoteClick = () => {
-    this.findDevices(false);
+  handleRemoteClick = async () => {
+    await this.findDevices(false);
   };
 
-  handleAddKnownDevice = ip => {
+  handleAddKnownDevice = async ip => {
     this.setState({ knownDevice: ip });
-    this.scanKnownDevice(ip);
+    await this.scanKnownDevice(ip);
   };
 
-  async scanKnownDevice(ip) {
+  scanKnownDevice = async ip => {
     await this.loadDescriptionAsync(ip, true);
-  }
+  };
 
-  async findDevices(isLocal) {
+  findDevices = async isLocal => {
     try {
       const message = isLocal
         ? "Scanning local devices..."
@@ -99,9 +95,9 @@ class AppDrawerContents extends React.Component {
     } catch (e) {
       //console.log(e);
     }
-  }
+  };
 
-  async getLocalIPAddressAsync() {
+  getLocalIPAddressAsync = async () => {
     try {
       const ip = await getLocalIPAddress();
       if (ip) {
@@ -118,9 +114,9 @@ class AppDrawerContents extends React.Component {
     } catch (e) {
       //console.log(e);
     }
-  }
+  };
 
-  async loadDescriptionAsync(ip, showMessage = false) {
+  loadDescriptionAsync = async (ip, showMessage = false) => {
     // ip should be a valid IP address.
     const isLocal = ip.split(".").slice(0, 1)[0] === "169";
     const devices = isLocal ? "localDevices" : "remoteDevices";
@@ -168,7 +164,7 @@ class AppDrawerContents extends React.Component {
     } finally {
       this.setState({ scanCompleted: this.state.scanCompleted + 1 });
     }
-  }
+  };
 
   ScanProgress(disabled = false, value = 0) {
     if (disabled) {
@@ -254,15 +250,7 @@ class AppDrawerContents extends React.Component {
     }
   }
 
-  channelPage = ({ match: { params } }) => {
-    return <ChannelPage ipAddress={params.id} />;
-  };
-
   gettingStartedLink = props => <Link to="/getting-started" {...props} />;
-
-  gettingStartedPage = () => {
-    return <GettingStartedPage />;
-  };
 
   componentDidMount = () => {
     this.getLocalIPAddressAsync();

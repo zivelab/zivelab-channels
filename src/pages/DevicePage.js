@@ -247,7 +247,7 @@ class DevicePage extends React.Component {
     currentIPAddress = null;
   }
 
-  async loadAboutAsync() {
+  loadAboutAsync = async () => {
     const { ipAddress } = this.state;
     if (ipAddress !== currentIPAddress) return;
     try {
@@ -264,9 +264,9 @@ class DevicePage extends React.Component {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
-  async loadChannelAsync() {
+  loadChannelAsync = async () => {
     const { ipAddress } = this.state;
     if (ipAddress !== currentIPAddress) return;
     try {
@@ -329,9 +329,9 @@ class DevicePage extends React.Component {
     } finally {
       //clearInterval(this.timerID );
     }
-  }
+  };
 
-  async loadCookAsync() {
+  loadCookAsync = async () => {
     const { ipAddress } = this.state;
     if (ipAddress !== currentIPAddress) return;
     try {
@@ -350,9 +350,9 @@ class DevicePage extends React.Component {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
-  async loadSamplesAsync(index) {
+  loadSamplesAsync = async index => {
     const { ipAddress, cook } = this.state;
     if (ipAddress !== currentIPAddress) return;
     try {
@@ -383,9 +383,9 @@ class DevicePage extends React.Component {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
-  async startExpAsync() {
+  startExpAsync = async () => {
     const { ipAddress } = this.state;
     if (ipAddress !== currentIPAddress) return;
     try {
@@ -413,14 +413,14 @@ class DevicePage extends React.Component {
       const startURL = "http://" + ipAddress + "/start";
       const response = await fetch(startURL, settings);
       if (response.ok) {
-        this.props.sendMessage("Started");
+        console.log("Started");
       }
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
-  async stopExpAsync() {
+  stopExpAsync = async () => {
     const { ipAddress } = this.state;
     if (ipAddress !== currentIPAddress) return;
     try {
@@ -433,12 +433,12 @@ class DevicePage extends React.Component {
       };
       const response = await fetch(stopURL, settings);
       if (response.ok) {
-        this.props.sendMessage("Manually Stopped");
+        console.log("Manually Stopped");
       }
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   getTitle = about => {
     if (about) {
