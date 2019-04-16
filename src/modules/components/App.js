@@ -288,6 +288,7 @@ class App extends React.Component {
           </AppBar>
           <AppDrawer
             open={openDrawer}
+            notified={openMessage}
             sendMessage={this.sendMessage}
             toggleDrawer={this.toggleDrawer}
           />

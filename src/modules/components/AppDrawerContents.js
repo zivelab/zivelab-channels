@@ -257,7 +257,7 @@ class AppDrawerContents extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, notified } = this.props;
     const { selectedKey, knownDevice } = this.state;
     const { localIP, localDevices, remoteDevices } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
@@ -355,6 +355,7 @@ class AppDrawerContents extends React.Component {
           knownDevice={knownDevice}
           onClick={this.handleAddKnownDevice}
           disabled={isScanning}
+          moveUp={notified}
         />
       </React.Fragment>
     );
@@ -363,6 +364,7 @@ class AppDrawerContents extends React.Component {
 
 AppDrawerContents.propTypes = {
   classes: PropTypes.object.isRequired,
+  notified: PropTypes.bool.isRequired,
   sendMessage: PropTypes.func.isRequired
 };
 

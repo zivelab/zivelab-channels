@@ -6,6 +6,12 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 
 const styles = theme => ({
+  snackbar: {
+    position: "absolute"
+  },
+  snackbarContent: {
+    width: 360
+  },
   close: {
     padding: theme.spacing.unit / 2
   }
@@ -23,7 +29,10 @@ class Notifications extends React.Component {
           autoHideDuration={3000}
           onClose={onClose}
           onExited={onExited}
-          ContentProps={{ "aria-describedby": "alert-message" }}
+          ContentProps={{
+            "aria-describedby": "alert-message",
+            className: classes.snackbarContent
+          }}
           message={<span id="message-id">{messageInfo.message}</span>}
           action={[
             <IconButton
@@ -37,6 +46,7 @@ class Notifications extends React.Component {
               <CloseIcon />
             </IconButton>
           ]}
+          className={classes.snackbar}
         />
       </React.Fragment>
     );

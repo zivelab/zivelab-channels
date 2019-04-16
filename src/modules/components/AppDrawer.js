@@ -37,7 +37,14 @@ const styles = theme => ({
 
 class AppDrawer extends React.Component {
   render() {
-    const { classes, open, reduxTheme, sendMessage, toggleDrawer } = this.props;
+    const {
+      classes,
+      open,
+      notified,
+      reduxTheme,
+      sendMessage,
+      toggleDrawer
+    } = this.props;
     return (
       <nav>
         <Drawer
@@ -58,7 +65,7 @@ class AppDrawer extends React.Component {
               )}
             </IconButton>
           </div>
-          <AppDrawerContents sendMessage={sendMessage} />
+          <AppDrawerContents sendMessage={sendMessage} notified={notified} />
         </Drawer>
       </nav>
     );
@@ -67,6 +74,7 @@ class AppDrawer extends React.Component {
 
 AppDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
+  notified: PropTypes.bool.isRequired,
   open: PropTypes.bool.isRequired,
   reduxTheme: PropTypes.object.isRequired,
   sendMessage: PropTypes.func.isRequired,

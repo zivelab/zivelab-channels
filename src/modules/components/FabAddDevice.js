@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
@@ -24,6 +25,20 @@ const styles = theme => ({
     position: "absolute",
     bottom: theme.spacing.unit * 2,
     right: theme.spacing.unit * 2
+  },
+  fabMoveUp: {
+    transform: "translate3d(0, -75px, 0)",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.easeOut
+    })
+  },
+  fabMoveDown: {
+    transform: "translate3d(0, 0, 0)",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.leavingScreen,
+      easing: theme.transitions.easing.sharp
+    })
   }
 });
 
@@ -80,8 +95,12 @@ class FabAddDevice extends React.Component {
   };
 
   render() {
-    const { classes, disabled } = this.props;
+    const { classes, disabled, moveUp } = this.props;
     const { open, knownDevice, isValidDevice } = this.state;
+    const fabClassName = classNames(
+      classes.fab,
+      moveUp ? classes.fabMoveUp : classes.fabMoveDown
+    );
     return (
       <React.Fragment key="section-to-add-known-device">
         <Tooltip
@@ -91,7 +110,7 @@ class FabAddDevice extends React.Component {
         >
           <Fab
             aria-label="Add"
-            className={classes.fab}
+            className={fabClassName}
             color="primary"
             size="medium"
             onClick={this.handleOpen}
@@ -145,7 +164,8 @@ FabAddDevice.propTypes = {
   classes: PropTypes.object.isRequired,
   disabled: PropTypes.bool,
   knownDevice: PropTypes.string.isRequired,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  moveUp: PropTypes.bool
 };
 
 export default withStyles(styles)(FabAddDevice);
