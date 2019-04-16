@@ -41,6 +41,7 @@ class StartExpButton extends React.Component {
           aria-label="Start"
           onClick={this.handleClick}
           disabled={disabled}
+          color="primary"
         >
           <PlayArrowIcon />
         </IconButton>

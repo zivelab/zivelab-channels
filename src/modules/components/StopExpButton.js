@@ -12,7 +12,12 @@ class StopExpButton extends React.Component {
     const { disabled, onStop } = this.props;
     return (
       <React.Fragment key="section-to-setup-experiment">
-        <IconButton aria-label="Stop" onClick={onStop} disabled={disabled}>
+        <IconButton
+          aria-label="Stop"
+          onClick={onStop}
+          disabled={disabled}
+          color="secondary"
+        >
           <StopIcon />
         </IconButton>
       </React.Fragment>
