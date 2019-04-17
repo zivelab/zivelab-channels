@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 
 // controls
 import Badge from "@material-ui/core/Badge";
@@ -21,7 +20,7 @@ import HubSpotIcon from "../icons/HubSpot";
 
 // Components
 import FabAddDevice from "./FabAddDevice";
-import LinkListItemText from "./LinkListItemText";
+import ListItemLink from "./ListItemLink";
 import UtilityContents from "./UtilityContents";
 
 // functions
@@ -48,9 +47,7 @@ const styles = theme => ({
   }
 });
 
-const gettingStartedKey = "nav-getting-started";
 const gettingStartedTo = "/getting-started";
-const gettingStartedLink = props => <Link to={gettingStartedTo} {...props} />;
 
 class AppDrawerContents extends React.Component {
   state = {
@@ -193,12 +190,7 @@ class AppDrawerContents extends React.Component {
   }
 
   RenderDevices(devices) {
-    const { classes } = this.props;
     const linkTo = ip => "/device/" + ip;
-    const deviceLink = ip => props => <Link to={linkTo(ip)} {...props} />;
-    const listKey = ip => {
-      return "nav-device-" + ip.split(".").join("-");
-    };
     const dividerKey = ip => {
       return "nav-divider-" + ip.split(".").join("-");
     };
@@ -237,19 +229,12 @@ class AppDrawerContents extends React.Component {
     return sorted.map(device => (
       <React.Fragment key="section-to-device-list-nav">
         <Divider variant="inset" key={dividerKey(device.ipAddress)} />
-        <ListItem
-          button
-          dense
-          key={listKey(device.ipAddress)}
-          component={deviceLink(device.ipAddress)}
-          className={classes.nested}
-        >
-          <LinkListItemText
-            primary={deviceTitle(device)}
-            secondary={deviceDesc(device)}
-            href={linkTo(device.ipAddress)}
-          />
-        </ListItem>
+        <ListItemLink
+          nested
+          primary={deviceTitle(device)}
+          secondary={deviceDesc(device)}
+          to={linkTo(device.ipAddress)}
+        />
       </React.Fragment>
     ));
   }
@@ -271,14 +256,7 @@ class AppDrawerContents extends React.Component {
     return (
       <React.Fragment key="section-to-list-nav-contents">
         <Divider key="nav-first-divider" />
-        <ListItem
-          button
-          dense
-          key={gettingStartedKey}
-          component={gettingStartedLink}
-        >
-          <LinkListItemText primary="Getting Started" href={gettingStartedTo} />
-        </ListItem>
+        <ListItemLink primary="Getting Started" to={gettingStartedTo} />
         <Divider key="nav-second-divider" />
         <Tooltip
           title={`Scan local devices of ${localIP}`}

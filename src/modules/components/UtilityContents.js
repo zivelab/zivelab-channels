@@ -1,6 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 
 // controls
 import Collapse from "@material-ui/core/Collapse";
@@ -11,18 +9,14 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 
 // components
-import LinkListItemText from "./LinkListItemText";
+import ListItemLink from "./ListItemLink";
 
 // Icons
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 
-const linearRegressionKey = "linear-regression-nav";
 const linearRegressionTo = "/linear-regression";
-const linearRegressionLink = props => (
-  <Link to={linearRegressionTo} {...props} />
-);
 
 class UtilityContents extends React.Component {
   state = {
@@ -34,7 +28,6 @@ class UtilityContents extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
     const { open } = this.state;
     return (
       <React.Fragment key="section-to-list-utilities-nav">
@@ -48,27 +41,16 @@ class UtilityContents extends React.Component {
         <Collapse in={open} timeout="auto" unmountOnExit>
           <Divider variant="inset" key="nav-utilities-inner-divider" />
           <List component="div" disablePadding>
-            <ListItem
-              button
-              dense
-              className={classes.nested}
-              key={linearRegressionKey}
-              component={linearRegressionLink}
-            >
-              <LinkListItemText
-                primary="Linear Regression"
-                href={linearRegressionTo}
-              />
-            </ListItem>
+            <ListItemLink
+              nested
+              primary="Linear Regression"
+              to={linearRegressionTo}
+            />
           </List>
         </Collapse>
       </React.Fragment>
     );
   }
 }
-
-UtilityContents.propTypes = {
-  classes: PropTypes.object.isRequired
-};
 
 export default UtilityContents;
