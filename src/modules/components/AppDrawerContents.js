@@ -20,8 +20,9 @@ import DeviceHubIcon from "@material-ui/icons/DeviceHub";
 import HubSpotIcon from "../icons/HubSpot";
 
 // Components
-import UtilityContents from "./UtilityContents";
 import FabAddDevice from "./FabAddDevice";
+import LinkListItemText from "./LinkListItemText";
+import UtilityContents from "./UtilityContents";
 
 // functions
 import compose from "../utils/compose";
@@ -40,15 +41,19 @@ const styles = theme => ({
         ? theme.palette.grey[200]
         : theme.palette.grey[900]
     }`
+  },
+  active: {
+    color: theme.palette.primary.main,
+    fontWeight: theme.typography.fontWeightMedium
   }
 });
 
-const gettingStartedKey = "getting-started-nav";
+const gettingStartedKey = "nav-getting-started";
+const gettingStartedTo = "/getting-started";
+const gettingStartedLink = props => <Link to={gettingStartedTo} {...props} />;
 
 class AppDrawerContents extends React.Component {
   state = {
-    selectedKey: gettingStartedKey,
-
     localIP: null,
     localDevices: [],
     remoteDevices: [],
@@ -59,10 +64,6 @@ class AppDrawerContents extends React.Component {
     isRemoteScan: false,
     scanCompleted: 0,
     scanTotal: 0
-  };
-
-  handleListItemClick = (event, key) => {
-    this.setState({ selectedKey: key });
   };
 
   handleLocalClick = async () => {
@@ -241,20 +242,17 @@ class AppDrawerContents extends React.Component {
           dense
           key={listKey(device.ipAddress)}
           component={deviceLink(device.ipAddress)}
-          selected={this.state.selectedKey === device.ipAddress}
-          onClick={event => this.handleListItemClick(event, device.ipAddress)}
           className={classes.nested}
         >
-          <ListItemText
+          <LinkListItemText
             primary={deviceTitle(device)}
             secondary={deviceDesc(device)}
+            href={linkTo(device.ipAddress)}
           />
         </ListItem>
       </React.Fragment>
     ));
   }
-
-  gettingStartedLink = props => <Link to="/getting-started" {...props} />;
 
   componentDidMount = () => {
     this.getLocalIPAddressAsync();
@@ -262,8 +260,7 @@ class AppDrawerContents extends React.Component {
 
   render() {
     const { classes, notified } = this.props;
-    const { selectedKey, knownDevice } = this.state;
-    const { localIP, localDevices, remoteDevices } = this.state;
+    const { localIP, localDevices, remoteDevices, knownDevice } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
 
     // progress in scanning
@@ -278,11 +275,9 @@ class AppDrawerContents extends React.Component {
           button
           dense
           key={gettingStartedKey}
-          component={this.gettingStartedLink}
-          selected={selectedKey === gettingStartedKey}
-          onClick={event => this.handleListItemClick(event, gettingStartedKey)}
+          component={gettingStartedLink}
         >
-          <ListItemText primary="Getting Started" />
+          <LinkListItemText primary="Getting Started" href={gettingStartedTo} />
         </ListItem>
         <Divider key="nav-second-divider" />
         <Tooltip
@@ -373,11 +368,7 @@ class AppDrawerContents extends React.Component {
           </List>
         </Collapse>
         <Divider key="nav-end-devices-divider" />
-        <UtilityContents
-          classes={classes}
-          selectedKey={selectedKey}
-          onClick={this.handleListItemClick}
-        />
+        <UtilityContents classes={classes} />
         <Divider key="nav-last-divider" />
         <FabAddDevice
           knownDevice={knownDevice}

@@ -10,12 +10,19 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 
+// components
+import LinkListItemText from "./LinkListItemText";
+
 // Icons
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 
 const linearRegressionKey = "linear-regression-nav";
+const linearRegressionTo = "/linear-regression";
+const linearRegressionLink = props => (
+  <Link to={linearRegressionTo} {...props} />
+);
 
 class UtilityContents extends React.Component {
   state = {
@@ -26,10 +33,8 @@ class UtilityContents extends React.Component {
     this.setState(state => ({ open: !state.open }));
   };
 
-  linearRegressionLink = props => <Link to="/linear-regression" {...props} />;
-
   render() {
-    const { classes, selectedKey, onClick } = this.props;
+    const { classes } = this.props;
     const { open } = this.state;
     return (
       <React.Fragment key="section-to-list-utilities-nav">
@@ -41,18 +46,19 @@ class UtilityContents extends React.Component {
           {open ? <ExpandLess color="action" /> : <ExpandMore color="action" />}
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <Divider variant="inset" key="nav-utilities-regression" />
+          <Divider variant="inset" key="nav-utilities-inner-divider" />
           <List component="div" disablePadding>
             <ListItem
               button
               dense
               className={classes.nested}
               key={linearRegressionKey}
-              component={this.linearRegressionLink}
-              selected={selectedKey === linearRegressionKey}
-              onClick={event => onClick(event, linearRegressionKey)}
+              component={linearRegressionLink}
             >
-              <ListItemText primary="Linear Regression" />
+              <LinkListItemText
+                primary="Linear Regression"
+                href={linearRegressionTo}
+              />
             </ListItem>
           </List>
         </Collapse>
@@ -62,9 +68,7 @@ class UtilityContents extends React.Component {
 }
 
 UtilityContents.propTypes = {
-  classes: PropTypes.object.isRequired,
-  selectedKey: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired
+  classes: PropTypes.object.isRequired
 };
 
 export default UtilityContents;
