@@ -15,9 +15,6 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 
-// Pages
-import LinearRegressionPage from "../../pages/LinearRegressionPage";
-
 const linearRegressionKey = "linear-regression-nav";
 
 class UtilityContents extends React.Component {
@@ -30,10 +27,6 @@ class UtilityContents extends React.Component {
   };
 
   linearRegressionLink = props => <Link to="/linear-regression" {...props} />;
-
-  linearRegressionPage = () => {
-    return <LinearRegressionPage />;
-  };
 
   render() {
     const { classes, selectedKey, onClick } = this.props;
