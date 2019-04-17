@@ -5,8 +5,11 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 // controls
+import Badge from "@material-ui/core/Badge";
+import Collapse from "@material-ui/core/Collapse";
 import Divider from "@material-ui/core/Divider";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -28,6 +31,15 @@ import { timeoutPromise } from "../utils/promise";
 const styles = theme => ({
   nested: {
     paddingLeft: theme.spacing.unit * 4
+  },
+  badge: {
+    top: "100%",
+    right: -3,
+    border: `2px solid ${
+      theme.palette.type === "light"
+        ? theme.palette.grey[200]
+        : theme.palette.grey[900]
+    }`
   }
 });
 
@@ -210,40 +222,36 @@ class AppDrawerContents extends React.Component {
       const ip = device.ipAddress;
       return name === "Untitled" ? ip : model + " | " + ip;
     };
-    if (devices) {
-      const sorted = devices.sort(function(a, b) {
-        const a_ip = a.ipAddress
-          .split(".")
-          .map(num => `000${num}`.slice(-3))
-          .join("");
-        const b_ip = b.ipAddress
-          .split(".")
-          .map(num => `000${num}`.slice(-3))
-          .join("");
-        return a_ip - b_ip;
-      });
-      return sorted.map(device => (
-        <React.Fragment key={device.ipAddress}>
-          <Divider variant="inset" key={dividerKey(device.ipAddress)} />
-          <ListItem
-            button
-            dense
-            key={listKey(device.ipAddress)}
-            component={deviceLink(device.ipAddress)}
-            selected={this.state.selectedKey === device.ipAddress}
-            onClick={event => this.handleListItemClick(event, device.ipAddress)}
-            className={classes.nested}
-          >
-            <ListItemText
-              primary={deviceTitle(device)}
-              secondary={deviceDesc(device)}
-            />
-          </ListItem>
-        </React.Fragment>
-      ));
-    } else {
-      return <React.Fragment />;
-    }
+    const sorted = devices.sort(function(a, b) {
+      const a_ip = a.ipAddress
+        .split(".")
+        .map(num => `000${num}`.slice(-3))
+        .join("");
+      const b_ip = b.ipAddress
+        .split(".")
+        .map(num => `000${num}`.slice(-3))
+        .join("");
+      return a_ip - b_ip;
+    });
+    return sorted.map(device => (
+      <React.Fragment key="section-to-device-list-nav">
+        <Divider variant="inset" key={dividerKey(device.ipAddress)} />
+        <ListItem
+          button
+          dense
+          key={listKey(device.ipAddress)}
+          component={deviceLink(device.ipAddress)}
+          selected={this.state.selectedKey === device.ipAddress}
+          onClick={event => this.handleListItemClick(event, device.ipAddress)}
+          className={classes.nested}
+        >
+          <ListItemText
+            primary={deviceTitle(device)}
+            secondary={deviceDesc(device)}
+          />
+        </ListItem>
+      </React.Fragment>
+    ));
   }
 
   gettingStartedLink = props => <Link to="/getting-started" {...props} />;
@@ -278,8 +286,8 @@ class AppDrawerContents extends React.Component {
         </ListItem>
         <Divider key="nav-second-divider" />
         <Tooltip
-          title={`Click to scan local devices of ${localIP}`}
-          aria-label="Click to scan local devices"
+          title={`Scan local devices of ${localIP}`}
+          aria-label="Scan local devices"
           enterDelay={300}
         >
           <ListItem
@@ -290,13 +298,21 @@ class AppDrawerContents extends React.Component {
             disabled={isScanning}
           >
             <ListItemIcon>
-              <DeviceHubIcon />
+              <Badge
+                color="secondary"
+                badgeContent={localDevices.length}
+                invisible={localDevices.length < 1}
+                classes={{ badge: classes.badge }}
+              >
+                <DeviceHubIcon />
+              </Badge>
             </ListItemIcon>
             <ListItemText
-              primary="Scan My Devices"
+              inset
+              primary="My Devices"
               secondary={
                 isLocalScanning
-                  ? "scanning... " + scanCompleted + "/" + scanTotal
+                  ? "scanning: " + scanCompleted + "/" + scanTotal
                   : localDevices.length
                   ? localDevices.length === 1
                     ? "1 device found"
@@ -307,11 +323,15 @@ class AppDrawerContents extends React.Component {
           </ListItem>
         </Tooltip>
         {this.ScanProgress(!isLocalScanning, completed)}
-        {this.RenderDevices(localDevices)}
+        <Collapse in={true} timeout="auto" unmountOnExit>
+          <List component="nav-local-device-list" disablePadding>
+            {this.RenderDevices(localDevices)}
+          </List>
+        </Collapse>
         <Divider key="nav-third-divider" />
         <Tooltip
-          title="Click to scan remote devices"
-          aria-label="Click to scan remote devices"
+          title="Scan remote devices"
+          aria-label="Scan remote devices"
           enterDelay={300}
         >
           <ListItem
@@ -322,13 +342,21 @@ class AppDrawerContents extends React.Component {
             disabled={isScanning}
           >
             <ListItemIcon>
-              <HubSpotIcon />
+              <Badge
+                color="primary"
+                badgeContent={remoteDevices.length}
+                invisible={remoteDevices.length < 1}
+                classes={{ badge: classes.badge }}
+              >
+                <HubSpotIcon />
+              </Badge>
             </ListItemIcon>
             <ListItemText
-              primary="Scan Remote Devices"
+              inset
+              primary="Remote Devices"
               secondary={
                 isRemoteScanning
-                  ? "scanning... " + scanCompleted + "/" + scanTotal
+                  ? "scanning: " + scanCompleted + "/" + scanTotal
                   : remoteDevices.length
                   ? remoteDevices.length === 1
                     ? "1 device found"
@@ -339,7 +367,11 @@ class AppDrawerContents extends React.Component {
           </ListItem>
         </Tooltip>
         {this.ScanProgress(!isRemoteScanning, completed)}
-        {this.RenderDevices(remoteDevices)}
+        <Collapse in={true} timeout="auto" unmountOnExit>
+          <List component="nav-remote-device-list" disablePadding>
+            {this.RenderDevices(remoteDevices)}
+          </List>
+        </Collapse>
         <Divider key="nav-end-devices-divider" />
         <UtilityContents
           classes={classes}
