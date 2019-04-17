@@ -316,7 +316,7 @@ class AppDrawerContents extends React.Component {
           >
             <ListItemIcon>
               <Badge
-                color="primary"
+                color="secondary"
                 badgeContent={remoteDevices.length}
                 invisible={remoteDevices.length < 1}
                 classes={{ badge: classes.badge }}
