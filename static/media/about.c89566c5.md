@@ -1,4 +1,4 @@
-# Getting Started
+# About
 
 <p class="description">How to find your Zive devices using this web application.</p>
 
