@@ -40,8 +40,8 @@ class AboutButton extends React.Component {
     const { reduxAbout, sendMessage } = this.props;
     const { open } = this.state;
 
-    if (!isEmpty(reduxAbout)) {
-      return (
+    return (
+      !isEmpty(reduxAbout) && (
         <React.Fragment key="section-to-show-about">
           <Tooltip title="Show about" enterDelay={300}>
             <IconButton
@@ -58,10 +58,8 @@ class AboutButton extends React.Component {
             sendMessage={sendMessage}
           />
         </React.Fragment>
-      );
-    } else {
-      return <React.Fragment key="section-to-show-about-disabled" />;
-    }
+      )
+    );
   }
 }
 

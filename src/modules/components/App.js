@@ -304,7 +304,12 @@ class App extends React.Component {
                 path="/getting-started/about"
                 component={this.aboutPage}
               />
-              <Route exact path="/device/:id" component={this.devicePage} />
+              <Route exact path="/my-device/:id" component={this.devicePage} />
+              <Route
+                exact
+                path="/remote-device/:id"
+                component={this.devicePage}
+              />
               <Route
                 exact
                 path="/utilities/linear-regression"

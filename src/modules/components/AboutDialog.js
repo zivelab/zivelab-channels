@@ -54,8 +54,8 @@ class AboutDialog extends React.Component {
 
   render() {
     const { classes, reduxAbout, onClose, ...other } = this.props;
-    if (!isEmpty(reduxAbout)) {
-      return (
+    return (
+      !isEmpty(reduxAbout) && (
         <React.Fragment key="section-to-open-dialog-about">
           <Dialog
             onClose={onClose}
@@ -87,10 +87,8 @@ class AboutDialog extends React.Component {
             </DialogActions>
           </Dialog>
         </React.Fragment>
-      );
-    } else {
-      return <React.Fragment key="section-to-open-dialog-about-disabled" />;
-    }
+      )
+    );
   }
 }
 

@@ -7,15 +7,13 @@ import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 
 // components
+import ListItemBoldText from "./ListItemBoldText";
 import ListItemLink from "./ListItemLink";
 
 // Icons
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
 
 const linearRegressionTo = "/utilities/linear-regression";
 
@@ -36,8 +34,7 @@ class UtilityContents extends React.Component {
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
-          <ListItemText inset primary="Utilities" />
-          {open ? <ExpandLess color="action" /> : <ExpandMore color="action" />}
+          <ListItemBoldText primary="Utilities" />
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <Divider

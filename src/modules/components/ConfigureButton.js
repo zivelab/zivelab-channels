@@ -40,8 +40,8 @@ class ConfigureButton extends React.Component {
     const { reduxAbout } = this.props;
     const { open } = this.state;
 
-    if (!isEmpty(reduxAbout)) {
-      return (
+    return (
+      !isEmpty(reduxAbout) && (
         <React.Fragment key="section-to-configure-ethernet">
           <Tooltip title="Configure Ethernet settings" enterDelay={300}>
             <IconButton
@@ -54,10 +54,8 @@ class ConfigureButton extends React.Component {
           </Tooltip>
           <ConfigureDialog open={open} onClose={this.handleClose} />
         </React.Fragment>
-      );
-    } else {
-      return <React.Fragment key="section-to-configure-ethernet" />;
-    }
+      )
+    );
   }
 }
 

@@ -43,8 +43,8 @@ class SetUpDialog extends React.Component {
       onChange,
       ...other
     } = this.props;
-    if (parameters) {
-      return (
+    return (
+      parameters && (
         <React.Fragment key="section-to-setup-dialog">
           <Dialog
             onClose={onClose}
@@ -135,10 +135,8 @@ class SetUpDialog extends React.Component {
             </DialogActions>
           </Dialog>
         </React.Fragment>
-      );
-    } else {
-      return <React.Fragment />;
-    }
+      )
+    );
   }
 }
 

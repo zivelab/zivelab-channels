@@ -7,15 +7,13 @@ import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 
 // components
+import ListItemBoldText from "./ListItemBoldText";
 import ListItemLink from "./ListItemLink";
 
 // Icons
 import AppsIcon from "@material-ui/icons/Apps";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
 
 const aboutTo = "/getting-started/about";
 
@@ -36,8 +34,7 @@ class GettingStartedContents extends React.Component {
           <ListItemIcon>
             <AppsIcon />
           </ListItemIcon>
-          <ListItemText inset primary="Getting Started" />
-          {open ? <ExpandLess color="action" /> : <ExpandMore color="action" />}
+          <ListItemBoldText primary="Getting Started" />
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <Divider variant="inset" key="nav-getting-started-about-divider" />

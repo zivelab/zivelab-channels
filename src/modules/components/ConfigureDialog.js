@@ -163,8 +163,8 @@ class ConfigureDialog extends React.Component {
       ipAddress !== reduxAbout.ipAddress ||
       subnetMask !== reduxAbout.subnetMask ||
       router !== reduxAbout.router;
-    if (!isEmpty(reduxAbout)) {
-      return (
+    return (
+      !isEmpty(reduxAbout) && (
         <React.Fragment key="section-to-open-dialog-configure">
           <Dialog
             onClose={this.handleClose}
@@ -278,10 +278,8 @@ class ConfigureDialog extends React.Component {
             </DialogActions>
           </Dialog>
         </React.Fragment>
-      );
-    } else {
-      return <React.Fragment key="section-to-open-dialog-configure-disabled" />;
-    }
+      )
+    );
   }
 }
 
