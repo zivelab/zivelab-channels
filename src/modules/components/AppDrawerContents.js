@@ -256,6 +256,7 @@ class AppDrawerContents extends React.Component {
 
     // [todo] we need more elegant way
     const openGettingStartedContents =
+      this.props.location.pathname === "/" ||
       this.props.location.pathname.indexOf("getting-started") >= 0;
     const openUtilitiesContents =
       this.props.location.pathname.indexOf("utilities") >= 0;
