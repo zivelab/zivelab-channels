@@ -21,8 +21,8 @@ import { getCookie } from "../utils/helpers";
 
 class AppDrawerContents extends React.Component {
   state = {
-    localIP: null,
-    localDevices: [],
+    myIP: null,
+    myDevices: [],
     remoteDevices: [],
     knownDevice: "",
 
@@ -57,10 +57,10 @@ class AppDrawerContents extends React.Component {
         : "Scanning remote devices...";
       this.props.sendMessage(message);
 
-      if (!isLocal && !this.state.localIP) {
+      if (!isLocal && !this.state.myIP) {
         await this.getLocalIPAddressAsync();
       }
-      const baseIP = isLocal ? "169.254.17.1" : this.state.localIP;
+      const baseIP = isLocal ? "169.254.17.1" : this.state.myIP;
       const scanDevices = getFullRange(baseIP, isLocal);
       this.setState({
         isLocalScan: isLocal,
@@ -86,7 +86,7 @@ class AppDrawerContents extends React.Component {
             .slice(0, 3)
             .join(".") + ".15";
         this.setState({
-          localIP: ip,
+          myIP: ip,
           knownDevice: knownDevice
         });
       }
@@ -98,7 +98,7 @@ class AppDrawerContents extends React.Component {
   loadDescriptionAsync = async (ip, showMessage = false) => {
     // ip should be a valid IP address.
     const isLocal = ip.split(".").slice(0, 1)[0] === "169";
-    const devices = isLocal ? "localDevices" : "remoteDevices";
+    const devices = isLocal ? "myDevices" : "remoteDevices";
     try {
       // [TODO] We really want to '/description', but we will do later
       const descriptionURL = "http://" + ip + "/about";
@@ -146,17 +146,17 @@ class AppDrawerContents extends React.Component {
   componentDidMount = () => {
     this.getLocalIPAddressAsync();
 
-    // find last devices
-    const myDevices = getCookie("myDevices");
-    if (myDevices.length > 0) {
-      const target = JSON.parse(myDevices).map(device => {
+    // find last devices from cookie
+    const lastMyDevices = getCookie("myDevices");
+    if (lastMyDevices.length > 0) {
+      const target = JSON.parse(lastMyDevices).map(device => {
         return device.ipAddress;
       });
       target.map(async ip => await this.loadDescriptionAsync(ip, false));
     }
-    const remoteDevices = getCookie("remoteDevices");
-    if (remoteDevices.length > 0) {
-      const target = JSON.parse(remoteDevices).map(device => {
+    const lastRemoteDevices = getCookie("remoteDevices");
+    if (lastRemoteDevices.length > 0) {
+      const target = JSON.parse(lastRemoteDevices).map(device => {
         return device.ipAddress;
       });
       target.map(async ip => await this.loadDescriptionAsync(ip, false));
@@ -165,7 +165,7 @@ class AppDrawerContents extends React.Component {
 
   render() {
     const { notified } = this.props;
-    const { localIP, localDevices, remoteDevices, knownDevice } = this.state;
+    const { myIP, myDevices, remoteDevices, knownDevice } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
 
     // progress in scanning
@@ -191,9 +191,8 @@ class AppDrawerContents extends React.Component {
           <Divider key="nav-my-devices-divider" />
           <DeviceContents
             openImmediately={openMyDeviceContents}
-            isRemote={false}
-            localIP={localIP}
-            devices={localDevices}
+            myIP={myIP}
+            devices={myDevices}
             onScan={this.handleLocalClick}
             isScanning={isLocalScan}
             scanCompleted={scanCompleted}
@@ -201,9 +200,9 @@ class AppDrawerContents extends React.Component {
           />
           <Divider key="nav-remote-devices-divider" />
           <DeviceContents
+            remote
             openImmediately={openRemoteDeviceContents}
-            isRemote={true}
-            localIP={localIP}
+            myIP={myIP}
             devices={remoteDevices}
             onScan={this.handleRemoteClick}
             isScanning={isRemoteScan}

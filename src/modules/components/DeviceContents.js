@@ -46,7 +46,7 @@ class DeviceContents extends React.Component {
     if (
       JSON.stringify(this.props.devices) !== JSON.stringify(prevProps.devices)
     ) {
-      if (this.props.isRemote) {
+      if (this.props.remote) {
         document.cookie = `remoteDevices=${JSON.stringify(
           this.props.devices
         )};path=/;max-age=31536000`;
@@ -88,9 +88,8 @@ class DeviceContents extends React.Component {
   }
 
   RenderDevices = () => {
-    const { isRemote, devices } = this.props;
-    const linkTo = ip =>
-      isRemote ? "/remote-device/" + ip : "/my-device/" + ip;
+    const { remote, devices } = this.props;
+    const linkTo = ip => (remote ? "/remote-device/" + ip : "/my-device/" + ip);
     const dividerKey = ip => {
       return "nav-divider-" + ip.split(".").join("-");
     };
@@ -140,12 +139,12 @@ class DeviceContents extends React.Component {
   };
 
   getHeader = () => {
-    const { devices, isRemote } = this.props;
+    const { devices, remote } = this.props;
     const isEmpty = devices.length < 1;
-    if (isRemote) {
+    if (remote) {
       return isEmpty ? "Scan Remote Devices" : "Remote Devices";
     } else {
-      return isEmpty ? "Scan Local Devices" : "Local Devices";
+      return isEmpty ? "Scan My Devices" : "My Devices";
     }
   };
 
@@ -169,7 +168,7 @@ class DeviceContents extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { devices, isRemote } = this.props;
+    const { devices, remote } = this.props;
     const { isScanning, scanCompleted, scanTotal } = this.props;
     const { open } = this.state;
 
@@ -186,7 +185,7 @@ class DeviceContents extends React.Component {
               invisible={devices.length < 1}
               classes={{ badge: classes.badge }}
             >
-              {isRemote ? <HubSpotIcon /> : <DeviceHubIcon />}
+              {remote ? <HubSpotIcon /> : <DeviceHubIcon />}
             </Badge>
           </ListItemIcon>
           <ListItemBoldText
@@ -218,14 +217,14 @@ class DeviceContents extends React.Component {
 }
 
 DeviceContents.defaultProps = {
-  isRemote: false
+  remote: false
 };
 
 DeviceContents.propTypes = {
   classes: PropTypes.object.isRequired,
   openImmediately: PropTypes.bool,
-  isRemote: PropTypes.bool,
-  localIP: PropTypes.string,
+  remote: PropTypes.bool,
+  myIP: PropTypes.string,
   devices: PropTypes.array.isRequired,
   onScan: PropTypes.func,
   isScanning: PropTypes.bool,
