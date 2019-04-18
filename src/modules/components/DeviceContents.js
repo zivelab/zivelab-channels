@@ -12,6 +12,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import Tooltip from "@material-ui/core/Tooltip";
 
 // Icons
 import DeviceHubIcon from "@material-ui/icons/DeviceHub";
@@ -149,18 +150,20 @@ class DeviceContents extends React.Component {
   };
 
   renderScanButton = scanning => {
-    const { devices } = this.props;
+    const { devices, remote } = this.props;
     const isEmpty = devices.length < 1;
     return (
       !isEmpty && (
         <ListItemSecondaryAction>
-          <IconButton
-            color="default"
-            disabled={scanning}
-            onClick={this.handleScan}
-          >
-            <RefreshIcon fontSize="small" />
-          </IconButton>
+          <Tooltip title={remote ? "Scan remote devices" : "Scan my devices"}>
+            <IconButton
+              color="default"
+              disabled={scanning}
+              onClick={this.handleScan}
+            >
+              <RefreshIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </ListItemSecondaryAction>
       )
     );
