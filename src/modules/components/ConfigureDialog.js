@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
 
 // controls
 import Button from "@material-ui/core/Button";
@@ -14,7 +13,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
 // functions
-import compose from "../utils/compose";
 import { isEmpty } from "../utils/object";
 import { validateIPaddress } from "../utils/net";
 
@@ -80,19 +78,19 @@ class ConfigureDialog extends React.Component {
 
   handleClose = () => {
     // set default values
-    const { reduxAbout } = this.props;
+    const { about } = this.props;
     this.setState({
-      hostName: reduxAbout.hostName,
-      configureIPv4: reduxAbout.configureIPv4,
-      ipAddress: reduxAbout.ipAddress,
-      subnetMask: reduxAbout.subnetMask,
-      router: reduxAbout.router
+      hostName: about.hostName,
+      configureIPv4: about.configureIPv4,
+      ipAddress: about.ipAddress,
+      subnetMask: about.subnetMask,
+      router: about.router
     });
     this.props.onClose();
   };
 
   postConfigureAsync = async () => {
-    const ip = this.props.reduxAbout.ipAddress;
+    const ip = this.props.about.ipAddress;
     try {
       const payload = new URLSearchParams();
       payload.append("hostName", this.state.hostName);
@@ -117,31 +115,31 @@ class ConfigureDialog extends React.Component {
   };
 
   componentDidMount() {
-    const { reduxAbout } = this.props;
+    const { about } = this.props;
     this.setState({
-      hostName: reduxAbout.hostName,
-      configureIPv4: reduxAbout.configureIPv4,
-      ipAddress: reduxAbout.ipAddress,
-      subnetMask: reduxAbout.subnetMask,
-      router: reduxAbout.router
+      hostName: about.hostName,
+      configureIPv4: about.configureIPv4,
+      ipAddress: about.ipAddress,
+      subnetMask: about.subnetMask,
+      router: about.router
     });
   }
 
   componentDidUpdate(prevProps) {
-    const { reduxAbout } = this.props;
-    if (JSON.stringify(reduxAbout) !== JSON.stringify(prevProps.reduxAbout)) {
+    const { about } = this.props;
+    if (JSON.stringify(about) !== JSON.stringify(prevProps.about)) {
       this.setState({
-        hostName: reduxAbout.hostName,
-        configureIPv4: reduxAbout.configureIPv4,
-        ipAddress: reduxAbout.ipAddress,
-        subnetMask: reduxAbout.subnetMask,
-        router: reduxAbout.router
+        hostName: about.hostName,
+        configureIPv4: about.configureIPv4,
+        ipAddress: about.ipAddress,
+        subnetMask: about.subnetMask,
+        router: about.router
       });
     }
   }
 
   render() {
-    const { classes, reduxAbout, onClose, ...other } = this.props;
+    const { classes, about, onClose, ...other } = this.props;
     const {
       hostName,
       configureIPv4,
@@ -158,13 +156,14 @@ class ConfigureDialog extends React.Component {
           validateIPaddress(subnetMask) &&
           validateIPaddress(router)));
     const isChanged =
-      hostName.trim() !== reduxAbout.hostName ||
-      configureIPv4 !== reduxAbout.configureIPv4 ||
-      ipAddress !== reduxAbout.ipAddress ||
-      subnetMask !== reduxAbout.subnetMask ||
-      router !== reduxAbout.router;
+      hostName.trim() !== about.hostName ||
+      configureIPv4 !== about.configureIPv4 ||
+      ipAddress !== about.ipAddress ||
+      subnetMask !== about.subnetMask ||
+      router !== about.router;
+
     return (
-      !isEmpty(reduxAbout) && (
+      !isEmpty(about) && (
         <React.Fragment key="section-to-open-dialog-configure">
           <Dialog
             onClose={this.handleClose}
@@ -285,13 +284,8 @@ class ConfigureDialog extends React.Component {
 
 ConfigureDialog.propTypes = {
   classes: PropTypes.object.isRequired,
-  reduxAbout: PropTypes.object.isRequired,
+  about: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired
 };
 
-export default compose(
-  connect(state => ({
-    reduxAbout: state.about
-  })),
-  withStyles(styles)
-)(ConfigureDialog);
+export default withStyles(styles)(ConfigureDialog);

@@ -1,7 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
 
 // controls
 import IconButton from "@material-ui/core/IconButton";
@@ -14,10 +12,7 @@ import SettingsEthernet from "@material-ui/icons/SettingsEthernet";
 import ConfigureDialog from "./ConfigureDialog";
 
 // functions
-import compose from "../utils/compose";
 import { isEmpty } from "../utils/object";
-
-const styles = theme => ({});
 
 class ConfigureButton extends React.Component {
   state = {
@@ -37,11 +32,11 @@ class ConfigureButton extends React.Component {
   };
 
   render() {
-    const { reduxAbout } = this.props;
+    const { about } = this.props;
     const { open } = this.state;
 
     return (
-      !isEmpty(reduxAbout) && (
+      !isEmpty(about) && (
         <React.Fragment key="section-to-configure-ethernet">
           <Tooltip title="Configure Ethernet settings" enterDelay={300}>
             <IconButton
@@ -52,7 +47,11 @@ class ConfigureButton extends React.Component {
               <SettingsEthernet />
             </IconButton>
           </Tooltip>
-          <ConfigureDialog open={open} onClose={this.handleClose} />
+          <ConfigureDialog
+            open={open}
+            about={about}
+            onClose={this.handleClose}
+          />
         </React.Fragment>
       )
     );
@@ -60,13 +59,7 @@ class ConfigureButton extends React.Component {
 }
 
 ConfigureButton.propTypes = {
-  classes: PropTypes.object.isRequired,
-  reduxAbout: PropTypes.object.isRequired
+  about: PropTypes.object.isRequired
 };
 
-export default compose(
-  connect(state => ({
-    reduxAbout: state.about
-  })),
-  withStyles(styles)
-)(ConfigureButton);
+export default ConfigureButton;

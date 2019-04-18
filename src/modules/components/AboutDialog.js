@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
 
 // controls
 import Dialog from "@material-ui/core/Dialog";
@@ -13,7 +12,6 @@ import Button from "@material-ui/core/Button";
 import copy from "clipboard-copy";
 
 // functions
-import compose from "../utils/compose";
 import { isEmpty } from "../utils/object";
 
 const styles = theme => ({
@@ -48,14 +46,14 @@ const aboutLabels = {
 
 class AboutDialog extends React.Component {
   handleCopy = async () => {
-    await copy(JSON.stringify(this.props.reduxAbout, undefined, 3));
+    await copy(JSON.stringify(this.props.about, undefined, 3));
     this.props.sendMessage("Copied");
   };
 
   render() {
-    const { classes, reduxAbout, onClose, ...other } = this.props;
+    const { classes, about, sendMessage, onClose, ...other } = this.props;
     return (
-      !isEmpty(reduxAbout) && (
+      !isEmpty(about) && (
         <React.Fragment key="section-to-open-dialog-about">
           <Dialog
             onClose={onClose}
@@ -65,13 +63,13 @@ class AboutDialog extends React.Component {
           >
             <DialogTitle id="dialog-about">About</DialogTitle>
             <DialogContent>
-              {Object.keys(reduxAbout).map((key, index) => (
+              {Object.keys(about).map((key, index) => (
                 <TextField
                   id={key}
                   key={key}
                   label={aboutLabels[key]}
                   className={classes.textField}
-                  value={reduxAbout[key] ? reduxAbout[key] : "Not assigned"}
+                  value={about[key] ? about[key] : "Not assigned"}
                   margin="normal"
                   multiline={true}
                   InputProps={{
@@ -94,14 +92,9 @@ class AboutDialog extends React.Component {
 
 AboutDialog.propTypes = {
   classes: PropTypes.object.isRequired,
-  reduxAbout: PropTypes.object.isRequired,
+  about: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   sendMessage: PropTypes.func.isRequired
 };
 
-export default compose(
-  connect(state => ({
-    reduxAbout: state.about
-  })),
-  withStyles(styles)
-)(AboutDialog);
+export default withStyles(styles)(AboutDialog);
