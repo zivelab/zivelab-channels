@@ -27,8 +27,7 @@ class ListItemLink extends React.Component {
   renderLink = itemProps => <Link to={this.props.to} {...itemProps} />;
 
   render() {
-    const { classes, nested } = this.props;
-    const { icon, primary, secondary, to } = this.props;
+    const { classes, nested, icon, primary, secondary, to } = this.props;
     const active = this.props.location.pathname === to;
     return (
       <ListItem

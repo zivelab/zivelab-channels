@@ -58,17 +58,16 @@ class NotFoundPage extends Component {
       });
   }
 
-  gettingStartedLink = props => <Link to="/getting-started" {...props} />;
+  defaultLink = props => <Link to="/getting-started/about" {...props} />;
 
   render() {
     const { classes } = this.props;
     const { md } = this.state;
-    // console.log(this.props.location.pathname);
     return (
       <AppContent className={classes.root} title="Not Found Page">
         <Markdown className={classes.markdown} markdown={md} />
         <Button
-          component={this.gettingStartedLink}
+          component={this.defaultLink}
           className={classes.button}
           variant="outlined"
           color="primary"
@@ -83,7 +82,6 @@ class NotFoundPage extends Component {
 NotFoundPage.propTypes = {
   classes: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  location: PropTypes.object.isRequired,
   reduxAbout: PropTypes.object.isRequired
 };
 

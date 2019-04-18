@@ -243,6 +243,7 @@ class DevicePage extends React.Component {
     }
   }
 
+  // [todo] We have to cancel all asynchronous tasks
   componentWillUnmount() {
     currentIPAddress = null;
   }

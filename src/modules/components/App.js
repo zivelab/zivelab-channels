@@ -39,9 +39,9 @@ import ConfigureButton from "./ConfigureButton";
 import Notifications from "./Notifications";
 
 // Pages
-import GettingStartedPage from "../../pages/GettingStartedPage";
+import AboutPage from "../../pages/getting-started/AboutPage";
 import DevicePage from "../../pages/DevicePage";
-import LinearRegressionPage from "../../pages/LinearRegressionPage";
+import LinearRegressionPage from "../../pages/utilities/LinearRegressionPage";
 import NotFoundPage from "../../pages/NotFoundPage";
 
 import { ACTION_TYPES } from "../constants";
@@ -207,8 +207,8 @@ class App extends React.Component {
     return <DevicePage ipAddress={params.id} sendMessage={this.sendMessage} />;
   };
 
-  gettingStartedPage = () => {
-    return <GettingStartedPage />;
+  aboutPage = () => {
+    return <AboutPage />;
   };
 
   linearRegressionPage = () => {
@@ -298,16 +298,16 @@ class App extends React.Component {
             })}
           >
             <Switch>
-              <Redirect exact path="/" to="/getting-started" />
+              <Redirect exact path="/" to="/getting-started/about" />
               <Route
                 exact
-                path="/getting-started"
-                component={this.gettingStartedPage}
+                path="/getting-started/about"
+                component={this.aboutPage}
               />
               <Route exact path="/device/:id" component={this.devicePage} />
               <Route
                 exact
-                path="/linear-regression"
+                path="/utilities/linear-regression"
                 component={this.linearRegressionPage}
               />
               <Route component={this.notFoundPage} />

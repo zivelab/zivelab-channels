@@ -1,17 +1,17 @@
-import "../bootstrap";
+import "../../bootstrap";
 // --- Post bootstrap -----
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { ACTION_TYPES } from "../modules/constants";
+import { ACTION_TYPES } from "../../modules/constants";
 
-import compose from "../modules/utils/compose";
-import { isEmpty } from "../modules/utils/object";
+import compose from "../../modules/utils/compose";
+import { isEmpty } from "../../modules/utils/object";
 
-import AppContent from "../modules/components/AppContent";
-import Markdown from "../modules/components/Markdown";
-import Page from "../docs/pages/gettingStarted/gettingStarted.md";
+import AppContent from "../../modules/components/AppContent";
+import Markdown from "../../modules/components/Markdown";
+import Page from "../../docs/pages/getting-started/about.md";
 
 const styles = theme => ({
   root: {
@@ -24,7 +24,7 @@ const styles = theme => ({
   }
 });
 
-class GettingStartedPage extends Component {
+class AboutPage extends Component {
   state = {
     md: ""
   };
@@ -57,14 +57,14 @@ class GettingStartedPage extends Component {
     const { classes } = this.props;
     const { md } = this.state;
     return (
-      <AppContent className={classes.root} title="Getting Started">
+      <AppContent className={classes.root} title="About">
         <Markdown className={classes.markdown} markdown={md} />
       </AppContent>
     );
   }
 }
 
-GettingStartedPage.propTypes = {
+AboutPage.propTypes = {
   classes: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   reduxAbout: PropTypes.object.isRequired
@@ -75,4 +75,4 @@ export default compose(
     reduxAbout: state.about
   })),
   withStyles(styles)
-)(GettingStartedPage);
+)(AboutPage);

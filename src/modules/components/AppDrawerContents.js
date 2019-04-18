@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
 // controls
@@ -20,6 +21,7 @@ import HubSpotIcon from "../icons/HubSpot";
 
 // Components
 import FabAddDevice from "./FabAddDevice";
+import GettingStartedContents from "./GettingStartedContents";
 import ListItemLink from "./ListItemLink";
 import UtilityContents from "./UtilityContents";
 
@@ -46,8 +48,6 @@ const styles = theme => ({
     fontWeight: theme.typography.fontWeightMedium
   }
 });
-
-const gettingStartedTo = "/getting-started";
 
 class AppDrawerContents extends React.Component {
   state = {
@@ -253,10 +253,16 @@ class AppDrawerContents extends React.Component {
     const isLocalScanning = isLocalScan && isScanning;
     const isRemoteScanning = isRemoteScan && isScanning;
     const completed = isScanning ? (scanCompleted * 100) / scanTotal : 0;
+
+    // [todo] we need more elegant way
+    const openGettingStartedContents =
+      this.props.location.pathname.indexOf("getting-started") >= 0;
+    const openUtilitiesContents =
+      this.props.location.pathname.indexOf("utilities") >= 0;
     return (
       <React.Fragment key="section-to-list-nav-contents">
         <Divider key="nav-first-divider" />
-        <ListItemLink primary="Getting Started" to={gettingStartedTo} />
+        <GettingStartedContents openImmediately={openGettingStartedContents} />
         <Divider key="nav-second-divider" />
         <Tooltip
           title={`Scan local devices of ${localIP}`}
@@ -346,7 +352,7 @@ class AppDrawerContents extends React.Component {
           </List>
         </Collapse>
         <Divider key="nav-end-devices-divider" />
-        <UtilityContents classes={classes} />
+        <UtilityContents openImmediately={openUtilitiesContents} />
         <Divider key="nav-last-divider" />
         <FabAddDevice
           knownDevice={knownDevice}
@@ -369,5 +375,6 @@ export default compose(
   connect(state => ({
     reduxTitle: state.title
   })),
+  withRouter,
   withStyles(styles)
 )(AppDrawerContents);

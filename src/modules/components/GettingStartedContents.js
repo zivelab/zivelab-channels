@@ -13,13 +13,13 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemLink from "./ListItemLink";
 
 // Icons
-import DashboardIcon from "@material-ui/icons/Dashboard";
+import AppsIcon from "@material-ui/icons/Apps";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 
-const linearRegressionTo = "/utilities/linear-regression";
+const aboutTo = "/getting-started/about";
 
-class UtilityContents extends React.Component {
+class GettingStartedContents extends React.Component {
   state = {
     open: this.props.openImmediately
   };
@@ -31,25 +31,18 @@ class UtilityContents extends React.Component {
   render() {
     const { open } = this.state;
     return (
-      <React.Fragment key="nav-utilities">
+      <React.Fragment key="section-getting-started-nav">
         <ListItem button dense onClick={this.handleClick}>
           <ListItemIcon>
-            <DashboardIcon />
+            <AppsIcon />
           </ListItemIcon>
-          <ListItemText inset primary="Utilities" />
+          <ListItemText inset primary="Getting Started" />
           {open ? <ExpandLess color="action" /> : <ExpandMore color="action" />}
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <Divider
-            variant="inset"
-            key="nav-utilities-linear-regression-divider"
-          />
+          <Divider variant="inset" key="nav-getting-started-about-divider" />
           <List component="div" disablePadding>
-            <ListItemLink
-              nested
-              primary="Linear Regression"
-              to={linearRegressionTo}
-            />
+            <ListItemLink nested primary="About" to={aboutTo} />
           </List>
         </Collapse>
       </React.Fragment>
@@ -57,8 +50,8 @@ class UtilityContents extends React.Component {
   }
 }
 
-UtilityContents.propTypes = {
+GettingStartedContents.propTypes = {
   openImmediately: PropTypes.bool
 };
 
-export default UtilityContents;
+export default GettingStartedContents;
