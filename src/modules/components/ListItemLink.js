@@ -59,7 +59,8 @@ ListItemLink.propTypes = {
   icon: PropTypes.element,
   primary: PropTypes.string,
   secondary: PropTypes.string,
-  to: PropTypes.string.isRequired
+  to: PropTypes.string.isRequired,
+  depth: PropTypes.number
 };
 
 export default compose(

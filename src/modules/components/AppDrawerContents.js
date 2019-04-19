@@ -183,11 +183,13 @@ class AppDrawerContents extends React.Component {
       this.props.location.pathname.indexOf("remote-device") >= 0;
     return (
       <React.Fragment key="section-to-list-nav-contents">
-        <Divider key="nav-getting-started-divider" />
         <List>
+          <Divider key="nav-getting-started-divider" />
           <GettingStartedContents
             openImmediately={openGettingStartedContents}
           />
+          <Divider key="nav-utilities-divider" />
+          <UtilityContents openImmediately={openUtilitiesContents} />
           <Divider key="nav-my-devices-divider" />
           <DeviceContents
             openImmediately={openMyDeviceContents}
@@ -209,8 +211,6 @@ class AppDrawerContents extends React.Component {
             scanCompleted={scanCompleted}
             scanTotal={scanTotal}
           />
-          <Divider key="nav-utilities-divider" />
-          <UtilityContents openImmediately={openUtilitiesContents} />
           <Divider key="nav-last-divider" />
         </List>
         <FabAddDevice
