@@ -13,7 +13,10 @@ const styles = theme => ({
 
 class ListItemBoldText extends React.Component {
   render() {
-    const { classes, primary, secondary } = this.props;
+    const { classes, primary, secondary, depth } = this.props;
+    const style = {
+      paddingLeft: 8 * depth
+    };
     return (
       <ListItemText
         primary={primary}
@@ -21,6 +24,7 @@ class ListItemBoldText extends React.Component {
         classes={{
           primary: classNames([classes.bold])
         }}
+        style={style}
       />
     );
   }
@@ -29,7 +33,12 @@ class ListItemBoldText extends React.Component {
 ListItemBoldText.propTypes = {
   classes: PropTypes.object.isRequired,
   primary: PropTypes.string,
-  secondary: PropTypes.string
+  secondary: PropTypes.string,
+  depth: PropTypes.number
+};
+
+ListItemBoldText.defaultProps = {
+  depth: 0
 };
 
 export default withStyles(styles)(ListItemBoldText);

@@ -1,20 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
 
 // controls
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 
 // Components
-import DeviceContents from "./DeviceContents";
+import AppDrawerDeviceItems from "./AppDrawerDeviceItems";
+import AppDrawerGeneralItems from "./AppDrawerGeneralItems";
 import FabAddDevice from "./FabAddDevice";
-import GettingStartedContents from "./GettingStartedContents";
-import UtilityContents from "./UtilityContents";
 
 // functions
-import compose from "../utils/compose";
 import { getLocalIPAddress, getFullRange, isZiveDevice } from "../utils/net";
 import { timeoutPromise } from "../utils/promise";
 import { getCookie } from "../utils/helpers";
@@ -170,29 +167,13 @@ class AppDrawerContents extends React.Component {
 
     // progress in scanning
     const isScanning = scanTotal > 0 && scanCompleted < scanTotal;
-
-    // [todo] we need more elegant way
-    const openGettingStartedContents =
-      this.props.location.pathname === "/" ||
-      this.props.location.pathname.indexOf("getting-started") >= 0;
-    const openUtilitiesContents =
-      this.props.location.pathname.indexOf("utilities") >= 0;
-    const openMyDeviceContents =
-      this.props.location.pathname.indexOf("my-device") >= 0;
-    const openRemoteDeviceContents =
-      this.props.location.pathname.indexOf("remote-device") >= 0;
     return (
       <React.Fragment key="section-to-list-nav-contents">
         <List>
-          <Divider key="nav-getting-started-divider" />
-          <GettingStartedContents
-            openImmediately={openGettingStartedContents}
-          />
-          <Divider key="nav-utilities-divider" />
-          <UtilityContents openImmediately={openUtilitiesContents} />
+          <Divider key="nav-getting-started-divider1" />
+          <AppDrawerGeneralItems />
           <Divider key="nav-my-devices-divider" />
-          <DeviceContents
-            openImmediately={openMyDeviceContents}
+          <AppDrawerDeviceItems
             myIP={myIP}
             devices={myDevices}
             onScan={this.handleLocalClick}
@@ -201,9 +182,8 @@ class AppDrawerContents extends React.Component {
             scanTotal={scanTotal}
           />
           <Divider key="nav-remote-devices-divider" />
-          <DeviceContents
+          <AppDrawerDeviceItems
             remote
-            openImmediately={openRemoteDeviceContents}
             myIP={myIP}
             devices={remoteDevices}
             onScan={this.handleRemoteClick}
@@ -229,9 +209,4 @@ AppDrawerContents.propTypes = {
   sendMessage: PropTypes.func.isRequired
 };
 
-export default compose(
-  connect(state => ({
-    reduxTitle: state.title
-  })),
-  withRouter
-)(AppDrawerContents);
+export default withRouter(AppDrawerContents);

@@ -6,7 +6,6 @@ import { withStyles } from "@material-ui/core/styles";
 import Badge from "@material-ui/core/Badge";
 import IconButton from "@material-ui/core/IconButton";
 import Collapse from "@material-ui/core/Collapse";
-import Divider from "@material-ui/core/Divider";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -38,7 +37,7 @@ const styles = theme => ({
   }
 });
 
-class DeviceContents extends React.Component {
+class AppDrawerNavDevice extends React.Component {
   state = {
     open: this.props.openImmediately
   };
@@ -72,28 +71,9 @@ class DeviceContents extends React.Component {
     this.props.onScan();
   };
 
-  ScanProgress(disabled = false, value = 0) {
-    if (disabled) {
-      return <React.Fragment />;
-    } else {
-      return (
-        <React.Fragment>
-          <LinearProgress
-            variant="determinate"
-            value={value}
-            color="secondary"
-          />
-        </React.Fragment>
-      );
-    }
-  }
-
   RenderDevices = () => {
     const { remote, devices } = this.props;
     const linkTo = ip => (remote ? "/remote-device/" + ip : "/my-device/" + ip);
-    const dividerKey = ip => {
-      return "nav-divider-" + ip.split(".").join("-");
-    };
     const deviceTitle = device => {
       const name = device.name || "Untitled";
       const model = device.model.startsWith("Zive")
@@ -127,15 +107,14 @@ class DeviceContents extends React.Component {
       return a_ip - b_ip;
     });
     return sorted.map(device => (
-      <React.Fragment key="section-to-device-list-nav">
-        <Divider variant="inset" key={dividerKey(device.ipAddress)} />
-        <ListItemLink
-          nested
-          primary={deviceTitle(device)}
-          secondary={deviceDesc(device)}
-          to={linkTo(device.ipAddress)}
-        />
-      </React.Fragment>
+      <ListItemLink
+        depth={1}
+        to={linkTo(device.ipAddress)}
+        primary={deviceTitle(device)}
+        secondary={deviceDesc(device)}
+        key={device.ipAddress}
+        disableRipple
+      />
     ));
   };
 
@@ -156,13 +135,15 @@ class DeviceContents extends React.Component {
       !isEmpty && (
         <ListItemSecondaryAction>
           <Tooltip title={remote ? "Scan remote devices" : "Scan my devices"}>
-            <IconButton
-              color="default"
-              disabled={scanning}
-              onClick={this.handleScan}
-            >
-              <RefreshIcon fontSize="small" />
-            </IconButton>
+            <div>
+              <IconButton
+                color="default"
+                disabled={scanning}
+                onClick={this.handleScan}
+              >
+                <RefreshIcon fontSize="small" />
+              </IconButton>
+            </div>
           </Tooltip>
         </ListItemSecondaryAction>
       )
@@ -179,8 +160,14 @@ class DeviceContents extends React.Component {
     const scanning = isScanning && scanTotal > 0 && scanCompleted < scanTotal;
     const completed = scanning ? (scanCompleted * 100) / scanTotal : 0;
     return (
-      <React.Fragment key="section-devices-nav">
-        <ListItem button dense onClick={this.handleClick} disabled={scanning}>
+      <>
+        <ListItem
+          button
+          dense
+          key={remote ? "remote-device" : "my-device"}
+          onClick={this.handleClick}
+          disabled={scanning}
+        >
           <ListItemIcon>
             <Badge
               color="secondary"
@@ -205,25 +192,31 @@ class DeviceContents extends React.Component {
           />
           {this.renderScanButton(scanning)}
         </ListItem>
-        {this.ScanProgress(!scanning, completed)}
+        {scanning && (
+          <LinearProgress
+            variant="determinate"
+            value={completed}
+            color="secondary"
+          />
+        )}
         <Collapse in={open} timeout="auto" unmountOnExit>
-          {devices.length > 1 && (
+          {/*devices.length > 1 && (
             <Divider variant="inset" key="nav-devices-divider" />
-          )}
+          )*/}
           <List component="nav-device-list" disablePadding>
             {this.RenderDevices(devices)}
           </List>
         </Collapse>
-      </React.Fragment>
+      </>
     );
   }
 }
 
-DeviceContents.defaultProps = {
+AppDrawerNavDevice.defaultProps = {
   remote: false
 };
 
-DeviceContents.propTypes = {
+AppDrawerNavDevice.propTypes = {
   classes: PropTypes.object.isRequired,
   openImmediately: PropTypes.bool,
   remote: PropTypes.bool,
@@ -235,4 +228,4 @@ DeviceContents.propTypes = {
   scanTotal: PropTypes.number
 };
 
-export default withStyles(styles)(DeviceContents);
+export default withStyles(styles)(AppDrawerNavDevice);

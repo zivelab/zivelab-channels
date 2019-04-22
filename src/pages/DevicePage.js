@@ -401,7 +401,7 @@ class DevicePage extends React.Component {
       payload.append("iteration", this.state.parameters.iteration);
       payload.append("currentRange", this.state.parameters.currentRange);
       payload.append("maxInitialDelay", this.state.parameters.maxInitialDelay);
-      payload.append("skip", this.state.parameters.skip);
+      payload.append("skip", 1);
       payload.append("cycles", 0);
       payload.append("started", ticks);
       const settings = {
@@ -414,7 +414,7 @@ class DevicePage extends React.Component {
       const startURL = "http://" + ipAddress + "/start";
       const response = await fetch(startURL, settings);
       if (response.ok) {
-        console.log("Started");
+        console.log("Started: " + ticks);
       }
     } catch (e) {
       console.log(e);
@@ -488,7 +488,7 @@ class DevicePage extends React.Component {
           )}
           <p />
           <Typography variant="h4" gutterBottom>
-            Channel (demo)
+            Channel
           </Typography>
           <Button
             variant="contained"
@@ -510,7 +510,7 @@ class DevicePage extends React.Component {
           )}
           <p />
           <Typography variant="h4" gutterBottom>
-            Cook (demo)
+            Cook
           </Typography>
           <StartExpButton
             disabled={!channel || !channel.isIdle}
@@ -535,7 +535,7 @@ class DevicePage extends React.Component {
           )}
           <p />
           <Typography variant="h4" gutterBottom>
-            Samples (demo)
+            Samples
           </Typography>
           <p />
           <TextField

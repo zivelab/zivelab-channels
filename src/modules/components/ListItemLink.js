@@ -24,20 +24,26 @@ const styles = theme => ({
 });
 
 class ListItemLink extends React.Component {
+  componentDidMount() {
+    // Center the selected item in the list container.
+    const activeElement = document.querySelector(
+      `.${this.props.classes.active}`
+    );
+    if (activeElement && activeElement.scrollIntoView) {
+      activeElement.scrollIntoView({});
+    }
+  }
+
   renderLink = itemProps => <Link to={this.props.to} {...itemProps} />;
 
   render() {
-    const { classes, nested, icon, primary, secondary, to } = this.props;
+    const { classes, icon, primary, secondary, to, depth } = this.props;
     const active = this.props.location.pathname === to;
+    const style = {
+      paddingLeft: 8 * depth
+    };
     return (
-      <ListItem
-        button
-        dense
-        component={this.renderLink}
-        className={classNames({
-          [classes.nested]: nested
-        })}
-      >
+      <ListItem button dense component={this.renderLink}>
         {icon && <ListItemIcon>{icon}</ListItemIcon>}
         <ListItemText
           primary={primary}
@@ -47,6 +53,7 @@ class ListItemLink extends React.Component {
               [classes.active]: active
             })
           }}
+          style={style}
         />
       </ListItem>
     );
@@ -60,7 +67,7 @@ ListItemLink.propTypes = {
   primary: PropTypes.string,
   secondary: PropTypes.string,
   to: PropTypes.string.isRequired,
-  depth: PropTypes.number
+  depth: PropTypes.number.isRequired
 };
 
 export default compose(

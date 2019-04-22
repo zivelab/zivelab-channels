@@ -1,10 +1,10 @@
-import "../../bootstrap";
+import "../../../bootstrap";
 // --- Post bootstrap -----
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { ACTION_TYPES } from "../../modules/constants";
+import { ACTION_TYPES } from "../../../modules/constants";
 
 import regression from "regression";
 import copy from "clipboard-copy";
@@ -19,10 +19,10 @@ import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
-import compose from "../../modules/utils/compose";
-import { isEmpty } from "../../modules/utils/object";
+import compose from "../../../modules/utils/compose";
+import { isEmpty } from "../../../modules/utils/object";
 
-import AppContent from "../../modules/components/AppContent";
+import AppContent from "../../../modules/components/AppContent";
 
 const styles = theme => ({
   root: {
