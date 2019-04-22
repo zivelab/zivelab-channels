@@ -3,20 +3,12 @@ import PropTypes from "prop-types";
 
 // controls
 import Collapse from "@material-ui/core/Collapse";
-// eslint-disable-next-line
-import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-// eslint-disable-next-line
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 
 // components
 import ListItemBoldText from "./ListItemBoldText";
 import ListItemLink from "./ListItemLink";
-
-// Icons
-// eslint-disable-next-line
-import DashboardIcon from "@material-ui/icons/Dashboard";
 
 const linearRegressionTo = "/utilities/linear-regression";
 
@@ -34,16 +26,9 @@ class UtilityContents extends React.Component {
     return (
       <React.Fragment key="nav-utilities">
         <ListItem button dense onClick={this.handleClick}>
-          {/*<ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>*/}
           <ListItemBoldText primary="Utilities" />
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          {/*<Divider
-            variant="inset"
-            key="nav-utilities-linear-regression-divider"
-          />*/}
           <List component="div" disablePadding>
             <ListItemLink
               nested
