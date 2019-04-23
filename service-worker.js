@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/zivelab-channels/precache-manifest.974f19ba82d74bd72d144a92fe7da1af.js"
+  "/zivelab-channels/precache-manifest.1d1cdd8227b4d258da4cf4a26578c8c7.js"
 );
 
 workbox.clientsClaim();
