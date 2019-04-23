@@ -4,8 +4,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { ACTION_TYPES } from "../../../modules/constants";
-
+import { bindActionCreators } from "redux";
 import regression from "regression";
 import copy from "clipboard-copy";
 
@@ -19,10 +18,11 @@ import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
-import compose from "../../../modules/utils/compose";
-import { isEmpty } from "../../../modules/utils/object";
-
 import AppContent from "../../../modules/components/AppContent";
+
+import compose from "../../../modules/utils/compose";
+import { dispatchAbout } from "../../../modules/redux/actions";
+import { isEmpty } from "../../../modules/utils/object";
 
 const styles = theme => ({
   root: {
@@ -110,19 +110,11 @@ class LinearRegressionPage extends Component {
       ? num.toPrecision(precision)
       : num;
   };
-  dispatchAbout = about => {
-    this.props.dispatch({
-      type: ACTION_TYPES.ABOUT_CHANGE,
-      payload: {
-        about
-      }
-    });
-  };
 
   componentDidUpdate(prevProps, prevState) {
     const { reduxAbout } = prevProps;
     if (!isEmpty(reduxAbout)) {
-      this.dispatchAbout({});
+      this.props.dispatchAbout({});
     }
   }
 
@@ -293,13 +285,20 @@ class LinearRegressionPage extends Component {
 
 LinearRegressionPage.propTypes = {
   classes: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
   reduxAbout: PropTypes.object.isRequired
 };
 
+const mapStateToProps = state => ({
+  reduxAbout: state.about
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ dispatchAbout }, dispatch);
+
 export default compose(
-  connect(state => ({
-    reduxAbout: state.about
-  })),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   withStyles(styles)
 )(LinearRegressionPage);

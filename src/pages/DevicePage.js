@@ -4,7 +4,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { ACTION_TYPES } from "../modules/constants";
+import { bindActionCreators } from "redux";
+
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -12,10 +13,11 @@ import ReactJson from "react-json-view";
 import moment from "moment";
 
 import AppContent from "../modules/components/AppContent";
-import compose from "../modules/utils/compose";
-
 import StartExpButton from "../modules/components/StartExpButton";
 import StopExpButton from "../modules/components/StopExpButton";
+
+import { dispatchAbout, enqueueSnackbar } from "../modules/redux/actions";
+import compose from "../modules/utils/compose";
 
 const styles = theme => ({
   root: {
@@ -202,15 +204,6 @@ class DevicePage extends React.Component {
     await this.stopExpAsync();
   };
 
-  dispatchAbout = about => {
-    this.props.dispatch({
-      type: ACTION_TYPES.ABOUT_CHANGE,
-      payload: {
-        about
-      }
-    });
-  };
-
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.ipAddress !== nextProps.ipAddress) {
       currentIPAddress = nextProps.ipAddress;
@@ -244,7 +237,7 @@ class DevicePage extends React.Component {
       this.state.about &&
       JSON.stringify(prevProps.reduxAbout) !== JSON.stringify(this.state.about)
     ) {
-      this.dispatchAbout(this.state.about);
+      this.props.actions.about.dispatchAbout(this.state.about);
     }
   }
 
@@ -299,11 +292,11 @@ class DevicePage extends React.Component {
         channelJson.isTooHot = state === states.TooHotFET;
 
         if (state === states.Running && this.state.channel.isIdle) {
-          this.props.sendMessage("Started");
+          this.props.actions.snackbar.enqueueSnackbar("Started");
         } else if (state === states.Finished) {
-          this.props.sendMessage("Successfully finished");
+          this.props.actions.snackbar.enqueueSnackbar("Successfully finished");
         } else if (state === states.Stopped) {
-          this.props.sendMessage("Manually stopped");
+          this.props.actions.snackbar.enqueueSnackbar("Manually stopped");
         }
 
         // Update state: channel and auxData
@@ -586,17 +579,29 @@ class DevicePage extends React.Component {
 
 DevicePage.propTypes = {
   classes: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
   ipAddress: PropTypes.string.isRequired,
   reduxAbout: PropTypes.object.isRequired,
-  reduxTheme: PropTypes.object.isRequired,
-  sendMessage: PropTypes.func.isRequired
+  reduxTheme: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  reduxAbout: state.about,
+  reduxTheme: state.theme
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: {
+      about: bindActionCreators({ dispatchAbout }, dispatch),
+      snackbar: bindActionCreators({ enqueueSnackbar }, dispatch)
+    }
+  };
 };
 
 export default compose(
-  connect(state => ({
-    reduxAbout: state.about,
-    reduxTheme: state.theme
-  })),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   withStyles(styles)
 )(DevicePage);

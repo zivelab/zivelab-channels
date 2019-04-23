@@ -32,7 +32,7 @@ class AboutButton extends React.Component {
   };
 
   render() {
-    const { about, sendMessage } = this.props;
+    const { about } = this.props;
     const { open } = this.state;
 
     return (
@@ -47,12 +47,7 @@ class AboutButton extends React.Component {
               <InfoIcon />
             </IconButton>
           </Tooltip>
-          <AboutDialog
-            open={open}
-            about={about}
-            onClose={this.handleClose}
-            sendMessage={sendMessage}
-          />
+          <AboutDialog open={open} about={about} onClose={this.handleClose} />
         </React.Fragment>
       )
     );
@@ -60,8 +55,7 @@ class AboutButton extends React.Component {
 }
 
 AboutButton.propTypes = {
-  about: PropTypes.object.isRequired,
-  sendMessage: PropTypes.func.isRequired
+  about: PropTypes.object.isRequired
 };
 
 export default AboutButton;

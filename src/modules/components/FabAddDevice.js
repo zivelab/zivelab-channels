@@ -160,6 +160,10 @@ class FabAddDevice extends React.Component {
   }
 }
 
+FabAddDevice.defaultProps = {
+  moveUp: false
+};
+
 FabAddDevice.propTypes = {
   classes: PropTypes.object.isRequired,
   disabled: PropTypes.bool,

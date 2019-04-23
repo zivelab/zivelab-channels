@@ -6,6 +6,8 @@ import {
   ThemeProvider,
   createGenerateClassName
 } from "@material-ui/styles";
+import { SnackbarProvider } from "notistack";
+
 import { lightTheme, darkTheme, setPrismTheme } from "./prism";
 import getTheme from "../styles/getTheme";
 import { getCookie } from "../utils/helpers";
@@ -78,7 +80,9 @@ class AppWrapper extends React.Component {
     const { theme } = this.state;
     return (
       <StylesProvider generateClassName={generateClassName}>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <SnackbarProvider maxSnack={1}>{children}</SnackbarProvider>
+        </ThemeProvider>
       </StylesProvider>
     );
   }
@@ -90,6 +94,8 @@ AppWrapper.propTypes = {
   reduxTheme: PropTypes.object.isRequired
 };
 
-export default connect(state => ({
+const mapStateToProps = state => ({
   reduxTheme: state.theme
-}))(AppWrapper);
+});
+
+export default connect(mapStateToProps)(AppWrapper);

@@ -1,6 +1,7 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 // controls
 import Divider from "@material-ui/core/Divider";
@@ -15,6 +16,8 @@ import FabAddDevice from "./FabAddDevice";
 import { getLocalIPAddress, getFullRange, isZiveDevice } from "../utils/net";
 import { timeoutPromise } from "../utils/promise";
 import { getCookie } from "../utils/helpers";
+import compose from "../utils/compose";
+import { enqueueSnackbar } from "../redux/actions";
 
 class AppDrawerContents extends React.Component {
   state = {
@@ -51,10 +54,11 @@ class AppDrawerContents extends React.Component {
 
   findDevices = async isLocal => {
     try {
-      const message = isLocal
-        ? "Scanning local devices..."
-        : "Scanning remote devices...";
-      this.props.sendMessage(message);
+      if (isLocal) {
+        this.props.enqueueSnackbar("Scanning local devices");
+      } else {
+        this.props.enqueueSnackbar("Scanning remote devices");
+      }
 
       if (!isLocal && !this.state.myIP) {
         await this.getLocalIPAddressAsync();
@@ -136,8 +140,7 @@ class AppDrawerContents extends React.Component {
         })
       });
       if (showMessage) {
-        const message = "Can't find device.";
-        this.props.sendMessage(message);
+        this.props.enqueueSnackbar("Can't find device.");
       }
     } finally {
       this.setState({ scanCompleted: this.state.scanCompleted + 1 });
@@ -169,7 +172,6 @@ class AppDrawerContents extends React.Component {
   }
 
   render() {
-    const { notified } = this.props;
     const { myIP, myDevices, remoteDevices, knownDevice } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
 
@@ -205,16 +207,19 @@ class AppDrawerContents extends React.Component {
           knownDevice={knownDevice}
           onClick={this.handleAddKnownDevice}
           disabled={isScanning}
-          moveUp={notified}
         />
       </React.Fragment>
     );
   }
 }
 
-AppDrawerContents.propTypes = {
-  notified: PropTypes.bool.isRequired,
-  sendMessage: PropTypes.func.isRequired
-};
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ enqueueSnackbar }, dispatch);
 
-export default withRouter(AppDrawerContents);
+export default compose(
+  connect(
+    null,
+    mapDispatchToProps
+  ),
+  withRouter
+)(AppDrawerContents);

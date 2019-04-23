@@ -3,8 +3,10 @@ import PropTypes from "prop-types";
 import clsx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { ACTION_TYPES } from "../constants";
+import { bindActionCreators } from "redux";
+
 import compose from "../utils/compose";
+import { dispatchTitle } from "../redux/actions";
 
 const styles = theme => ({
   root: {
@@ -29,15 +31,6 @@ class AppContent extends React.Component {
     document.title = title;
   };
 
-  dispatchTitle = title => {
-    this.props.dispatch({
-      type: ACTION_TYPES.TITLE_CHANGE,
-      payload: {
-        title
-      }
-    });
-  };
-
   componentDidMount() {
     const docTitle = this.getDocTitle(this.props.title);
     this.titleSideEffect(docTitle);
@@ -48,7 +41,7 @@ class AppContent extends React.Component {
     const { reduxTitle } = this.props;
     if (reduxTitle !== docTitle) {
       this.titleSideEffect(docTitle);
-      this.dispatchTitle(docTitle);
+      this.props.dispatchTitle(docTitle);
     }
   }
 
@@ -63,13 +56,20 @@ AppContent.propTypes = {
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
   title: PropTypes.string.isRequired,
-  dispatch: PropTypes.func.isRequired,
   reduxTitle: PropTypes.string.isRequired
 };
 
+const mapStateToProps = state => ({
+  reduxTitle: state.title
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ dispatchTitle }, dispatch);
+
 export default compose(
-  connect(state => ({
-    reduxTitle: state.title
-  })),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   withStyles(styles)
 )(AppContent);

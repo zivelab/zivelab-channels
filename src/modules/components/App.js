@@ -36,7 +36,7 @@ import AboutButton from "./AboutButton";
 import AppDrawer from "./AppDrawer";
 import Banners from "./Banners";
 import ConfigureButton from "./ConfigureButton";
-import Notifications from "./Notifications";
+import Notifier from "./Notifier";
 
 // Pages
 import AboutPage from "../../pages/getting-started/AboutPage";
@@ -129,7 +129,6 @@ class App extends React.Component {
 
   state = {
     openDrawer: false,
-    openMessage: false,
     messageInfo: {}
   };
 
@@ -148,39 +147,6 @@ class App extends React.Component {
         paletteType
       }
     });
-  };
-
-  processQueue = () => {
-    if (this.queue.length > 0) {
-      this.setState({
-        messageInfo: this.queue.shift(),
-        openMessage: true
-      });
-    }
-  };
-
-  sendMessage = message => {
-    this.queue.push({
-      message,
-      key: new Date().getTime()
-    });
-
-    if (this.state.openMessage) {
-      this.setState({ openMessage: false });
-    } else {
-      this.processQueue();
-    }
-  };
-
-  handleMessageClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    this.setState({ openMessage: false });
-  };
-
-  handleMessageExited = () => {
-    this.processQueue();
   };
 
   renderInfoButton = about => {
@@ -204,7 +170,7 @@ class App extends React.Component {
   };
 
   devicePage = ({ match: { params } }) => {
-    return <DevicePage ipAddress={params.id} sendMessage={this.sendMessage} />;
+    return <DevicePage ipAddress={params.id} />;
   };
 
   aboutPage = () => {
@@ -221,7 +187,7 @@ class App extends React.Component {
 
   render() {
     const { classes, reduxTheme, reduxTitle, reduxAbout } = this.props;
-    const { openDrawer, openMessage, messageInfo } = this.state;
+    const { openDrawer } = this.state;
     const title = reduxTitle || "Zive Channels";
     return (
       <Router basename={process.env.PUBLIC_URL}>
@@ -258,7 +224,7 @@ class App extends React.Component {
                 </Typography>
               )}
               <div className={classes.grow} />
-              <AboutButton about={reduxAbout} sendMessage={this.sendMessage} />
+              <AboutButton about={reduxAbout} />
               <ConfigureButton about={reduxAbout} />
               <Tooltip title="Toggle theme" enterDelay={300}>
                 <IconButton
@@ -286,12 +252,7 @@ class App extends React.Component {
               </Tooltip>
             </Toolbar>
           </AppBar>
-          <AppDrawer
-            open={openDrawer}
-            notified={openMessage}
-            sendMessage={this.sendMessage}
-            toggleDrawer={this.toggleDrawer}
-          />
+          <AppDrawer open={openDrawer} toggleDrawer={this.toggleDrawer} />
           <main
             className={classNames(classes.content, {
               [classes.contentShift]: openDrawer
@@ -318,12 +279,7 @@ class App extends React.Component {
               <Route component={this.notFoundPage} />
             </Switch>
           </main>
-          <Notifications
-            open={openMessage}
-            messageInfo={messageInfo}
-            onClose={this.handleMessageClose}
-            onExited={this.handleMessageExited}
-          />
+          <Notifier />
         </div>
       </Router>
     );
@@ -338,11 +294,13 @@ App.propTypes = {
   reduxTitle: PropTypes.string.isRequired
 };
 
+const mapStateToProps = state => ({
+  reduxAbout: state.about,
+  reduxTheme: state.theme,
+  reduxTitle: state.title
+});
+
 export default compose(
-  connect(state => ({
-    reduxAbout: state.about,
-    reduxTheme: state.theme,
-    reduxTitle: state.title
-  })),
+  connect(mapStateToProps),
   withStyles(styles)
 )(App);

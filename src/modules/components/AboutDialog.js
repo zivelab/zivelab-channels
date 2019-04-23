@@ -47,44 +47,41 @@ const aboutLabels = {
 class AboutDialog extends React.Component {
   handleCopy = async () => {
     await copy(JSON.stringify(this.props.about, undefined, 3));
-    this.props.sendMessage("Copied");
   };
 
   render() {
-    const { classes, about, sendMessage, onClose, ...other } = this.props;
+    const { classes, about, onClose, ...other } = this.props;
     return (
       !isEmpty(about) && (
-        <React.Fragment key="section-to-open-dialog-about">
-          <Dialog
-            onClose={onClose}
-            scroll="paper"
-            aria-labelledby="dialog-about"
-            {...other}
-          >
-            <DialogTitle id="dialog-about">About</DialogTitle>
-            <DialogContent>
-              {Object.keys(about).map((key, index) => (
-                <TextField
-                  id={key}
-                  key={key}
-                  label={aboutLabels[key]}
-                  className={classes.textField}
-                  value={about[key] ? about[key] : "Not assigned"}
-                  margin="normal"
-                  multiline={true}
-                  InputProps={{
-                    readOnly: true
-                  }}
-                />
-              ))}
-            </DialogContent>
-            <DialogActions>
-              <Button color="primary" onClick={this.handleCopy}>
-                Copy to Clipboard
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </React.Fragment>
+        <Dialog
+          onClose={onClose}
+          scroll="paper"
+          aria-labelledby="dialog-about"
+          {...other}
+        >
+          <DialogTitle id="dialog-about">About</DialogTitle>
+          <DialogContent>
+            {Object.keys(about).map((key, index) => (
+              <TextField
+                id={key}
+                key={key}
+                label={aboutLabels[key]}
+                className={classes.textField}
+                value={about[key] ? about[key] : "Not assigned"}
+                margin="normal"
+                multiline={true}
+                InputProps={{
+                  readOnly: true
+                }}
+              />
+            ))}
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={this.handleCopy}>
+              Copy to Clipboard
+            </Button>
+          </DialogActions>
+        </Dialog>
       )
     );
   }
@@ -93,8 +90,7 @@ class AboutDialog extends React.Component {
 AboutDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   about: PropTypes.object.isRequired,
-  onClose: PropTypes.func.isRequired,
-  sendMessage: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(AboutDialog);

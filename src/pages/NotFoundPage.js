@@ -4,16 +4,18 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { ACTION_TYPES } from "../modules/constants";
-import Button from "@material-ui/core/Button";
+import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
 
-import compose from "../modules/utils/compose";
-import { isEmpty } from "../modules/utils/object";
+import Button from "@material-ui/core/Button";
 
 import AppContent from "../modules/components/AppContent";
 import Markdown from "../modules/components/Markdown";
 import Page from "../docs/pages/notFound.md";
+
+import { dispatchAbout } from "../modules/redux/actions";
+import { isEmpty } from "../modules/utils/object";
+import compose from "../modules/utils/compose";
 
 const styles = theme => ({
   root: {
@@ -34,19 +36,10 @@ class NotFoundPage extends Component {
     md: ""
   };
 
-  dispatchAbout = about => {
-    this.props.dispatch({
-      type: ACTION_TYPES.ABOUT_CHANGE,
-      payload: {
-        about
-      }
-    });
-  };
-
   componentDidUpdate(prevProps, prevState) {
     const { reduxAbout } = prevProps;
     if (!isEmpty(reduxAbout)) {
-      this.dispatchAbout({});
+      this.props.dispatchAbout({});
     }
   }
 
@@ -81,13 +74,20 @@ class NotFoundPage extends Component {
 
 NotFoundPage.propTypes = {
   classes: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
   reduxAbout: PropTypes.object.isRequired
 };
 
+const mapStateToProps = state => ({
+  reduxAbout: state.about
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ dispatchAbout }, dispatch);
+
 export default compose(
-  connect(state => ({
-    reduxAbout: state.about
-  })),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   withStyles(styles)
 )(NotFoundPage);
