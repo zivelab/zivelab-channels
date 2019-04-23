@@ -58,7 +58,8 @@ const states = {
   Running: "Running",
   Finished: "Finished",
   Stopped: "Stopped",
-  RunningNoiseLevel: "RunningNoiseLevel"
+  RunningNoiseLevel: "RunningNoiseLevel",
+  TooHotFET: "TooHotFET"
 };
 
 //const voltageRanges = [
@@ -170,10 +171,6 @@ class DevicePage extends React.Component {
 
   handleSamples = async () => {
     await this.loadSamplesAsync(this.state.cookIndex);
-  };
-
-  handleChannel = async () => {
-    await this.loadChannelAsync();
   };
 
   handleChange = (event, name) => {
@@ -292,12 +289,14 @@ class DevicePage extends React.Component {
         const state = Object.keys(states).find(
           key => states[key] === channelJson.state
         );
+        channelJson.received = Date.now();
         channelJson.isIdle = state === states.Idle;
         channelJson.isRunning =
           state === states.Running ||
           state === states.Finished ||
           state === states.Stopped;
         channelJson.isRunningNoiseLevel = state === states.RunningNoiseLevel;
+        channelJson.isTooHot = state === states.TooHotFET;
 
         if (state === states.Running && this.state.channel.isIdle) {
           this.props.sendMessage("Started");
@@ -430,6 +429,9 @@ class DevicePage extends React.Component {
       };
       const startURL = "http://" + ipAddress + "/start";
       const response = await fetch(startURL, settings);
+      if (response.ok) {
+        console.log("started: " + ticks);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -505,13 +507,6 @@ class DevicePage extends React.Component {
           <Typography variant="h4" gutterBottom>
             Channel
           </Typography>
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={this.handleChannel}
-          >
-            Refresh
-          </Button>
           <p />
           {channel ? (
             <ReactJson
