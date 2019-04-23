@@ -157,6 +157,7 @@ class AppDrawerNavDevice extends React.Component {
     const { open } = this.state;
 
     // progress in scanning
+    const disabled = scanTotal > 0 && scanCompleted < scanTotal;
     const scanning = isScanning && scanTotal > 0 && scanCompleted < scanTotal;
     const completed = scanning ? (scanCompleted * 100) / scanTotal : 0;
     return (
@@ -166,7 +167,7 @@ class AppDrawerNavDevice extends React.Component {
           dense
           key={remote ? "remote-device" : "my-device"}
           onClick={this.handleClick}
-          disabled={scanning}
+          disabled={disabled}
         >
           <ListItemIcon>
             <Badge
