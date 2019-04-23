@@ -30,6 +30,8 @@ class AppDrawerContents extends React.Component {
     scanTotal: 0
   };
 
+  controller = new AbortController();
+
   handleLocalClick = async () => {
     await this.findDevices(true);
   };
@@ -104,7 +106,9 @@ class AppDrawerContents extends React.Component {
       });
       const descriptionFetch = await timeoutPromise(
         1000,
-        fetch(descriptionRequest)
+        fetch(descriptionRequest, {
+          signal: this.controller.signal
+        })
       );
       const descriptionJson = await descriptionFetch.json();
       if (descriptionJson) {
@@ -159,6 +163,10 @@ class AppDrawerContents extends React.Component {
       target.map(async ip => await this.loadDescriptionAsync(ip, false));
     }
   };
+
+  componentWillUnmount() {
+    this.controller.abort();
+  }
 
   render() {
     const { notified } = this.props;

@@ -164,6 +164,8 @@ class DevicePage extends React.Component {
     auxData: []
   };
 
+  controller = new AbortController();
+
   handleSamples = async () => {
     await this.loadSamplesAsync(this.state.cookIndex);
   };
@@ -246,6 +248,7 @@ class DevicePage extends React.Component {
   // [todo] We have to cancel all asynchronous tasks
   componentWillUnmount() {
     currentIPAddress = null;
+    this.controller.abort();
   }
 
   loadAboutAsync = async () => {
@@ -253,7 +256,9 @@ class DevicePage extends React.Component {
     if (ipAddress !== currentIPAddress) return;
     try {
       const aboutURL = "http://" + ipAddress + "/about";
-      const aboutFetch = await fetch(aboutURL);
+      const aboutFetch = await fetch(aboutURL, {
+        signal: this.controller.signal
+      });
       const aboutJson = await aboutFetch.json();
       if (aboutJson) {
         aboutJson.hostName = aboutJson.hostName || "Untitled";
@@ -272,7 +277,9 @@ class DevicePage extends React.Component {
     if (ipAddress !== currentIPAddress) return;
     try {
       const channelURL = "http://" + ipAddress + "/channel";
-      const channelFetch = await fetch(channelURL);
+      const channelFetch = await fetch(channelURL, {
+        signal: this.controller.signal
+      });
       const channelJson = await channelFetch.json();
       if (channelJson) {
         const state = Object.keys(states).find(
@@ -327,8 +334,6 @@ class DevicePage extends React.Component {
       }
     } catch (e) {
       console.log(e);
-    } finally {
-      //clearInterval(this.timerID );
     }
   };
 
@@ -337,7 +342,9 @@ class DevicePage extends React.Component {
     if (ipAddress !== currentIPAddress) return;
     try {
       const cookURL = "http://" + ipAddress + "/cook";
-      const cookFetch = await fetch(cookURL);
+      const cookFetch = await fetch(cookURL, {
+        signal: this.controller.signal
+      });
       const cookJson = await cookFetch.json();
       if (cookJson) {
         cookJson.started.moment = moment(
@@ -358,7 +365,9 @@ class DevicePage extends React.Component {
     if (ipAddress !== currentIPAddress) return;
     try {
       const samplesURL = "http://" + ipAddress + "/samples?index=" + index;
-      const samplesFetch = await fetch(samplesURL);
+      const samplesFetch = await fetch(samplesURL, {
+        signal: this.controller.signal
+      });
       const samplesJson = await samplesFetch.json();
       if (
         samplesJson &&
@@ -409,7 +418,8 @@ class DevicePage extends React.Component {
         headers: {
           "Content-Length": payload.toString().length.toString()
         },
-        body: payload.toString()
+        body: payload.toString(),
+        signal: this.controller.signal
       };
       const startURL = "http://" + ipAddress + "/start";
       const response = await fetch(startURL, settings);
@@ -430,7 +440,8 @@ class DevicePage extends React.Component {
         method: "POST",
         headers: {
           "Content-Length": 0
-        }
+        },
+        signal: this.controller.signal
       };
       const response = await fetch(stopURL, settings);
       if (response.ok) {
