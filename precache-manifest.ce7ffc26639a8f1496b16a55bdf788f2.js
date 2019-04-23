@@ -12,19 +12,19 @@ self.__precacheManifest = [
     "url": "/zivelab-channels/static/js/runtime~main.149fc12e.js"
   },
   {
-    "revision": "c63070867272f11cf56b",
-    "url": "/zivelab-channels/static/js/main.e8f68c7e.chunk.js"
+    "revision": "99cd4d62ad3cc5116101",
+    "url": "/zivelab-channels/static/js/main.8127b191.chunk.js"
   },
   {
-    "revision": "3ebe74619459645268c2",
-    "url": "/zivelab-channels/static/js/2.975ed639.chunk.js"
+    "revision": "059e989f10469afde7eb",
+    "url": "/zivelab-channels/static/js/2.f048d30a.chunk.js"
   },
   {
-    "revision": "3ebe74619459645268c2",
+    "revision": "059e989f10469afde7eb",
     "url": "/zivelab-channels/static/css/2.ac9ad68d.chunk.css"
   },
   {
-    "revision": "563be44f3bde42ddf6eff1769d8e53d9",
+    "revision": "c9c9af7401ce6035b13fe3ba151cb24f",
     "url": "/zivelab-channels/index.html"
   }
 ];
