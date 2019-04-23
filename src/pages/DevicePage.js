@@ -161,7 +161,9 @@ class DevicePage extends React.Component {
 
     parameters: defaultParameters,
 
-    auxData: []
+    auxData: [],
+
+    timer: null
   };
 
   controller = new AbortController();
@@ -227,10 +229,14 @@ class DevicePage extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.loadAboutAsync();
-    this.loadChannelAsync();
-  }
+  componentDidMount = async () => {
+    await this.loadAboutAsync();
+    await this.loadChannelAsync();
+    let timer = setInterval(async () => {
+      await this.loadChannelAsync();
+    }, 2000);
+    this.setState({ timer });
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.ipAddress !== this.state.ipAddress) {
@@ -249,6 +255,7 @@ class DevicePage extends React.Component {
   componentWillUnmount() {
     currentIPAddress = null;
     this.controller.abort();
+    clearInterval(this.state.timer);
   }
 
   loadAboutAsync = async () => {
@@ -423,9 +430,6 @@ class DevicePage extends React.Component {
       };
       const startURL = "http://" + ipAddress + "/start";
       const response = await fetch(startURL, settings);
-      if (response.ok) {
-        console.log("Started: " + ticks);
-      }
     } catch (e) {
       console.log(e);
     }
