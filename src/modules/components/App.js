@@ -37,6 +37,7 @@ import AppDrawer from "./AppDrawer";
 import Banners from "./Banners";
 import ConfigureButton from "./ConfigureButton";
 import Notifier from "./Notifier";
+import OpenInNewButton from "./OpenInNewButton";
 
 // Pages
 import AboutPage from "../../pages/getting-started/AboutPage";
@@ -226,6 +227,7 @@ class App extends React.Component {
               <div className={classes.grow} />
               <AboutButton about={reduxAbout} />
               <ConfigureButton about={reduxAbout} />
+              <OpenInNewButton about={reduxAbout} />
               <Tooltip title="Toggle theme" enterDelay={300}>
                 <IconButton
                   color="inherit"
