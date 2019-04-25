@@ -68,7 +68,6 @@ class AppDrawer extends React.Component {
 AppDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
-  reduxTheme: PropTypes.object.isRequired,
   toggleDrawer: PropTypes.func.isRequired
 };
 

@@ -11,6 +11,7 @@ import {
   Redirect
 } from "react-router-dom";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 // controls
 import AppBar from "@material-ui/core/AppBar";
@@ -30,6 +31,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 // functions
 import compose from "../utils/compose";
 import { isEmpty } from "../utils/object";
+import { changeTheme } from "../redux/actions";
 
 // Components
 import AboutButton from "./AboutButton";
@@ -44,8 +46,6 @@ import AboutPage from "../../pages/getting-started/AboutPage";
 import DevicePage from "../../pages/DevicePage";
 import LinearRegressionPage from "../../pages/getting-started/utilities/LinearRegressionPage";
 import NotFoundPage from "../../pages/NotFoundPage";
-
-import { ACTION_TYPES } from "../constants";
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -142,12 +142,7 @@ class App extends React.Component {
       this.props.reduxTheme.paletteType === "light" ? "dark" : "light";
     document.cookie = `paletteType=${paletteType};path=/;max-age=31536000`;
 
-    this.props.dispatch({
-      type: ACTION_TYPES.THEME_CHANGE,
-      payload: {
-        paletteType
-      }
-    });
+    this.props.changeTheme(paletteType);
   };
 
   renderInfoButton = about => {
@@ -289,11 +284,7 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  classes: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  reduxAbout: PropTypes.object.isRequired,
-  reduxTheme: PropTypes.object.isRequired,
-  reduxTitle: PropTypes.string.isRequired
+  classes: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -302,7 +293,13 @@ const mapStateToProps = state => ({
   reduxTitle: state.title
 });
 
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ changeTheme }, dispatch);
+
 export default compose(
-  connect(mapStateToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   withStyles(styles)
 )(App);

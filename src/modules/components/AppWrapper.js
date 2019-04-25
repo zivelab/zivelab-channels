@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   StylesProvider,
   ThemeProvider,
@@ -13,7 +14,7 @@ import Button from "@material-ui/core/Button";
 import { lightTheme, darkTheme, setPrismTheme } from "./prism";
 import getTheme from "../styles/getTheme";
 import { getCookie } from "../utils/helpers";
-import { ACTION_TYPES } from "../constants";
+import { changeTheme } from "../redux/actions";
 
 const generateClassName = createGenerateClassName();
 
@@ -38,13 +39,10 @@ class AppWrapper extends React.Component {
       (paletteColors &&
         JSON.stringify(reduxTheme.paletteColors) !== paletteColors)
     ) {
-      this.props.dispatch({
-        type: ACTION_TYPES.THEME_CHANGE,
-        payload: {
-          paletteType,
-          paletteColors: paletteColors ? JSON.parse(paletteColors) : null
-        }
-      });
+      this.props.changeTheme(
+        paletteType,
+        paletteColors ? JSON.parse(paletteColors) : null
+      );
     }
   }
 
@@ -100,13 +98,17 @@ class AppWrapper extends React.Component {
 }
 
 AppWrapper.propTypes = {
-  children: PropTypes.node.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  reduxTheme: PropTypes.object.isRequired
+  children: PropTypes.node.isRequired
 };
 
 const mapStateToProps = state => ({
   reduxTheme: state.theme
 });
 
-export default connect(mapStateToProps)(AppWrapper);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ changeTheme }, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppWrapper);

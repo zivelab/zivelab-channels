@@ -55,8 +55,7 @@ AppContent.propTypes = {
   children: PropTypes.node.isRequired,
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
-  title: PropTypes.string.isRequired,
-  reduxTitle: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({
