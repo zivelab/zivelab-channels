@@ -284,8 +284,7 @@ class LinearRegressionPage extends Component {
 }
 
 LinearRegressionPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-  reduxAbout: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

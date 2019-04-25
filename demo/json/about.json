@@ -5,7 +5,7 @@
   "frequencyRanges": "4kHz to 0.1Hz",
   "voltageRanges": "1000V/100V",
   "currentRanges": "2A/400mA/200mA...400uA",
-  "temperatureSensor": "PT1000",
+  "temperatureSensor": "PT100",
   "configureIPv4": "Using DHCP",
   "ipAddress": "192.168.0.6",
   "subnetMask": "255.255.255.0",
