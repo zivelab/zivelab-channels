@@ -37,7 +37,7 @@ class AboutButton extends React.Component {
 
     return (
       !isEmpty(about) && (
-        <React.Fragment key="section-to-show-about">
+        <>
           <Tooltip title="Show about" enterDelay={300}>
             <IconButton
               color="inherit"
@@ -48,7 +48,7 @@ class AboutButton extends React.Component {
             </IconButton>
           </Tooltip>
           <AboutDialog open={open} about={about} onClose={this.handleClose} />
-        </React.Fragment>
+        </>
       )
     );
   }

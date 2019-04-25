@@ -23,14 +23,12 @@ import Typography from "@material-ui/core/Typography";
 
 // Icons
 import GithubIcon from "@material-ui/docs/svgIcons/GitHub";
-import InfoIcon from "@material-ui/icons/Info";
 import LightbulbOutlineIcon from "@material-ui/docs/svgIcons/LightbulbOutline";
 import LightbulbFullIcon from "@material-ui/docs/svgIcons/LightbulbFull";
 import MenuIcon from "@material-ui/icons/Menu";
 
 // functions
 import compose from "../utils/compose";
-import { isEmpty } from "../utils/object";
 import { changeTheme } from "../redux/actions";
 
 // Components
@@ -143,26 +141,6 @@ class App extends React.Component {
     document.cookie = `paletteType=${paletteType};path=/;max-age=31536000`;
 
     this.props.changeTheme(paletteType);
-  };
-
-  renderInfoButton = about => {
-    if (isEmpty(about)) {
-      return <React.Fragment />;
-    } else {
-      return (
-        <Tooltip title="Show about" enterDelay={300}>
-          <IconButton
-            edge="end"
-            component="a"
-            color="inherit"
-            href="https://github.com/zivelab/zivelab-channels"
-            aria-label="about"
-          >
-            <InfoIcon />
-          </IconButton>
-        </Tooltip>
-      );
-    }
   };
 
   devicePage = ({ match: { params } }) => {

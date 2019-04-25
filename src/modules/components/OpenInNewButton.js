@@ -21,7 +21,7 @@ class AboutButton extends React.Component {
     const { about } = this.props;
     return (
       !isEmpty(about) && (
-        <React.Fragment key="section-to-open-in-new">
+        <>
           <Tooltip title="Open in new" enterDelay={300}>
             <IconButton
               color="inherit"
@@ -31,7 +31,7 @@ class AboutButton extends React.Component {
               <OpenInNewIcon />
             </IconButton>
           </Tooltip>
-        </React.Fragment>
+        </>
       )
     );
   }

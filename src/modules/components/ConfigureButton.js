@@ -37,7 +37,7 @@ class ConfigureButton extends React.Component {
 
     return (
       !isEmpty(about) && (
-        <React.Fragment key="section-to-configure-ethernet">
+        <>
           <Tooltip title="Configure Ethernet settings" enterDelay={300}>
             <IconButton
               color="inherit"
@@ -52,7 +52,7 @@ class ConfigureButton extends React.Component {
             about={about}
             onClose={this.handleClose}
           />
-        </React.Fragment>
+        </>
       )
     );
   }
