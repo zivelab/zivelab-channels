@@ -8,6 +8,8 @@ import {
 } from "@material-ui/styles";
 import { SnackbarProvider } from "notistack";
 
+import Button from "@material-ui/core/Button";
+
 import { lightTheme, darkTheme, setPrismTheme } from "./prism";
 import getTheme from "../styles/getTheme";
 import { getCookie } from "../utils/helpers";
@@ -81,7 +83,16 @@ class AppWrapper extends React.Component {
     return (
       <StylesProvider generateClassName={generateClassName}>
         <ThemeProvider theme={theme}>
-          <SnackbarProvider maxSnack={1}>{children}</SnackbarProvider>
+          <SnackbarProvider
+            maxSnack={1}
+            action={
+              <Button color="secondary" size="small">
+                {"Dismiss"}
+              </Button>
+            }
+          >
+            {children}
+          </SnackbarProvider>
         </ThemeProvider>
       </StylesProvider>
     );

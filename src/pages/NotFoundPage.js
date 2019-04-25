@@ -13,7 +13,7 @@ import AppContent from "../modules/components/AppContent";
 import Markdown from "../modules/components/Markdown";
 import Page from "../docs/pages/notFound.md";
 
-import { dispatchAbout } from "../modules/redux/actions";
+import { changeAbout } from "../modules/redux/actions";
 import { isEmpty } from "../modules/utils/object";
 import compose from "../modules/utils/compose";
 
@@ -82,7 +82,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ dispatchAbout }, dispatch);
+  bindActionCreators({ dispatchAbout: changeAbout }, dispatch);
 
 export default compose(
   connect(

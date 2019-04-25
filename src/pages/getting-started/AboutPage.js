@@ -12,7 +12,7 @@ import Page from "../../docs/pages/getting-started/about.md";
 
 import compose from "../../modules/utils/compose";
 import { isEmpty } from "../../modules/utils/object";
-import { dispatchAbout } from "../../modules/redux/actions";
+import { changeAbout } from "../../modules/redux/actions";
 
 const styles = theme => ({
   root: {
@@ -66,7 +66,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ dispatchAbout }, dispatch);
+  bindActionCreators({ dispatchAbout: changeAbout }, dispatch);
 
 export default compose(
   connect(

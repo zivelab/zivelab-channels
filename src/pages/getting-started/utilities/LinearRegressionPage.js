@@ -21,7 +21,7 @@ import Typography from "@material-ui/core/Typography";
 import AppContent from "../../../modules/components/AppContent";
 
 import compose from "../../../modules/utils/compose";
-import { dispatchAbout } from "../../../modules/redux/actions";
+import { changeAbout } from "../../../modules/redux/actions";
 import { isEmpty } from "../../../modules/utils/object";
 
 const styles = theme => ({
@@ -293,7 +293,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ dispatchAbout }, dispatch);
+  bindActionCreators({ dispatchAbout: changeAbout }, dispatch);
 
 export default compose(
   connect(

@@ -1,11 +1,11 @@
-export const dispatchTitle = title => ({
+export const changeTitle = title => ({
   type: "TITLE_CHANGE",
   payload: {
     title
   }
 });
 
-export const dispatchAbout = about => ({
+export const changeAbout = about => ({
   type: "ABOUT_CHANGE",
   payload: {
     about

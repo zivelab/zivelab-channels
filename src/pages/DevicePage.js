@@ -16,7 +16,7 @@ import AppContent from "../modules/components/AppContent";
 import StartExpButton from "../modules/components/StartExpButton";
 import StopExpButton from "../modules/components/StopExpButton";
 
-import { dispatchAbout, enqueueSnackbar } from "../modules/redux/actions";
+import { changeAbout, enqueueSnackbar } from "../modules/redux/actions";
 import compose from "../modules/utils/compose";
 
 const styles = theme => ({
@@ -592,7 +592,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
   return {
     actions: {
-      about: bindActionCreators({ dispatchAbout }, dispatch),
+      about: bindActionCreators({ dispatchAbout: changeAbout }, dispatch),
       snackbar: bindActionCreators({ enqueueSnackbar }, dispatch)
     }
   };

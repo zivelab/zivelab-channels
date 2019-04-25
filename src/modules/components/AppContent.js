@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
 import compose from "../utils/compose";
-import { dispatchTitle } from "../redux/actions";
+import { changeTitle } from "../redux/actions";
 
 const styles = theme => ({
   root: {
@@ -64,7 +64,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ dispatchTitle }, dispatch);
+  bindActionCreators({ dispatchTitle: changeTitle }, dispatch);
 
 export default compose(
   connect(
