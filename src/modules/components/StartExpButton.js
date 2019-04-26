@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 // controls
 import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
 
 // components
 import SetUpDialog from "./SetUpDialog";
@@ -33,17 +34,19 @@ class StartExpButton extends React.Component {
   };
 
   render() {
-    const { disabled, parameters, onChange } = this.props;
+    const { disabled, parameters, onChange, currentRanges } = this.props;
     const { open } = this.state;
     return (
-      <React.Fragment key="section-to-setup-experiment">
+      <>
         <IconButton
           aria-label="Start"
           onClick={this.handleClick}
           disabled={disabled}
           color="primary"
         >
-          <PlayArrowIcon />
+          <Tooltip title="Start">
+            <PlayArrowIcon fontSize="large" />
+          </Tooltip>
         </IconButton>
         <SetUpDialog
           open={open}
@@ -51,8 +54,9 @@ class StartExpButton extends React.Component {
           onClose={this.handleClose}
           onStart={this.handleStart}
           onChange={onChange}
+          currentRanges={currentRanges}
         />
-      </React.Fragment>
+      </>
     );
   }
 }
@@ -61,7 +65,8 @@ StartExpButton.propTypes = {
   disabled: PropTypes.bool.isRequired,
   parameters: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  onStart: PropTypes.func.isRequired
+  onStart: PropTypes.func.isRequired,
+  currentRanges: PropTypes.array
 };
 
 export default StartExpButton;

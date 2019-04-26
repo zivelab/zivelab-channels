@@ -368,24 +368,21 @@
             "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/about.json"
           )
         : new Request("/about");
-      const channelURL =
-        isDemo || true
-          ? new Request(
-              "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/channel.json"
-            )
-          : new Request("/channel");
-      const cookURL =
-        isDemo || true
-          ? new Request(
-              "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/cook.json"
-            )
-          : new Request("/cook");
-      const samplesURL =
-        isDemo || true
-          ? new Request(
-              "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/samples.json"
-            )
-          : new Request("/samples?index=1");
+      const channelURL = isDemo
+        ? new Request(
+            "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/channel.json"
+          )
+        : new Request("/channel");
+      const cookURL = isDemo
+        ? new Request(
+            "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/cook.json"
+          )
+        : new Request("/cook");
+      const samplesURL = isDemo
+        ? new Request(
+            "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/samples.json"
+          )
+        : new Request("/samples?index=1");
       const startURL = new Request("/start"); // with parameters
       const stopURL = new Request("/stop");
 
@@ -891,7 +888,7 @@
         xKey: PropTypes.string.isRequired,
         xUnit: PropTypes.string.isRequired,
         yKey: PropTypes.string.isRequired,
-        xUnit: PropTypes.string.isRequired
+        yUnit: PropTypes.string.isRequired
       };
       const SparklineWrapped = withStyles(styles)(Sparkline);
       //#endregion SparklineWrapped
@@ -916,8 +913,10 @@
               cook &&
               cook.data &&
               index >= 0 &&
-              index < cook.data.length
-            ? cook.data[index].samples
+              index < cook.data.length &&
+              cook.data[index].samples &&
+              cook.data[index].samples.data
+            ? cook.data[index].samples.data
             : null;
           if (!samples) {
             return (

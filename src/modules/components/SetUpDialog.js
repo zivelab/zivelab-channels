@@ -22,17 +22,6 @@ const styles = theme => ({
   }
 });
 
-const currentRanges = [
-  { value: 0, label: "2A" },
-  { value: 1, label: "400mA" },
-  { value: 2, label: "200mA" },
-  { value: 3, label: "40mA" },
-  { value: 4, label: "20mA" },
-  { value: 5, label: "4mA" },
-  { value: 6, label: "2mA" },
-  { value: 7, label: "400uA" }
-];
-
 class SetUpDialog extends React.Component {
   render() {
     const {
@@ -41,6 +30,7 @@ class SetUpDialog extends React.Component {
       onClose,
       onStart,
       onChange,
+      currentRanges,
       ...other
     } = this.props;
     return (
@@ -142,10 +132,24 @@ class SetUpDialog extends React.Component {
 
 SetUpDialog.propTypes = {
   classes: PropTypes.object.isRequired,
+  parameters: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   onStart: PropTypes.func.isRequired,
-  parameters: PropTypes.object.isRequired
+  currentRanges: PropTypes.array
+};
+
+SetUpDialog.defaultProps = {
+  currentRanges: [
+    { value: 0, label: "2A" },
+    { value: 1, label: "400mA" },
+    { value: 2, label: "200mA" },
+    { value: 3, label: "40mA" },
+    { value: 4, label: "20mA" },
+    { value: 5, label: "4mA" },
+    { value: 6, label: "2mA" },
+    { value: 7, label: "400uA" }
+  ]
 };
 
 export default withStyles(styles)(SetUpDialog);

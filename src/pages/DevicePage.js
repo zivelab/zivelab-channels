@@ -1,21 +1,31 @@
 import "../bootstrap";
 // --- Post bootstrap -----
 import React from "react";
+import clsx from "clsx";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import ReactJson from "react-json-view";
 import moment from "moment";
 
+//controls
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+
+// components
 import AppContent from "../modules/components/AppContent";
+import AuxPanel from "../modules/components/AuxPanel";
+import BodePanel from "../modules/components/BodePanel";
+import CookPanel from "../modules/components/CookPanel";
+import ZTablePanel from "../modules/components/ZTablePanel";
+import NyquistPanel from "../modules/components/NyquistPanel";
 import StartExpButton from "../modules/components/StartExpButton";
 import StopExpButton from "../modules/components/StopExpButton";
 
+// functions
 import { changeAbout, enqueueSnackbar } from "../modules/redux/actions";
 import compose from "../modules/utils/compose";
 
@@ -28,6 +38,21 @@ const styles = theme => ({
     marginBottom: theme.spacing.unit * 2,
     padding: (0, theme.spacing.unit * 2)
   },
+  gridContainer: {
+    width: "100%",
+    margin: 0
+  },
+  layout: {
+    width: "auto",
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(900 + theme.spacing.unit * 3 * 2)]: {
+      width: 900,
+      marginLeft: "auto",
+      marginRight: "auto"
+    }
+    //paddingTop: 65, // appBar.height
+  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
@@ -37,16 +62,6 @@ const styles = theme => ({
     margin: theme.spacing.unit
   }
 });
-
-// Special characters
-/*
-const voltageSign = "V";
-const currentSign = "A";
-const frequencySign = "Hz";
-const ohmSign = "\u2126";
-const degreeSign = "\u00B0";
-const degreeCelsiusSign = "\u00B0C";
-*/
 
 // Math Constatnts
 const dateTimeOffset = 62135596800000; // ticks from 0000-01-01 to 1970-01-01
@@ -63,54 +78,6 @@ const states = {
   RunningNoiseLevel: "RunningNoiseLevel",
   TooHotFET: "TooHotFET"
 };
-
-//const voltageRanges = [
-//  { value: 0, label: "1000V" },
-//  { value: 1, label: "100V" }
-//];
-//const currentRanges = [
-//  { value: 0, label: "2A" },
-//  { value: 1, label: "400mA" },
-//  { value: 2, label: "200mA" },
-//  { value: 3, label: "40mA" },
-//  { value: 4, label: "20mA" },
-//  { value: 5, label: "4mA" },
-//  { value: 6, label: "2mA" },
-//  { value: 7, label: "400uA" }
-//];
-//const aboutLabels = {
-//  hostname: "Host Name",
-//  model: "Model",
-//  description: "Description",
-//  frequencyRanges: "Frequency Ranges",
-//  voltageRanges: "Voltage Ranges",
-//  currentRanges: "Current Ranges",
-//  temperatureSensor: "Temperature Sensor",
-//  macAddress: "Mac Address",
-//  ipAddress: "IP Address",
-//  subnetMask: "Subnet Mask",
-//  router: "Router",
-//  port: "Port",
-//  sifBoard: "SIF Board",
-//  sifFirmware: "SIF Firmware",
-//  sifSerialNumber: "SIF Serial Number",
-//  zimBoard: "ZIM Board",
-//  zimFirmware: "ZIM Firmware",
-//  zimSerialNumber: "ZIM Serial Number"
-//};
-//const colHeaders = {
-//  pt: "Pt",
-//  time: "Time [s]",
-//  frequency: "Freq [Hz]",
-//  zreal: "Zreal [" + { ohmSign } + "]",
-//  zimag: "Zimag [" + { ohmSign } + "]",
-//  zmod: "Zmod [" + { ohmSign } + "]",
-//  zphase: "Zphase [" + { degreeSign } + "]",
-//  idc: "Idc [A]",
-//  vdc: "vdc [V]",
-//  temperature: "Temperature [" + { degreeCelsiusSign } + "]",
-//  currentRange: "IRange [A]"
-//};
 
 const defaultParameters = {
   initialFrequency: 1000,
@@ -132,7 +99,7 @@ const parameterLabels = {
   },
   finalFrequency: { label: "Final Frequency", min: 0.1, max: 4000, default: 1 },
   density: { label: "Density", min: 1, max: 20, default: 10 },
-  iteration: { label: "Iteration", min: 1, max: 100, default: 1 },
+  iteration: { label: "Iteration", min: 1, max: 200, default: 1 },
   currentRange: { label: "Current Range", min: 0, max: 7, default: 2 },
   maxInitialDelay: {
     label: "Max Initial Delay",
@@ -144,13 +111,6 @@ const parameterLabels = {
   cycles: { label: "cycles", min: 0, max: 100, default: 0 }
 };
 
-// [TODO]
-// Warning: Can't perform a React state update on an unmounted component.
-// This is a no-op, but it indicates a memory leak in your application.
-// To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
-//
-// we have to find a way to handle async tasks
-
 let currentIPAddress = null;
 
 class DevicePage extends React.Component {
@@ -160,13 +120,17 @@ class DevicePage extends React.Component {
     about: null,
     channel: null,
     cook: null,
-    cookIndex: 0,
+    cookIndex: -1,
 
     parameters: defaultParameters,
 
     auxData: [],
 
-    timer: null
+    timer: null,
+
+    voltageRanges: [],
+    currentRanges: [],
+    temperatureSensor: "PT100"
   };
 
   controller = new AbortController();
@@ -196,12 +160,74 @@ class DevicePage extends React.Component {
     });
   };
 
-  handleStartExp = async () => {
+  handleGoFirst = async () => {
+    const index = 0;
+    this.setState({
+      cookIndex: index
+    });
+    if (
+      this.state.cook &&
+      this.state.cook.data &&
+      index < this.state.cook.data.length &&
+      !this.state.cook.data[index].samples
+    )
+      await this.loadSamplesAsync(index);
+  };
+
+  handleGoNext = async () => {
+    const index = this.state.cookIndex + 1;
+    this.setState({
+      cookIndex: index
+    });
+    if (
+      this.state.cook &&
+      this.state.cook.data &&
+      index < this.state.cook.data.length &&
+      !this.state.cook.data[index].samples
+    )
+      await this.loadSamplesAsync(index);
+  };
+
+  handleGoLast = async () => {
+    const index = this.state.cook.data.length - 1;
+    this.setState({
+      cookIndex: index
+    });
+    if (
+      this.state.cook &&
+      this.state.cook.data &&
+      index < this.state.cook.data.length &&
+      !this.state.cook.data[index].samples
+    ) {
+      await this.loadSamplesAsync(index);
+    }
+  };
+  handleGoPrevious = async () => {
+    const index = this.state.cookIndex - 1;
+    this.setState({
+      cookIndex: index
+    });
+    if (
+      this.state.cook &&
+      this.state.cook.data &&
+      index < this.state.cook.data.length &&
+      !this.state.cook.data[index].samples
+    )
+      await this.loadSamplesAsync(index);
+  };
+
+  handleStart = async () => {
     await this.startExpAsync();
   };
 
-  handleStopExp = async () => {
+  handleStop = async () => {
     await this.stopExpAsync();
+  };
+
+  handleClearAuxData = () => {
+    this.setState({
+      auxData: []
+    });
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -212,7 +238,7 @@ class DevicePage extends React.Component {
         about: null,
         channel: null,
         cook: null,
-        cookIndex: 0
+        cookIndex: -1
       };
     } else {
       return null;
@@ -260,8 +286,28 @@ class DevicePage extends React.Component {
       if (aboutJson) {
         aboutJson.hostName = aboutJson.hostName || "Untitled";
         aboutJson.configureIPv4 = aboutJson.configureIPv4 || "Using DHCP";
+        const voltageRanges = aboutJson.voltageRanges
+          .split("/")
+          .map((range, index) => {
+            return { value: index, label: range };
+          });
+        const currentRanges = aboutJson.currentRanges
+          .split("/")
+          .map((range, index) => {
+            return { value: index, label: range };
+          });
+        aboutJson.currentRanges =
+          currentRanges[0].label +
+          "/" +
+          currentRanges[1].label +
+          "/.../" +
+          currentRanges[currentRanges.length - 1].label;
+        const temperatureSensor = aboutJson.temperatureSensor || "PT100";
         this.setState({
-          about: aboutJson
+          about: aboutJson,
+          voltageRanges,
+          currentRanges,
+          temperatureSensor
         });
       }
     } catch (e) {
@@ -291,7 +337,11 @@ class DevicePage extends React.Component {
         channelJson.isRunningNoiseLevel = state === states.RunningNoiseLevel;
         channelJson.isTooHot = state === states.TooHotFET;
 
-        if (state === states.Running && this.state.channel.isIdle) {
+        if (
+          state === states.Running &&
+          this.state.channel &&
+          (this.state.channel.isIdle || false)
+        ) {
           this.props.actions.snackbar.enqueueSnackbar("Started");
         } else if (state === states.Finished) {
           this.props.actions.snackbar.enqueueSnackbar("Successfully finished");
@@ -301,7 +351,7 @@ class DevicePage extends React.Component {
 
         // Update state: channel and auxData
         const newAuxItem = {
-          time: new Date().getTime() - launched,
+          time: (new Date().getTime() - launched) / 1000, // [sec]
           voltage: channelJson.auxVoltage,
           temperature: channelJson.auxTemperature
         };
@@ -327,8 +377,24 @@ class DevicePage extends React.Component {
             this.state.cook.started.ticks !== lastTicks ||
             this.state.cook.started.count !== lastCount
           ) {
-            this.loadCookAsync();
+            await this.loadCookAsync();
           }
+        }
+
+        if (
+          !channelJson.isRunning &&
+          this.state.cook &&
+          this.state.cook.data.length > 0 &&
+          this.state.cookIndex < 0
+        ) {
+          this.handleGoFirst();
+        } else if (
+          !channelJson.isRunning &&
+          this.state.cook &&
+          this.state.cook.data.length > 0 &&
+          this.state.cookIndex > this.state.cook.data.length
+        ) {
+          this.handleGoLast();
         }
       }
     } catch (e) {
@@ -471,7 +537,8 @@ class DevicePage extends React.Component {
 
   render() {
     const { classes, reduxTheme } = this.props;
-    const { about, channel, cook, cookIndex, parameters } = this.state;
+    const { about, channel, cook, cookIndex, parameters, auxData } = this.state;
+    const { voltageRanges, currentRanges, temperatureSensor } = this.state;
     const samples =
       cook && cook.data && cook.data[cookIndex] && cook.data[cookIndex].samples
         ? cook.data[cookIndex].samples
@@ -481,7 +548,65 @@ class DevicePage extends React.Component {
       reduxTheme.paletteType === "light" ? "rjv-default" : "monokai";
     return (
       <AppContent className={classes.root} title={title}>
-        <div className={classes.content}>
+        <div className={clsx(classes.content, classes.layout)}>
+          <Grid
+            container
+            className={classes.gridContainer}
+            spacing={40}
+            layout="row"
+            alignItems="stretch"
+          >
+            {/* Aux Voltage/Temperature */}
+            <Grid item key="AuxCard" xs={12} sm={12} md={4}>
+              <AuxPanel
+                auxData={auxData}
+                channel={channel}
+                onClear={this.handleClearAuxData}
+                voltageRanges={voltageRanges}
+                temperatureSensor={temperatureSensor}
+              />
+            </Grid>
+
+            {/* Cook */}
+            <Grid item key="CookCard" xs={12} sm={12} md={8}>
+              <CookPanel
+                channel={channel}
+                cook={cook}
+                cookIndex={cookIndex}
+                parameters={parameters}
+                onGoFirst={this.handleGoFirst}
+                onGoLast={this.handleGoLast}
+                onGoNext={this.handleGoNext}
+                onGoPrevious={this.handleGoPrevious}
+                onStart={this.handleStart}
+                onStop={this.handleStop}
+                onChange={this.handleChange}
+              />
+            </Grid>
+
+            {/* Nyquist*/}
+            <Grid item key="CookNyquistCard" xs={12} sm={12} md={6}>
+              <NyquistPanel cook={this.state.cook} />
+            </Grid>
+
+            {/* Bode*/}
+            <Grid item key="CookBodeCard" xs={12} sm={12} md={6}>
+              <BodePanel cook={this.state.cook} />
+            </Grid>
+
+            {/* Cook Table */}
+            <Grid item key="CookTable" xs={12} sm={12} md={12}>
+              <ZTablePanel
+                cook={this.state.cook}
+                currentRanges={currentRanges}
+              />
+            </Grid>
+          </Grid>
+          <p />
+          <Typography variant="h3" gutterBottom>
+            For debugging...
+          </Typography>
+          <p />
           <Typography variant="h4" gutterBottom>
             About
           </Typography>
@@ -490,7 +615,7 @@ class DevicePage extends React.Component {
             <ReactJson
               src={about}
               displayDataTypes={false}
-              collapsed={false}
+              collapsed={true}
               theme={theme}
             />
           ) : (
@@ -519,11 +644,11 @@ class DevicePage extends React.Component {
             disabled={!channel || !channel.isIdle}
             parameters={parameters}
             onChange={this.handleChange}
-            onStart={this.handleStartExp}
+            onStart={this.handleStart}
           />
           <StopExpButton
             disabled={!channel || !channel.isRunning}
-            onStop={this.handleStopExp}
+            onStop={this.handleStop}
           />
           <p />
           {cook ? (
