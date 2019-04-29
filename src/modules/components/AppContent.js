@@ -41,7 +41,7 @@ class AppContent extends React.Component {
     const { reduxTitle } = this.props;
     if (reduxTitle !== docTitle) {
       this.titleSideEffect(docTitle);
-      this.props.dispatchTitle(docTitle);
+      this.props.changeTitle(docTitle);
     }
   }
 
@@ -63,7 +63,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ dispatchTitle: changeTitle }, dispatch);
+  bindActionCreators({ changeTitle }, dispatch);
 
 export default compose(
   connect(

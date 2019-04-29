@@ -6,24 +6,18 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import ReactJson from "react-json-view";
 import moment from "moment";
 
 //controls
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 
 // components
 import AppContent from "../modules/components/AppContent";
 import AuxPanel from "../modules/components/AuxPanel";
 import BodePanel from "../modules/components/BodePanel";
 import CookPanel from "../modules/components/CookPanel";
-import ZTablePanel from "../modules/components/ZTablePanel";
 import NyquistPanel from "../modules/components/NyquistPanel";
-import StartExpButton from "../modules/components/StartExpButton";
-import StopExpButton from "../modules/components/StopExpButton";
+import ZTablePanel from "../modules/components/ZTablePanel";
 
 // functions
 import { changeAbout, enqueueSnackbar } from "../modules/redux/actions";
@@ -263,7 +257,7 @@ class DevicePage extends React.Component {
       this.state.about &&
       JSON.stringify(prevProps.reduxAbout) !== JSON.stringify(this.state.about)
     ) {
-      this.props.actions.about.dispatchAbout(this.state.about);
+      this.props.actions.about.changeAbout(this.state.about);
     }
   }
 
@@ -536,16 +530,10 @@ class DevicePage extends React.Component {
   };
 
   render() {
-    const { classes, reduxTheme } = this.props;
+    const { classes } = this.props;
     const { about, channel, cook, cookIndex, parameters, auxData } = this.state;
     const { voltageRanges, currentRanges, temperatureSensor } = this.state;
-    const samples =
-      cook && cook.data && cook.data[cookIndex] && cook.data[cookIndex].samples
-        ? cook.data[cookIndex].samples
-        : null;
     const title = this.getTitle(about);
-    const theme =
-      reduxTheme.paletteType === "light" ? "rjv-default" : "monokai";
     return (
       <AppContent className={classes.root} title={title}>
         <div className={clsx(classes.content, classes.layout)}>
@@ -602,100 +590,6 @@ class DevicePage extends React.Component {
               />
             </Grid>
           </Grid>
-          <p />
-          <Typography variant="h3" gutterBottom>
-            For debugging...
-          </Typography>
-          <p />
-          <Typography variant="h4" gutterBottom>
-            About
-          </Typography>
-          <p />
-          {about ? (
-            <ReactJson
-              src={about}
-              displayDataTypes={false}
-              collapsed={true}
-              theme={theme}
-            />
-          ) : (
-            <div />
-          )}
-          <p />
-          <Typography variant="h4" gutterBottom>
-            Channel
-          </Typography>
-          <p />
-          {channel ? (
-            <ReactJson
-              src={channel}
-              displayDataTypes={false}
-              collapsed={true}
-              theme={theme}
-            />
-          ) : (
-            <div />
-          )}
-          <p />
-          <Typography variant="h4" gutterBottom>
-            Cook
-          </Typography>
-          <StartExpButton
-            disabled={!channel || !channel.isIdle}
-            parameters={parameters}
-            onChange={this.handleChange}
-            onStart={this.handleStart}
-          />
-          <StopExpButton
-            disabled={!channel || !channel.isRunning}
-            onStop={this.handleStop}
-          />
-          <p />
-          {cook ? (
-            <ReactJson
-              src={cook}
-              displayDataTypes={false}
-              collapsed={true}
-              theme={theme}
-            />
-          ) : (
-            <div />
-          )}
-          <p />
-          <Typography variant="h4" gutterBottom>
-            Samples
-          </Typography>
-          <p />
-          <TextField
-            id="standard-number"
-            label="Index"
-            value={cookIndex}
-            onChange={e => this.handleChange(e, "cookIndex")}
-            type="number"
-            className={classes.textField}
-            InputLabelProps={{
-              shrink: true
-            }}
-            margin="normal"
-          />
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={this.handleSamples}
-          >
-            Get Samples
-          </Button>
-          <p />
-          {samples ? (
-            <ReactJson
-              src={samples}
-              displayDataTypes={false}
-              collapsed={true}
-              theme={theme}
-            />
-          ) : (
-            <div />
-          )}
         </div>
       </AppContent>
     );
@@ -705,19 +599,17 @@ class DevicePage extends React.Component {
 DevicePage.propTypes = {
   classes: PropTypes.object.isRequired,
   ipAddress: PropTypes.string.isRequired,
-  reduxAbout: PropTypes.object.isRequired,
-  reduxTheme: PropTypes.object.isRequired
+  reduxAbout: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  reduxAbout: state.about,
-  reduxTheme: state.theme
+  reduxAbout: state.about
 });
 
 const mapDispatchToProps = dispatch => {
   return {
     actions: {
-      about: bindActionCreators({ dispatchAbout: changeAbout }, dispatch),
+      about: bindActionCreators({ changeAbout }, dispatch),
       snackbar: bindActionCreators({ enqueueSnackbar }, dispatch)
     }
   };

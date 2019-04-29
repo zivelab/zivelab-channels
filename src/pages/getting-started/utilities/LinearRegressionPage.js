@@ -114,7 +114,7 @@ class LinearRegressionPage extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { reduxAbout } = prevProps;
     if (!isEmpty(reduxAbout)) {
-      this.props.dispatchAbout({});
+      this.props.changeAbout({});
     }
   }
 
@@ -292,7 +292,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ dispatchAbout: changeAbout }, dispatch);
+  bindActionCreators({ changeAbout }, dispatch);
 
 export default compose(
   connect(
