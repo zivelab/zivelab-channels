@@ -70,7 +70,8 @@ const states = {
   Finished: "Finished",
   Stopped: "Stopped",
   RunningNoiseLevel: "RunningNoiseLevel",
-  TooHotFET: "TooHotFET"
+  TooHotFET: "TooHotFET",
+  Failed: "Failed"
 };
 
 const defaultParameters = {
@@ -164,8 +165,9 @@ class DevicePage extends React.Component {
       this.state.cook.data &&
       index < this.state.cook.data.length &&
       !this.state.cook.data[index].samples
-    )
+    ) {
       await this.loadSamplesAsync(index);
+    }
   };
 
   handleGoNext = async () => {
@@ -288,7 +290,7 @@ class DevicePage extends React.Component {
         const currentRanges = aboutJson.currentRanges
           .split("/")
           .map((range, index) => {
-            return { value: index, label: range };
+            return { value: index, label: range, diabled: false };
           });
         aboutJson.currentRanges =
           currentRanges[0].label +
@@ -330,6 +332,7 @@ class DevicePage extends React.Component {
           state === states.Stopped;
         channelJson.isRunningNoiseLevel = state === states.RunningNoiseLevel;
         channelJson.isTooHot = state === states.TooHotFET;
+        channelJson.isFailed = state === states.Failed;
 
         if (
           state === states.Running &&
@@ -346,8 +349,8 @@ class DevicePage extends React.Component {
         // Update state: channel and auxData
         const newAuxItem = {
           time: (new Date().getTime() - launched) / 1000, // [sec]
-          voltage: channelJson.auxVoltage,
-          temperature: channelJson.auxTemperature
+          voltage: channelJson.auxVoltage.toFixed(3),
+          temperature: channelJson.auxTemperature.toFixed(3)
         };
         if (this.state.auxData.length < 200) {
           this.setState({
@@ -409,6 +412,10 @@ class DevicePage extends React.Component {
         cookJson.started.moment = moment(
           cookJson.started.ticks - dateTimeOffset
         );
+        cookJson.data = cookJson.data.filter(function(item) {
+          return item.frequency !== 0;
+        });
+        cookJson.parameters.currentRange = cookJson.parameters.currentRange - 1; // 0 = Auto
         this.setState({
           cook: cookJson,
           parameters: { ...cookJson.parameters }
@@ -467,7 +474,7 @@ class DevicePage extends React.Component {
       payload.append("finalFrequency", this.state.parameters.finalFrequency);
       payload.append("density", this.state.parameters.density);
       payload.append("iteration", this.state.parameters.iteration);
-      payload.append("currentRange", this.state.parameters.currentRange);
+      payload.append("currentRange", this.state.parameters.currentRange + 1); //0 = "Auto"
       payload.append("maxInitialDelay", this.state.parameters.maxInitialDelay);
       payload.append("skip", 1);
       payload.append("cycles", 0);
@@ -483,7 +490,9 @@ class DevicePage extends React.Component {
       const startURL = "http://" + ipAddress + "/start";
       const response = await fetch(startURL, settings);
       if (response.ok) {
-        console.log("started: " + ticks);
+        this.setState({
+          cookIndex: -1
+        });
       }
     } catch (e) {
       console.log(e);
@@ -504,7 +513,7 @@ class DevicePage extends React.Component {
       };
       const response = await fetch(stopURL, settings);
       if (response.ok) {
-        console.log("Manually Stopped");
+        //console.log("Manually Stopped");
       }
     } catch (e) {
       console.log(e);

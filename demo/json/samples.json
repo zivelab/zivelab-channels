@@ -1,130 +1,130 @@
 {
-  "dt": 3.125e-5,
+  "dt": 1.953125e-3,
   "multiplier": 33,
   "data": [
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 6.533813e-4,
+      "current": -1.15752e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 1.174122e-3,
+      "current": -5.875463e-2
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 1.48475e-3,
+      "current": -2.627238e-2
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 1.508848e-3,
+      "current": -2.412093e-2
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 1.285053e-3,
+      "current": -5.224109e-2
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 8.123868e-4,
+      "current": -1.062548e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 1.843257e-4,
+      "current": -1.774096e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -5.012302e-4,
+      "current": -2.542517e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -1.136432e-3,
+      "current": -3.243744e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -1.615139e-3,
+      "current": -3.764395e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -1.851567e-3,
+      "current": -4.019727e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -1.821545e-3,
+      "current": -3.967206e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -1.520954e-3,
+      "current": -3.616117e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -1.007106e-3,
+      "current": -3.021998e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -3.6368e-4,
+      "current": -2.281336e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 3.214334e-4,
+      "current": -1.519486e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 9.231426e-4,
+      "current": -8.562504e-2
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 1.353038e-3,
+      "current": -3.952396e-2
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 1.531439e-3,
+      "current": -2.195619e-2
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 1.443482e-3,
+      "current": -3.40924e-2
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 1.081387e-3,
+      "current": -7.571865e-2
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": 5.255963e-4,
+      "current": -1.392266e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -1.428645e-4,
+      "current": -2.147631e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -8.155059e-4,
+      "current": -2.899422e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -1.389331e-3,
+      "current": -3.525715e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -1.769888e-3,
+      "current": -3.926185e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -1.87951e-3,
+      "current": -4.034247e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -1.721492e-3,
+      "current": -3.832248e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -1.303067e-3,
+      "current": -3.352538e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -7.039777e-4,
+      "current": -2.675728e-1
     },
     {
-      "voltage": 1.903599e185,
-      "current": 1.903599e185
+      "voltage": -2.642748e-5,
+      "current": -1.91125e-1
     }
   ]
 }

@@ -119,7 +119,7 @@ class SetUpDialog extends React.Component {
               <Button onClick={onStart} color="primary">
                 Start
               </Button>
-              <Button onClick={onClose} color="primary">
+              <Button onClick={onClose} color="default">
                 Cancel
               </Button>
             </DialogActions>

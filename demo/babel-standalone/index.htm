@@ -139,10 +139,6 @@
         appBarTitle: {
           flex: 1
         },
-        icon: {
-          margin: theme.spacing.unit * 2
-        },
-
         layout: {
           width: "auto",
           marginLeft: theme.spacing.unit * 3,
@@ -152,22 +148,12 @@
             marginLeft: "auto",
             marginRight: "auto"
           }
-          //paddingTop: 65, // appBar.height
         },
-
-        section: {
-          height: "100%"
-        },
-
         cardContent: {
           display: "flex",
           justifyContent: "center",
           alignItems: "baseline",
           marginBottom: theme.spacing.unit * 2
-        },
-        cardDetails_col: {
-          display: "flex",
-          flexDirection: "column"
         },
         cardChart: {
           display: "flex",
@@ -177,57 +163,14 @@
           paddingTop: theme.spacing.unit,
           paddingBottom: theme.spacing.unit
         },
-        cardActions: {
-          [theme.breakpoints.up("sm")]: {
-            paddingBottom: theme.spacing.unit * 2
-          }
-        },
         cardControls: {
           display: "flex",
           alignItems: "center",
           paddingLeft: theme.spacing.unit,
           paddingBottom: theme.spacing.unit
         },
-
-        root: {
-          flexGrow: 1
-        },
         grow: {
           flexGrow: 1
-        },
-        menuButton: {
-          marginLeft: -12,
-          marginRight: 20
-        },
-        icon: {
-          marginRight: theme.spacing.unit
-        },
-        fab: {
-          margin: theme.spacing.unit
-        },
-        media: {
-          height: 0,
-          paddingTop: "56.25%" // 16:9
-        },
-        actions: {
-          display: "flex"
-        },
-        expand: {
-          transform: "rotate(0deg)",
-          marginLeft: "auto",
-          transition: theme.transitions.create("transform", {
-            duration: theme.transitions.duration.shortest
-          })
-        },
-        expandOpen: {
-          transform: "rotate(180deg)"
-        },
-
-        title: {
-          fontSize: 14
-        },
-        pos: {
-          marginBottom: 12
         },
         heading: {
           fontSize: theme.typography.pxToRem(15),
@@ -237,27 +180,25 @@
           width: "100%",
           margin: 0
         },
-
-        flexContainer: {
-          display: "flex",
-          alignItems: "center",
-          boxSizing: "border-box"
+        menu: {
+          width: 200
         },
-
         paper: {
           padding: theme.spacing.unit * 2,
           margin: "auto",
           maxWidth: 500
         },
-
+        table: {
+          fontFamily: theme.typography.fontFamily,
+          width: "100%"
+        },
+        tableCell: {
+          flex: 1
+        },
         tableContainer: {
           width: "100%",
           marginTop: theme.spacing.unit * 3,
           overflowX: "auto"
-        },
-        table: {
-          fontFamily: theme.typography.fontFamily,
-          width: "100%"
         },
         tableRow: {
           cursor: "pointer"
@@ -267,57 +208,18 @@
             backgroundColor: theme.palette.grey[200]
           }
         },
-        tableCell: {
-          flex: 1
-        },
-        noClick: {
-          cursor: "initial"
-        },
-
-        footer: {
-          marginTop: theme.spacing.unit * 8,
-          borderTop: `1px solid ${theme.palette.divider}`,
-          padding: `${theme.spacing.unit * 6}px 0`
-        },
-
         textField: {
           marginLeft: theme.spacing.unit,
           marginRight: theme.spacing.unit,
-          width: 200
-        },
-        menu: {
           width: 200
         },
 
         close: {
           padding: theme.spacing.unit / 2
         },
-        successSnackbar: {
-          backgroundColor: colors.green[600]
-        },
-        errorSnackbar: {
-          backgroundColor: theme.palette.error.dark
-        },
-        infoSnackbar: {
-          backgroundColor: theme.palette.primary.dark
-        },
-        warningSnackbar: {
-          backgroundColor: colors.amber[700]
-        },
 
-        chartOuterContainer145: {
-          width: "100%",
-          height: 145,
-          backgroundColor: "#F5F5F5"
-        },
         chartOuterContainer169: {
           paddingBottom: "56.25%" /* 16:9 */,
-          position: "relative",
-          height: 0
-          //backgroundColor: "#F5F5F5",
-        },
-        chartOuterContainerA4: {
-          paddingBottom: "70.70%" /* Landscape 297:210 */,
           position: "relative",
           height: 0
           //backgroundColor: "#F5F5F5",
@@ -378,12 +280,16 @@
             "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/cook.json"
           )
         : new Request("/cook");
-      const samplesURL = isDemo
-        ? new Request(
-            "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/samples.json"
-          )
-        : new Request("/samples?index=1");
-      const startURL = new Request("/start"); // with parameters
+      function samplesURL(index) {
+        const request = isDemo
+          ? new Request(
+              "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/json/samples.json?index=" +
+                index
+            )
+          : new Request("/samples?index=" + index);
+        return request;
+      }
+      const startURL = new Request("/start");
       const stopURL = new Request("/stop");
 
       // Special characters
@@ -428,13 +334,15 @@
         Running: "Running",
         Finished: "Finished",
         Stopped: "Stopped",
-        RunningNoiseLevel: "RunningNoiseLevel"
+        RunningNoiseLevel: "RunningNoiseLevel",
+        TooHotFET: "TooHotFET",
+        Failed: "Failed"
       };
-      const voltageRanges = [
+      const defaultVoltageRanges = [
         { value: 0, label: "1000V" },
         { value: 1, label: "100V" }
       ];
-      const currentRanges = [
+      const defaultCurrentRanges = [
         { value: 0, label: "2A" },
         { value: 1, label: "400mA" },
         { value: 2, label: "200mA" },
@@ -485,7 +393,8 @@
         currentRange: 2,
         maxInitialDelay: 12.0,
         skip: 1,
-        cycles: 0
+        cycles: 0,
+        expectedZ: 0.01
       };
       const parameterLabels = {
         initialFrequency: {
@@ -525,8 +434,8 @@
           <SvgIcon {...props}>
             <path
               d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,
-				1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,
-				22H14A1,1 0 0,0 15,21V20H9V21Z"
+      1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,
+      22H14A1,1 0 0,0 15,21V20H9V21Z"
             />
           </SvgIcon>
         );
@@ -536,9 +445,9 @@
           <SvgIcon {...props}>
             <path
               d="M12,2A7,7 0 0,1 19,9C19,11.38 17.81,13.47 16,14.74V17A1,1 0 0,1 15,18H9A1,
-				1 0 0,1 8,17V14.74C6.19,13.47 5,11.38 5,9A7,7 0 0,1 12,2M9,21V20H15V21A1,1 0 0,1 14,
-				22H10A1,1 0 0,1 9,21M12,4A5,5 0 0,0 7,9C7,11.05 8.23,12.81 10,13.58V16H14V13.58C15.77,
-				12.81 17,11.05 17,9A5,5 0 0,0 12,4Z"
+      1 0 0,1 8,17V14.74C6.19,13.47 5,11.38 5,9A7,7 0 0,1 12,2M9,21V20H15V21A1,1 0 0,1 14,
+      22H10A1,1 0 0,1 9,21M12,4A5,5 0 0,0 7,9C7,11.05 8.23,12.81 10,13.58V16H14V13.58C15.77,
+      12.81 17,11.05 17,9A5,5 0 0,0 12,4Z"
             />
           </SvgIcon>
         );
@@ -546,10 +455,14 @@
 
       //#region AboutDialogWrapped
       class AboutDialog extends React.Component {
+        handleCopy = async () => {
+          //await clipboardCopy(JSON.stringify(this.props.about, undefined, 3));
+        };
+
         render() {
           const { classes, about, onClose, ...other } = this.props;
-          if (about) {
-            return (
+          return (
+            about && (
               <Dialog
                 onClose={onClose}
                 scroll="paper"
@@ -560,7 +473,8 @@
                 <DialogContent>
                   {Object.keys(about).map((key, index) => (
                     <TextField
-                      id={aboutLabels[key]}
+                      id={key}
+                      key={key}
                       label={aboutLabels[key]}
                       className={classes.textField}
                       value={about[key] ? about[key] : "Not assigned"}
@@ -573,21 +487,17 @@
                   ))}
                 </DialogContent>
                 <DialogActions>
-                  <Button disabled={true} color="primary">
+                  <Button
+                    color="primary"
+                    onClick={this.handleCopy}
+                    disabled={true}
+                  >
                     Copy to Clipboard
                   </Button>
                 </DialogActions>
               </Dialog>
-            );
-          } else {
-            return (
-              <React.Fragment>
-                <Typography variant="h6" color="inherit">
-                  Not available
-                </Typography>
-              </React.Fragment>
-            );
-          }
+            )
+          );
         }
       }
       AboutDialog.propTypes = {
@@ -604,6 +514,7 @@
           const {
             classes,
             parameters,
+            currentRanges,
             onClose,
             onStart,
             onChange,
@@ -694,7 +605,7 @@
                   <Button onClick={onStart} color="primary">
                     Start
                   </Button>
-                  <Button onClick={onClose} color="primary">
+                  <Button onClick={onClose} color="default">
                     Cancel
                   </Button>
                 </DialogActions>
@@ -710,7 +621,8 @@
         onChange: PropTypes.func.isRequired,
         onClose: PropTypes.func.isRequired,
         onStart: PropTypes.func.isRequired,
-        parameters: PropTypes.object.isRequired
+        parameters: PropTypes.object.isRequired,
+        currentRanges: PropTypes.array.isRequired
       };
       const SetUpDialogWrapped = withStyles(styles)(SetUpDialog);
       //#endregion SetUpDialog
@@ -829,7 +741,7 @@
                       dataKey={yKey}
                       name={yKey}
                       unit={yUnit}
-                      tickFormatter={d3.format(".0s")}
+                      tickFormatter={d3.format(".3f")}
                       domain={["auto", "auto"]}
                       hide={true}
                     />
@@ -863,7 +775,7 @@
                       type="number"
                       name={yKey}
                       unit={yUnit}
-                      tickFormatter={d3.format(".0s")}
+                      tickFormatter={d3.format(".3f")}
                       domain={["auto", "auto"]}
                       hide={true}
                     />
@@ -998,68 +910,61 @@
           } = this.props;
           const themeIcon =
             themeName == "dark" ? <LightBulbIcon /> : <LightBulbOutlineIcon />;
+          const title = () => {
+            if (about) {
+              const hostName = about.hostName || "Untitled";
+              const model = about.model.startsWith("Zive")
+                ? about.model
+                    .split(" ")
+                    .slice(1)
+                    .join(" ")
+                : about.model;
+              const ip = about.ipAddress;
+              return hostName === "Untitled"
+                ? model + " (" + ip + ")"
+                : hostName + " (" + model + ", " + ip + ")";
+            } else {
+              return "Loading...";
+            }
+          };
           return (
             <React.Fragment>
               <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
-                  {/* 
-						<IconButton className={classes.menuButton} color="inherit" aria-label="Menu" disabled={true}>
-							<Icon>menu</Icon>
-						</IconButton>
-						*/}
+                  {/* Title */}
                   <Typography
                     variant="h6"
                     color="inherit"
                     noWrap
                     className={classes.appBarTitle}
                   >
-                    {about ? about.model : "loading..."}
+                    {title()}
                   </Typography>
                   {/* About */}
-                  <Tooltip title="About">
-                    <IconButton
-                      color="inherit"
-                      disabled={!about}
-                      onClick={onOpenAbout}
-                    >
+                  <IconButton
+                    color="inherit"
+                    disabled={!about}
+                    onClick={onOpenAbout}
+                  >
+                    <Tooltip title="About">
                       <Icon>info</Icon>
-                    </IconButton>
-                  </Tooltip>
+                    </Tooltip>
+                  </IconButton>
                   <AboutDialogWrapped
                     about={about}
                     open={openAbout}
                     onClose={onClose}
                   />
-                  {/* Share */}
-                  <IconButton
-                    color="inherit"
-                    aria-label="Share"
-                    disabled={true}
-                  >
-                    <Icon>share</Icon>
-                  </IconButton>
-                  {/* Save */}
-                  <IconButton color="inherit" aria-label="Save" disabled={true}>
-                    <Icon>save_alt</Icon>
-                  </IconButton>
-                  {/* Email */}
-                  <IconButton
-                    color="inherit"
-                    aria-label="Email"
-                    disabled={true}
-                  >
-                    <Icon>email</Icon>
-                  </IconButton>
                   {/* Theme */}
-                  <Tooltip title="Toggle light/dark theme">
-                    <IconButton
-                      color="inherit"
-                      aria-label="Theme"
-                      onClick={onToggleTheme}
-                    >
+                  <IconButton
+                    color="inherit"
+                    aria-label="Theme"
+                    onClick={onToggleTheme}
+                  >
+                    <Tooltip title="Toggle light/dark theme">
                       {themeIcon}
-                    </IconButton>
-                  </Tooltip>
+                    </Tooltip>
+                  </IconButton>
                 </Toolbar>
               </AppBar>
             </React.Fragment>
@@ -1081,18 +986,26 @@
       //#region AuxConsoleWrapped
       class AuxConsole extends React.Component {
         render() {
-          const { classes, auxData, channel, ...other } = this.props;
+          const {
+            classes,
+            auxData,
+            channel,
+            voltageRanges,
+            temperatureSensor,
+            ...other
+          } = this.props;
           const auxVoltageExpression = channel
             ? d3.format(".3f")(channel.auxVoltage) + voltageSign
-            : "--" + voltageSign;
+            : "";
           const auxVoltageRangeExpression = channel
             ? voltageRanges.find(x => x.value == channel.voltageRange).label +
               " range"
-            : "--V range";
+            : "";
           const auxTemperatureExpression = channel
             ? d3.format(".2f")(channel.auxTemperature) + degreeCelsiusSign
-            : "--" + degreeCelsiusSign;
-          const auxTemperatureSensorType = channel ? "PT1000" : "";
+            : "";
+          const auxTemperatureSensorType =
+            channel && temperatureSensor ? temperatureSensor : "";
           return (
             <React.Fragment>
               <Grid
@@ -1149,7 +1062,9 @@
       AuxConsole.propTypes = {
         classes: PropTypes.object.isRequired,
         auxData: PropTypes.object.isRequired,
-        channel: PropTypes.object.isRequired
+        channel: PropTypes.object.isRequired,
+        voltageRanges: PropTypes.array.isRequired,
+        temperatureSensor: PropTypes.string.isRequired
       };
       const AuxConsoleWrapped = withStyles(styles)(AuxConsole);
       //#endregion AuxConsoleWrapped
@@ -1157,18 +1072,26 @@
       //#region AuxPanelWrapped
       class AuxPanel extends React.Component {
         render() {
-          const { classes, auxData, channel, onClear, ...other } = this.props;
+          const {
+            classes,
+            auxData,
+            channel,
+            voltageRanges,
+            temperatureSensor,
+            onClear,
+            ...other
+          } = this.props;
           const auxVoltageExpression = channel
             ? d3.format(".3f")(channel.auxVoltage) + voltageSign
-            : "--" + voltageSign;
+            : "";
           const auxVoltageRangeExpression = channel
             ? voltageRanges.find(x => x.value == channel.voltageRange).label +
               " range"
-            : "--V range";
+            : "";
           const auxTemperatureExpression = channel
             ? d3.format(".2f")(channel.auxTemperature) + degreeCelsiusSign
-            : "--" + degreeCelsiusSign;
-          const auxTemperatureSensorType = channel ? "PT1000" : "";
+            : "";
+          const auxTemperatureSensorType = channel ? "PT100" : "";
           return (
             <React.Fragment>
               <Card>
@@ -1179,8 +1102,8 @@
                     <div className={classes.cardControls}>
                       <Tooltip title="Clear">
                         <IconButton aria-label="Clear" onClick={onClear}>
-                          <Icon fontSize="large" color="primary">
-                            refresh
+                          <Icon fontSize="large" color="action">
+                            clear_all
                           </Icon>
                         </IconButton>
                       </Tooltip>
@@ -1188,7 +1111,12 @@
                   }
                 />
                 <CardContent>
-                  <AuxConsole auxData={auxData} channel={channel} />
+                  <AuxConsole
+                    auxData={auxData}
+                    channel={channel}
+                    voltageRanges={voltageRanges}
+                    temperatureSensor={temperatureSensor}
+                  />
                 </CardContent>
               </Card>
             </React.Fragment>
@@ -1199,6 +1127,8 @@
         classes: PropTypes.object.isRequired,
         auxData: PropTypes.object.isRequired,
         channel: PropTypes.object.isRequired,
+        voltageRanges: PropTypes.array.isRequired,
+        temperatureSensor: PropTypes.string.isRequired,
         onClear: PropTypes.func.isRequired
       };
       const AuxPanelWrapped = withStyles(styles)(AuxPanel);
@@ -1211,7 +1141,7 @@
             classes,
             channel,
             cook,
-            activeIndex,
+            cookIndex,
             onGoFirst,
             onGoPrevious,
             onGoNext,
@@ -1225,33 +1155,39 @@
             : false;
           const cooked = cook ? cook.data : null;
 
-          if (cooked && activeIndex < 0) {
+          if (cooked && cookIndex < 0) {
             onGoFirst();
-          } else if (cooked && activeIndex > cooked.length) {
+          } else if (cooked && cookIndex > cooked.length) {
             onGoLast();
           }
-          const zitem = cooked ? cooked[activeIndex] : null;
+          const zitem = cooked ? cooked[cookIndex] : null;
 
           const frequncyExpression = isRunning
-            ? d3.format(".3s")(channel.lastFrequency) + frequencySign
+            ? channel.lastFrequency
+              ? d3.format(".3s")(channel.lastFrequency) + frequencySign
+              : " "
             : zitem
             ? d3.format(".3s")(zitem.frequency) + frequencySign
-            : "--" + frequencySign;
+            : " ";
           const zModulusExpression = isRunning
-            ? d3.format(".3s")(channel.lastZmod) + ohmSign
+            ? channel.lastZmod
+              ? d3.format(".3s")(channel.lastZmod) + ohmSign
+              : " "
             : zitem
             ? d3.format(".3s")(zitem.zmod) + ohmSign
-            : "--" + ohmSign;
+            : " ";
           const zPhaseExpression = isRunning
-            ? d3.format(".2f")(channel.lastZphase) + degreeSign
+            ? channel.lastZphase
+              ? d3.format(".2f")(channel.lastZphase) + degreeSign
+              : " "
             : zitem
             ? d3.format(".2f")(zitem.zphase) + degreeSign
-            : "--" + degreeSign;
+            : " ";
           const auxVExpression = isRunning
-            ? ""
+            ? " "
             : zitem
             ? d3.format(".2f")(zitem.vdc) + voltageSign
-            : "--" + voltageSign;
+            : " ";
           return (
             <React.Fragment>
               <Grid
@@ -1340,7 +1276,7 @@
                           justify="center"
                           alignItems="stretch"
                         >
-                          <div className={classes.root}>
+                          <div className={classes.grow}>
                             <LinearProgress
                               variant="determinate"
                               value={channel.progress}
@@ -1360,50 +1296,50 @@
                       sm={12}
                       md={12}
                     >
-                      <Tooltip title="Go first">
-                        <IconButton
-                          aria-label="GoFirst"
-                          onClick={onGoFirst}
-                          disabled={!isIdle || activeIndex <= 0}
-                        >
+                      <IconButton
+                        aria-label="GoFirst"
+                        onClick={onGoFirst}
+                        disabled={!isIdle || cookIndex <= 0}
+                      >
+                        <Tooltip title="Go first">
                           <Icon fontSize="default">first_page</Icon>
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Go previous">
-                        <IconButton
-                          aria-label="GoPrevious"
-                          onClick={onGoPrevious}
-                          disabled={!isIdle || activeIndex <= 0}
-                        >
+                        </Tooltip>
+                      </IconButton>
+                      <IconButton
+                        aria-label="GoPrevious"
+                        onClick={onGoPrevious}
+                        disabled={!isIdle || cookIndex <= 0}
+                      >
+                        <Tooltip title="Go previous">
                           <Icon fontSize="default">chevron_left</Icon>
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Go next">
-                        <IconButton
-                          aria-label="GoNext"
-                          onClick={onGoNext}
-                          disabled={
-                            !isIdle ||
-                            activeIndex < 0 ||
-                            activeIndex >= cooked.length - 1
-                          }
-                        >
+                        </Tooltip>
+                      </IconButton>
+                      <IconButton
+                        aria-label="GoNext"
+                        onClick={onGoNext}
+                        disabled={
+                          !isIdle ||
+                          cookIndex < 0 ||
+                          cookIndex >= cooked.length - 1
+                        }
+                      >
+                        <Tooltip title="Go next">
                           <Icon fontSize="default">chevron_right</Icon>
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Go last">
-                        <IconButton
-                          aria-label="GoLast"
-                          onClick={onGoLast}
-                          disabled={
-                            !isIdle ||
-                            activeIndex < 0 ||
-                            activeIndex >= cooked.length - 1
-                          }
-                        >
+                        </Tooltip>
+                      </IconButton>
+                      <IconButton
+                        aria-label="GoLast"
+                        onClick={onGoLast}
+                        disabled={
+                          !isIdle ||
+                          cookIndex < 0 ||
+                          cookIndex >= cooked.length - 1
+                        }
+                      >
+                        <Tooltip title="Go last">
                           <Icon fontSize="default">last_page</Icon>
-                        </IconButton>
-                      </Tooltip>
+                        </Tooltip>
+                      </IconButton>
                     </Grid>
                   )}
                 </Grid>
@@ -1411,7 +1347,7 @@
                   <LissajousCurveWrapped
                     channel={channel}
                     cook={cook}
-                    index={activeIndex}
+                    index={cookIndex}
                   />
                 </Grid>
               </Grid>
@@ -1421,7 +1357,7 @@
       }
       CookConsole.propTypes = {
         classes: PropTypes.object.isRequired,
-        activeIndex: PropTypes.number.isRequired,
+        cookIndex: PropTypes.number.isRequired,
         channel: PropTypes.object.isRequired,
         cook: PropTypes.object.isRequired,
         onGoFirst: PropTypes.func.isRequired,
@@ -1439,8 +1375,9 @@
             classes,
             channel,
             cook,
-            activeIndex,
+            cookIndex,
             parameters,
+            currentRanges,
             openSetUp,
             openSnackbar,
             messageInfo,
@@ -1460,6 +1397,8 @@
           const isRunningNoiseLevel = channel
             ? channel.isRunningNoiseLevel
             : false;
+          const isTooHot = channel ? channel.isTooHot : false;
+          const isFailed = channel ? channel.isFailed : false;
           const started =
             cook && cook.started && cook.started.moment
               ? cook.started.moment
@@ -1470,8 +1409,14 @@
               frequencySign
             : isRunningNoiseLevel
             ? "Measuring noise level..."
-            : cook && cook.data
+            : isTooHot
+            ? "Heat sink is very hot..."
+            : isFailed
+            ? "Something wrong, check cables..."
+            : cook && cook.data.length > 0
             ? "Cooked, " + started.fromNow()
+            : channel
+            ? "Idle"
             : "Loading...";
           return (
             <React.Fragment>
@@ -1480,33 +1425,34 @@
                   subheader={stateExpression}
                   action={
                     <div className={classes.cardControls}>
-                      <Tooltip title="Start">
-                        <IconButton
-                          aria-label="Start"
-                          onClick={onOpenSetUp}
-                          disabled={!isIdle}
-                        >
-                          <Icon fontSize="large" color="primary">
-                            play_arrow
-                          </Icon>
-                        </IconButton>
-                      </Tooltip>
+                      <IconButton
+                        aria-label="Start"
+                        onClick={onOpenSetUp}
+                        disabled={!isIdle}
+                        color="primary"
+                      >
+                        <Tooltip title="Start">
+                          <Icon fontSize="large">play_arrow</Icon>
+                        </Tooltip>
+                      </IconButton>
                       <SetUpDialogWrapped
                         open={openSetUp}
                         parameters={parameters}
+                        currentRanges={currentRanges}
                         onClose={onClose}
                         onStart={onStart}
                         onChange={onChangeParameter}
                       />
-                      <Tooltip title="Stop">
-                        <IconButton
-                          aria-label="Stop"
-                          onClick={onStop}
-                          disabled={!isRunning}
-                        >
+                      <IconButton
+                        aria-label="Stop"
+                        onClick={onStop}
+                        disabled={!isRunning}
+                        color="secondary"
+                      >
+                        <Tooltip title="Stop">
                           <Icon fontSize="large">stop</Icon>
-                        </IconButton>
-                      </Tooltip>
+                        </Tooltip>
+                      </IconButton>
                       <Snackbar
                         key={messageInfo.key}
                         anchorOrigin={{
@@ -1539,7 +1485,7 @@
                 />
                 <CardContent>
                   <CookConsoleWrapped
-                    activeIndex={activeIndex}
+                    cookIndex={cookIndex}
                     channel={channel}
                     cook={cook}
                     onGoFirst={onGoFirst}
@@ -1555,11 +1501,12 @@
       }
       CookPanel.propTypes = {
         classes: PropTypes.object.isRequired,
-        activeIndex: PropTypes.number.isRequired,
+        cookIndex: PropTypes.number.isRequired,
         channel: PropTypes.object.isRequired,
         cook: PropTypes.object.isRequired,
         messageInfo: PropTypes.object.isRequired,
         parameters: PropTypes.object.isRequired,
+        currentRanges: PropTypes.array.isRequired,
         onChangeParameter: PropTypes.func.isRequired,
         onClose: PropTypes.func.isRequired,
         onGoFirst: PropTypes.func.isRequired,
@@ -1580,15 +1527,13 @@
         render() {
           const { classes, cook, ...other } = this.props;
           const cooked = cook ? cook.data : null;
-          if (!cooked) {
-            return null;
-          }
           return (
-            <React.Fragment>
+            cooked &&
+            cooked.length > 0 && (
               <Card>
                 {/*<CardHeader
-						subheader="Nyquist Plot"
-					/>*/}
+      		          subheader="Nyquist Plot"
+                />*/}
                 <CardContent className={classes.cardChart}>
                   <Recharts.ResponsiveContainer width="100%" height={300}>
                     <Recharts.ScatterChart
@@ -1600,7 +1545,7 @@
                         dataKey="zreal"
                         name="Zreal"
                         unit="&#8486;"
-                        tickFormatter={d3.format(".2s")}
+                        tickFormatter={d3.format(".3s")}
                         domain={["auto", "auto"]}
                       >
                         {/* <Recharts.Label value="Zreal" offset={-10} position="insideBottom" /> */}
@@ -1610,7 +1555,7 @@
                         dataKey="zimag"
                         name="Zimag"
                         unit="&#8486;"
-                        tickFormatter={tick => d3.format(".2s")(-1 * tick)}
+                        tickFormatter={tick => d3.format(".3s")(-1 * tick)}
                         domain={["auto", "auto"]}
                         reversed={true}
                       >
@@ -1630,7 +1575,7 @@
                   </Recharts.ResponsiveContainer>
                 </CardContent>
               </Card>
-            </React.Fragment>
+            )
           );
         }
       }
@@ -1646,15 +1591,10 @@
         render() {
           const { classes, cook, ...other } = this.props;
           const cooked = cook ? cook.data : null;
-          if (!cooked) {
-            return null;
-          }
           return (
-            <React.Fragment>
+            cooked &&
+            cooked.length > 0 && (
               <Card>
-                {/*<CardHeader
-						subheader="Bode Plot"
-					/>*/}
                 <CardContent className={classes.cardChart}>
                   <Recharts.ResponsiveContainer width="100%" height={300}>
                     <Recharts.ScatterChart
@@ -1679,7 +1619,7 @@
                         dataKey="zmod"
                         name="Zmod"
                         unit="&#8486;"
-                        tickFormatter={d3.format(".2s")}
+                        tickFormatter={d3.format(".3s")}
                         domain={["auto", "auto"]}
                       >
                         {/* <Recharts.Label value="Zmod" offset={0} position="insideLeft" angle={-90}/> */}
@@ -1690,7 +1630,7 @@
                         dataKey="zphase"
                         name="Zphase"
                         unit="&deg;"
-                        tickFormatter={d3.format(".2")}
+                        tickFormatter={d3.format(".2f")}
                         domain={["auto", "auto"]}
                         orientation="right"
                       >
@@ -1718,7 +1658,7 @@
                   </Recharts.ResponsiveContainer>
                 </CardContent>
               </Card>
-            </React.Fragment>
+            )
           );
         }
       }
@@ -1732,18 +1672,18 @@
       //#region CookTablePanelWrapped
       class CookTablePanel extends React.Component {
         render() {
-          const { classes, cook, ...other } = this.props;
+          const { classes, cook, currentRanges, ...other } = this.props;
           const cooked = cook ? cook.data : null;
           const started = cook && cook.started ? cook.started.moment : null;
           const titleExpression = started
-            ? "Impedance data, measured " +
-              started.format("YYYY-MM-DD hh:mm:ss")
+            ? "Impedance data, measured at " +
+              started.format("HH:mm:ss") +
+              " on " +
+              started.format("YYYY-MM-DD")
             : "No data";
-          if (!cooked) {
-            return null;
-          }
           return (
-            <React.Fragment>
+            cooked &&
+            cooked.length > 0 && (
               <ExpansionPanel>
                 <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
                   <Typography className={classes.heading}>
@@ -1755,11 +1695,6 @@
                     <Table className={classes.table} key="tbl">
                       <TableHead>
                         <TableRow key="thead">
-                          {/*
-										{Object.keys(colHeaders).map((key, index) => (
-											<TableCell align="right" className={classes.tableCell}>{colHeaders[key]}</TableCell>	
-										))}
-										*/}
                           <TableCell
                             align="right"
                             className={classes.tableCell}
@@ -1844,49 +1779,49 @@
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".3s")(row.frequency)}
+                              {d3.format(".6s")(row.frequency)}
                             </TableCell>
                             <TableCell
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".3s")(row.zreal)}
+                              {d3.format(".6s")(row.zreal)}
                             </TableCell>
                             <TableCell
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".3s")(row.zimag)}
+                              {d3.format(".6s")(row.zimag)}
                             </TableCell>
                             <TableCell
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".3s")(row.zmod)}
+                              {d3.format(".6s")(row.zmod)}
                             </TableCell>
                             <TableCell
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".3")(row.zphase)}
+                              {d3.format(".3f")(row.zphase)}
                             </TableCell>
                             <TableCell
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".2s")(row.idc)}
+                              {d3.format(".6s")(row.idc)}
                             </TableCell>
                             <TableCell
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".3")(row.vdc)}
+                              {d3.format(".3f")(row.vdc)}
                             </TableCell>
                             <TableCell
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".3")(row.temperature)}
+                              {d3.format(".3f")(row.temperature)}
                             </TableCell>
                             <TableCell
                               align="right"
@@ -1905,13 +1840,14 @@
                   </Paper>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
-            </React.Fragment>
+            )
           );
         }
       }
       CookTablePanel.propTypes = {
         classes: PropTypes.object.isRequired,
-        cook: PropTypes.object.isRequired
+        cook: PropTypes.object.isRequired,
+        currentRanges: PropTypes.array.isRequired
       };
       const CookTablePanelWrapped = withStyles(styles)(CookTablePanel);
       //#endregion CookTablePanelWrapped
@@ -1934,11 +1870,19 @@
             cook: null,
 
             parameters: defaultParameters,
-            activeIndex: -1,
+            cookIndex: -1,
 
-            auxData: []
+            auxData: [],
+
+            timer: null,
+
+            voltageRanges: defaultVoltageRanges,
+            currentRanges: defaultCurrentRanges,
+            temperatureSensor: "PT100"
           };
         }
+
+        controller = new AbortController();
 
         //#region Event handlers
         processQueue = () => {
@@ -2027,7 +1971,7 @@
         handleGoFirst = () => {
           const index = 0;
           this.setState({
-            activeIndex: index
+            cookIndex: index
           });
           if (
             this.state.cook &&
@@ -2038,9 +1982,9 @@
             this.loadSamplesAsync(index);
         };
         handleGoNext = () => {
-          const index = this.state.activeIndex + 1;
+          const index = this.state.cookIndex + 1;
           this.setState({
-            activeIndex: index
+            cookIndex: index
           });
           if (
             this.state.cook &&
@@ -2053,7 +1997,7 @@
         handleGoLast = () => {
           const index = this.state.cook.data.length - 1;
           this.setState({
-            activeIndex: index
+            cookIndex: index
           });
           if (
             this.state.cook &&
@@ -2065,9 +2009,9 @@
           }
         };
         handleGoPrevious = () => {
-          const index = this.state.activeIndex - 1;
+          const index = this.state.cookIndex - 1;
           this.setState({
-            activeIndex: index
+            cookIndex: index
           });
           if (
             this.state.cook &&
@@ -2093,16 +2037,15 @@
             openSnackbar: true
           });
         };
-        handleStart = () => {
+        handleStart = async () => {
+          await this.startExpAsync();
           this.setState({
             openSetUp: false
           });
-          // Send a start signal to device
-          const parJSON = JSON.stringify(this.state.parameters);
-          console.log(parJSON);
         };
-        handleStop = () => {
-          // Send a stop signal to device
+
+        handleStop = async () => {
+          await this.stopExpAsync();
         };
         handleToggleTheme = () => {
           const themeName = this.state.themeName == "dark" ? "light" : "dark";
@@ -2117,29 +2060,54 @@
         }
 
         //#region Fetch
-        async loadAboutAsync() {
+        loadAboutAsync = async () => {
           try {
-            const aboutFetch = await fetch(aboutURL);
+            const aboutFetch = await fetch(aboutURL, {
+              signal: this.controller.signal
+            });
             const aboutJson = await aboutFetch.json();
             if (aboutJson) {
-              console.log("about.json loaded");
+              aboutJson.hostName = aboutJson.hostName || "Untitled";
+              aboutJson.configureIPv4 = aboutJson.configureIPv4 || "Using DHCP";
+              const voltageRanges = aboutJson.voltageRanges
+                .split("/")
+                .map((range, index) => {
+                  return { value: index, label: range };
+                });
+              const currentRanges = aboutJson.currentRanges
+                .split("/")
+                .map((range, index) => {
+                  return { value: index, label: range };
+                });
+              aboutJson.currentRanges =
+                currentRanges[0].label +
+                "/" +
+                currentRanges[1].label +
+                "/.../" +
+                currentRanges[currentRanges.length - 1].label;
+              const temperatureSensor = aboutJson.temperatureSensor || "PT100";
               this.setState({
-                about: aboutJson
+                about: aboutJson,
+                voltageRanges,
+                currentRanges,
+                temperatureSensor
               });
             }
           } catch (e) {
             console.log(e);
           }
-        }
-        async loadChannelAsync() {
+        };
+        loadChannelAsync = async () => {
           try {
-            const channelFetch = await fetch(channelURL);
+            const channelFetch = await fetch(channelURL, {
+              signal: this.controller.signal
+            });
             const channelJson = await channelFetch.json();
             if (channelJson) {
-              console.log("channel.json loaded");
               const state = Object.keys(states).find(
                 key => states[key] == channelJson.state
               );
+              channelJson.received = Date.now();
               channelJson.isIdle = state == states.Idle;
               channelJson.isRunning =
                 state == states.Running ||
@@ -2147,8 +2115,14 @@
                 state == states.Stopped;
               channelJson.isRunningNoiseLevel =
                 state == states.RunningNoiseLevel;
+              channelJson.isTooHot = state === states.TooHotFET;
+              channelJson.isFailed = state === states.Failed;
 
-              if (state == states.Running && this.state.channel.isIdle) {
+              if (
+                state == states.Running &&
+                this.state.channel &&
+                this.state.channel.isIdle
+              ) {
                 this.handleSnackBar("Started");
               } else if (state == states.Finished) {
                 this.handleSnackBar("Successfully finished");
@@ -2158,9 +2132,9 @@
 
               // Update state: channel and auxData
               const newAuxItem = {
-                time: new Date().getTime() - launched,
-                voltage: channelJson.auxVoltage,
-                temperature: channelJson.auxTemperature
+                time: (new Date().getTime() - launched) / 1000, // [sec]
+                voltage: channelJson.auxVoltage.toFixed(3),
+                temperature: channelJson.auxTemperature.toFixed(3)
               };
               if (this.state.auxData.length < 200) {
                 this.setState({
@@ -2191,17 +2165,22 @@
           } catch (e) {
             console.log(e);
           }
-        }
-        async loadCookAsync() {
+        };
+        loadCookAsync = async () => {
           try {
-            const cookFetch = await fetch(cookURL);
+            const cookFetch = await fetch(cookURL, {
+              signal: this.controller.signal
+            });
             const cookJson = await cookFetch.json();
             if (cookJson) {
-              // Update state: cook
-              console.log("cook.json loaded");
               cookJson.started.moment = moment(
                 cookJson.started.ticks - dateTimeOffset
               );
+              cookJson.data = cookJson.data.filter(function(item) {
+                return item.frequency !== 0;
+              });
+              cookJson.parameters.currentRange =
+                cookJson.parameters.currentRange - 1; // 0 = Auto
               this.setState({
                 cook: cookJson,
                 parameters: { ...cookJson.parameters }
@@ -2210,11 +2189,12 @@
           } catch (e) {
             console.log(e);
           }
-        }
-        async loadSamplesAsync(index) {
+        };
+        loadSamplesAsync = async index => {
           try {
-            //const url = samplesURL + "?" + index.toString();
-            const samplesFetch = await fetch(samplesURL);
+            const samplesFetch = await fetch(samplesURL(index), {
+              signal: this.controller.signal
+            });
             const samplesJson = await samplesFetch.json();
             if (
               samplesJson &&
@@ -2223,8 +2203,6 @@
               index >= 0 &&
               index < this.state.cook.data.length
             ) {
-              // Update state: cook[index].samples
-              console.log("cook[%d].samples loaded", index);
               const data = this.state.cook.data.map((item, j) => {
                 if (j == index) {
                   item.samples = samplesJson;
@@ -2241,11 +2219,83 @@
           } catch (e) {
             console.log(e);
           }
-        }
+        };
+        startExpAsync = async () => {
+          if (isDemo) return;
+          try {
+            const ticks = new Date().getTime() + dateTimeOffset; // miliiseconds since 0000-01-01
+            const payload = new URLSearchParams();
+            payload.append(
+              "initialFrequency",
+              this.state.parameters.initialFrequency
+            );
+            payload.append(
+              "finalFrequency",
+              this.state.parameters.finalFrequency
+            );
+            payload.append("density", this.state.parameters.density);
+            payload.append("iteration", this.state.parameters.iteration);
+            payload.append(
+              "currentRange",
+              this.state.parameters.currentRange + 1
+            ); // 0 = "Auto"
+            payload.append(
+              "maxInitialDelay",
+              this.state.parameters.maxInitialDelay
+            );
+            payload.append("skip", 1);
+            payload.append("cycles", 0);
+            payload.append("started", ticks);
+            const settings = {
+              method: "POST",
+              headers: {
+                "Content-Length": payload.toString().length.toString()
+              },
+              body: payload.toString(),
+              signal: this.controller.signal
+            };
+            const response = await fetch(startURL, settings);
+            if (response.ok) {
+              this.setState({
+                cookIndex: -1
+              });
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        };
+        stopExpAsync = async () => {
+          if (isDemo) return;
+          try {
+            const settings = {
+              method: "POST",
+              headers: {
+                "Content-Length": 0
+              },
+              signal: this.controller.signal
+            };
+            const response = await fetch(stopURL, settings);
+            if (response.ok) {
+              //console.log("Manually Stopped");
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        };
         //#endregion Fetch
 
+        componentDidMount = async () => {
+          await this.loadAboutAsync();
+          await this.loadChannelAsync();
+          let timer = setInterval(async () => {
+            await this.loadChannelAsync();
+          }, 3000);
+          this.setState({ timer });
+        };
+
         componentWillUnmount() {
-          clearInterval(this.interval);
+          this.controller.abort();
+          clearInterval(this.state.timer);
         }
 
         render() {
@@ -2256,6 +2306,7 @@
           {
             /* Binding functions */
           }
+
           this.handleChangeParameter = this.handleChangeParameter.bind(this);
           this.handleClearAuxData = this.handleClearAuxData.bind(this);
           this.handleClose = this.handleClose.bind(this);
@@ -2303,6 +2354,8 @@
                       <AuxPanelWrapped
                         auxData={this.state.auxData}
                         channel={this.state.channel}
+                        voltageRanges={this.state.voltageRanges}
+                        temperatureSensor={this.state.temperatureSensor}
                         onClear={this.handleClearAuxData}
                       />
                     </Grid>
@@ -2310,7 +2363,7 @@
                     {/* Cook */}
                     <Grid item key="CookCard" xs={12} sm={12} md={8}>
                       <CookPanelWrapped
-                        activeIndex={this.state.activeIndex}
+                        cookIndex={this.state.cookIndex}
                         channel={this.state.channel}
                         cook={this.state.cook}
                         messageInfo={this.state.messageInfo}
@@ -2326,6 +2379,7 @@
                         openSetUp={this.state.openSetUp}
                         openSnackbar={this.state.openSnackbar}
                         parameters={this.state.parameters}
+                        currentRanges={this.state.currentRanges}
                       />
                     </Grid>
 
@@ -2341,7 +2395,10 @@
 
                     {/* Cook Table */}
                     <Grid item key="CookTable" xs={12} sm={12} md={12}>
-                      <CookTablePanelWrapped cook={this.state.cook} />
+                      <CookTablePanelWrapped
+                        cook={this.state.cook}
+                        currentRanges={this.state.currentRanges}
+                      />
                     </Grid>
                   </Grid>
                 </main>

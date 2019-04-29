@@ -46,6 +46,7 @@ class CookPanel extends React.Component {
     const isRunning = channel ? channel.isRunning : false;
     const isRunningNoiseLevel = channel ? channel.isRunningNoiseLevel : false;
     const isTooHot = channel ? channel.isTooHot : false;
+    const isFailed = channel ? channel.isFailed : false;
     const started =
       cook && cook.started && cook.started.moment ? cook.started.moment : null;
     const stateExpression = isRunning
@@ -54,6 +55,8 @@ class CookPanel extends React.Component {
       ? "Measuring noise level..."
       : isTooHot
       ? "Heat sink is very hot..."
+      : isFailed
+      ? "Something wrong, check cables..."
       : cook && cook.data.length > 0
       ? "Cooked, " + started.fromNow()
       : channel
@@ -66,7 +69,7 @@ class CookPanel extends React.Component {
           action={
             <div className={classes.cardControls}>
               <StartExpButton
-                disabled={!isIdle}
+                disabled={!isIdle && !isFailed}
                 parameters={parameters}
                 onStart={onStart}
                 onChange={onChange}

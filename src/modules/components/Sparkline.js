@@ -24,6 +24,9 @@ class Sparkline extends React.Component {
       dataSet.map(item => {
         return { x: item[xKey], y: item[yKey] };
       });
+    const xKeys = dataSet && dataSet.map(item => item[xKey]);
+    const xMin = xKeys && xKeys[0];
+    const xMax = xKeys && xKeys[xKeys.length - 1];
     const data = {
       labels: ["Aux"],
       datasets: [
@@ -59,6 +62,17 @@ class Sparkline extends React.Component {
         display: false
       },
       maintainAspectRatio: false,
+      tooltips: {
+        callbacks: {
+          title: function() {
+            return "";
+          },
+          label: function(item, data) {
+            const dataPoint = item.yLabel;
+            return dataPoint;
+          }
+        }
+      },
       scales: {
         xAxes: [
           {
@@ -67,8 +81,10 @@ class Sparkline extends React.Component {
             },
             ticks: {
               callback: function(value) {
-                return format(".3")(value) + xUnit;
+                return format(".3f")(value) + xUnit;
               },
+              min: xMin,
+              max: xMax,
               display: false
             },
             gridLines: {
@@ -85,12 +101,12 @@ class Sparkline extends React.Component {
             },
             ticks: {
               callback: function(value) {
-                return format(".0")(value) + yUnit;
+                return format(".2f")(value) + yUnit;
               },
               display: false
             },
             gridLines: {
-              display: false,
+              display: true,
               color: "#aaa",
               zeroLineColor: "#aaa"
             }

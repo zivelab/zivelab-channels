@@ -147,7 +147,7 @@ class BodePanel extends React.Component {
             },
             ticks: {
               callback: function(value) {
-                return format(".3f")(value);
+                return format(".2f")(value);
               },
               fontColor: "#aaa",
               maxTicksLimit: 10

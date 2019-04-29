@@ -49,29 +49,32 @@ class CookConsole extends React.Component {
     const cooked = cook ? cook.data : null;
     const zitem = cooked ? cooked[cookIndex] : null;
 
-    const frequncyExpression =
-      isRunning && channel.lastFrequency
+    const frequncyExpression = isRunning
+      ? channel.lastFrequency
         ? format(".3s")(channel.lastFrequency) + frequencySign
-        : zitem
-        ? format(".3s")(zitem.frequency) + frequencySign
-        : "--" + frequencySign;
-    const zModulusExpression =
-      isRunning && channel.lastZmod
+        : " "
+      : zitem
+      ? format(".3s")(zitem.frequency) + frequencySign
+      : " ";
+    const zModulusExpression = isRunning
+      ? channel.lastZmod
         ? format(".3s")(channel.lastZmod) + ohmSign
-        : zitem
-        ? format(".3s")(zitem.zmod) + ohmSign
-        : "--" + ohmSign;
-    const zPhaseExpression =
-      isRunning && channel.lastZphase
+        : " "
+      : zitem
+      ? format(".3s")(zitem.zmod) + ohmSign
+      : " ";
+    const zPhaseExpression = isRunning
+      ? channel.lastZphase
         ? format(".2f")(channel.lastZphase) + degreeSign
-        : zitem
-        ? format(".2f")(zitem.zphase) + degreeSign
-        : "--" + degreeSign;
+        : " "
+      : zitem
+      ? format(".2f")(zitem.zphase) + degreeSign
+      : " ";
     const auxVExpression = isRunning
-      ? ""
+      ? " "
       : zitem
       ? format(".2f")(zitem.vdc) + voltageSign
-      : "--" + voltageSign;
+      : " ";
     return (
       <React.Fragment>
         <Grid

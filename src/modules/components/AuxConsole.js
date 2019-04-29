@@ -23,16 +23,17 @@ class AuxConsole extends React.Component {
     const auxVoltageExpression =
       channel && channel.auxVoltage
         ? format(".3f")(channel.auxVoltage) + voltageSign
-        : "--" + voltageSign;
+        : "";
     const auxVoltageRangeExpression = channel
       ? voltageRanges.find(x => x.value === channel.voltageRange).label +
         " range"
-      : "--V range";
+      : "";
     const auxTemperatureExpression =
       channel && channel.auxTemperature
         ? format(".2f")(channel.auxTemperature) + degreeCelsiusSign
-        : "--" + degreeCelsiusSign;
-    const auxTemperatureSensorType = temperatureSensor;
+        : "";
+    const auxTemperatureSensorType =
+      channel && temperatureSensor ? temperatureSensor : "";
     return (
       <Grid
         container

@@ -45,10 +45,14 @@ class ZTablePanel extends React.Component {
     const cooked = cook ? cook.data : null;
     const started = cook && cook.started ? cook.started.moment : null;
     const titleExpression = started
-      ? "Impedance data, measured " + started.format("YYYY-MM-DD hh:mm:ss")
+      ? "Impedance data, measured at " +
+        started.format("HH:mm:ss") +
+        " on " +
+        started.format("YYYY-MM-DD")
       : "No data";
     return (
-      cooked && (
+      cooked &&
+      cooked.length > 0 && (
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<Icon>expand_more</Icon>}>
             <Typography className={classes.heading}>
