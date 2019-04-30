@@ -130,14 +130,16 @@
       });
 
       const styles = theme => ({
-        appBar: {
-          position: "relative", //''fixed',
-          //zIndex: 2000,
-          //height: 65,
-          width: "100%"
+        root: {
+          display: "flex"
         },
         appBarTitle: {
           flex: 1
+        },
+        content: {
+          flexGrow: 1,
+          padding: theme.spacing.unit * 3,
+          marginTop: "32px"
         },
         layout: {
           width: "auto",
@@ -929,7 +931,7 @@
           };
           return (
             <React.Fragment>
-              <AppBar position="fixed" className={classes.appBar}>
+              <AppBar position="fixed">
                 <Toolbar>
                   {/* Title */}
                   <Typography
@@ -2328,7 +2330,7 @@
 
           return (
             <MuiThemeProvider theme={muiTheme}>
-              <React.Fragment>
+              <div className={classes.root}>
                 <CssBaseline />
 
                 {/* Header */}
@@ -2341,7 +2343,7 @@
                   themeName={this.state.themeName}
                 />
 
-                <main className={classes.layout}>
+                <main className={classNames(classes.content, classes.layout)}>
                   <Grid
                     container
                     className={classes.gridContainer}
@@ -2402,7 +2404,7 @@
                     </Grid>
                   </Grid>
                 </main>
-              </React.Fragment>
+              </div>
             </MuiThemeProvider>
           );
         }
