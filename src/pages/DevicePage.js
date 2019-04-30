@@ -349,8 +349,9 @@ class DevicePage extends React.Component {
         // Update state: channel and auxData
         const newAuxItem = {
           time: (new Date().getTime() - launched) / 1000, // [sec]
-          voltage: channelJson.auxVoltage.toFixed(3),
-          temperature: channelJson.auxTemperature.toFixed(3)
+          voltage: channelJson.auxVoltage && channelJson.auxVoltage.toFixed(3),
+          temperature:
+            channelJson.auxTemperature && channelJson.auxTemperature.toFixed(3)
         };
         if (this.state.auxData.length < 200) {
           this.setState({
