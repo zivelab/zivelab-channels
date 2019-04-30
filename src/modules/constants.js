@@ -17,3 +17,11 @@ export const LANGUAGES = ["en", "kr"];
 
 // Work in progress
 export const LANGUAGES_IN_PROGRESS = ["en", "kr"];
+
+// special characters
+export const SYMBOLS = {
+  DEGREE: "\u00B0",
+  DEGREE_CELSIUS: "\u00B0C",
+  NAN: "\u25A0\u25A0.\u25A0",
+  OHM: "\u2126"
+};

@@ -60,7 +60,7 @@ class CookPanel extends React.Component {
       : cook && cook.data.length > 0
       ? "Cooked, " + started.fromNow()
       : channel
-      ? "Idle"
+      ? "Ready"
       : "Loading...";
     return (
       <Card>

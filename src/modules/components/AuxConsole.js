@@ -10,11 +10,10 @@ import Typography from "@material-ui/core/Typography";
 // components
 import Sparkline from "./Sparkline";
 
-const styles = theme => ({});
+// constants
+import { SYMBOLS } from "../constants";
 
-// Special characters
-const voltageSign = "V";
-const degreeCelsiusSign = "\u00B0C";
+const styles = theme => ({});
 
 class AuxConsole extends React.Component {
   render() {
@@ -22,16 +21,16 @@ class AuxConsole extends React.Component {
     const { voltageRanges, temperatureSensor } = this.props;
     const auxVoltageExpression =
       channel && channel.auxVoltage
-        ? format(".3f")(channel.auxVoltage) + voltageSign
-        : "";
+        ? format(".3f")(channel.auxVoltage) + "V"
+        : SYMBOLS.NAN + "V";
     const auxVoltageRangeExpression = channel
       ? voltageRanges.find(x => x.value === channel.voltageRange).label +
         " range"
       : "";
     const auxTemperatureExpression =
       channel && channel.auxTemperature
-        ? format(".2f")(channel.auxTemperature) + degreeCelsiusSign
-        : "";
+        ? format(".2f")(channel.auxTemperature) + SYMBOLS.DEGREE_CELSIUS
+        : SYMBOLS.NAN + SYMBOLS.DEGREE_CELSIUS;
     const auxTemperatureSensorType =
       channel && temperatureSensor ? temperatureSensor : "";
     return (
@@ -57,7 +56,7 @@ class AuxConsole extends React.Component {
               xKey="time"
               xUnit="s"
               yKey="voltage"
-              yUnit={voltageSign}
+              yUnit="V"
             />
           </Grid>
         </Grid>
@@ -77,7 +76,7 @@ class AuxConsole extends React.Component {
               xKey="time"
               xUnit="s"
               yKey="temperature"
-              yUnit={degreeCelsiusSign}
+              yUnit={SYMBOLS.DEGREE_CELSIUS}
             />
           </Grid>
         </Grid>

@@ -16,6 +16,9 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import Typography from "@material-ui/core/Typography";
 
+// constants
+import { SYMBOLS } from "../constants";
+
 const styles = theme => ({
   tableContainer: {
     width: "100%",
@@ -33,11 +36,6 @@ const styles = theme => ({
     flex: 1
   }
 });
-
-// Special characters
-const ohmSign = "\u2126";
-const degreeSign = "\u00B0";
-const degreeCelsiusSign = "\u00B0C";
 
 class ZTablePanel extends React.Component {
   render() {
@@ -74,16 +72,16 @@ class ZTablePanel extends React.Component {
                       Freq (Hz)
                     </TableCell>
                     <TableCell align="right" className={classes.tableCell}>
-                      Zreal ({ohmSign})
+                      Zreal ({SYMBOLS.OHM})
                     </TableCell>
                     <TableCell align="right" className={classes.tableCell}>
-                      Zimag ({ohmSign})
+                      Zimag ({SYMBOLS.OHM})
                     </TableCell>
                     <TableCell align="right" className={classes.tableCell}>
-                      Zmod ({ohmSign})
+                      Zmod ({SYMBOLS.OHM})
                     </TableCell>
                     <TableCell align="right" className={classes.tableCell}>
-                      Zphase ({degreeSign})
+                      Zphase ({SYMBOLS.DEGREE})
                     </TableCell>
                     <TableCell align="right" className={classes.tableCell}>
                       Idc (A)
@@ -92,7 +90,7 @@ class ZTablePanel extends React.Component {
                       Vdc (V)
                     </TableCell>
                     <TableCell align="right" className={classes.tableCell}>
-                      Temp ({degreeCelsiusSign})
+                      Temp ({SYMBOLS.DEGREE_CELSIUS})
                     </TableCell>
                     <TableCell align="right" className={classes.tableCell}>
                       IRange (A)

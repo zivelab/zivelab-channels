@@ -130,21 +130,14 @@
       });
 
       const styles = theme => ({
-        root: {
-          display: "flex"
-        },
         appBarTitle: {
           flex: 1
-        },
-        content: {
-          flexGrow: 1,
-          padding: theme.spacing.unit * 3,
-          marginTop: "32px"
         },
         layout: {
           width: "auto",
           marginLeft: theme.spacing.unit * 3,
           marginRight: theme.spacing.unit * 3,
+          marginTop: "32px",
           [theme.breakpoints.up(900 + theme.spacing.unit * 3 * 2)]: {
             width: 900,
             marginLeft: "auto",
@@ -294,13 +287,14 @@
       const startURL = new Request("/start");
       const stopURL = new Request("/stop");
 
-      // Special characters
-      const voltageSign = "V";
-      const currentSign = "A";
-      const frequencySign = "Hz";
-      const ohmSign = "\u2126";
-      const degreeSign = "\u00B0";
-      const degreeCelsiusSign = "\u00B0C";
+      // special characters
+      const SYMBOLS = {
+        DEGREE: "\u00B0",
+        DEGREE_CELSIUS: "\u00B0C",
+        NAN: "\u25A0\u25A0.\u25A0",
+        OHM: "\u2126"
+      };
+
       // Math Constatnts
       const dateTimeOffset = 62135596800000; // ticks from 0000-01-01 to 1970-01-01
       const launched = new Date().getTime();
@@ -378,13 +372,13 @@
         pt: "Pt",
         time: "Time" + " [" + "s" + "]",
         frequency: "Freq" + " [" + "Hz" + "]",
-        zreal: "Zreal" + " [" + { ohmSign } + "]",
-        zimag: "Zimag" + " [" + { ohmSign } + "]",
-        zmod: "Zmod" + " [" + { ohmSign } + "]",
-        zphase: "Zphase" + " [" + { degreeSign } + "]",
+        zreal: "Zreal" + " [" + SYMBOLS.OHM + "]",
+        zimag: "Zimag" + " [" + SYMBOLS.OHM + "]",
+        zmod: "Zmod" + " [" + SYMBOLS.OHM + "]",
+        zphase: "Zphase" + " [" + SYMBOLS.DEGREE + "]",
         idc: "Idc" + " [" + "A" + "]",
         vdc: "vdc" + " [" + "V" + "]",
-        temperature: "Temperature" + " [" + { degreeCelsiusSign } + "]",
+        temperature: "Temperature" + " [" + SYMBOLS.DEGREE_CELSIUS + "]",
         currentRange: "IRange" + " [" + "A" + "]"
       };
       const defaultParameters = {
@@ -931,7 +925,7 @@
           };
           return (
             <React.Fragment>
-              <AppBar position="fixed">
+              <AppBar position="relative">
                 <Toolbar>
                   {/* Title */}
                   <Typography
@@ -997,15 +991,15 @@
             ...other
           } = this.props;
           const auxVoltageExpression = channel
-            ? d3.format(".3f")(channel.auxVoltage) + voltageSign
-            : "";
+            ? d3.format(".3f")(channel.auxVoltage) + "V"
+            : SYMBOLS.NAN + "V";
           const auxVoltageRangeExpression = channel
             ? voltageRanges.find(x => x.value == channel.voltageRange).label +
               " range"
             : "";
           const auxTemperatureExpression = channel
-            ? d3.format(".2f")(channel.auxTemperature) + degreeCelsiusSign
-            : "";
+            ? d3.format(".2f")(channel.auxTemperature) + SYMBOLS.DEGREE_CELSIUS
+            : SYMBOLS.NAN + SYMBOLS.DEGREE_CELSIUS;
           const auxTemperatureSensorType =
             channel && temperatureSensor ? temperatureSensor : "";
           return (
@@ -1032,7 +1026,7 @@
                       xKey="time"
                       xUnit="s"
                       yKey="voltage"
-                      yUnit={voltageSign}
+                      yUnit="V"
                     />
                   </Grid>
                 </Grid>
@@ -1052,7 +1046,7 @@
                       xKey="time"
                       xUnit="s"
                       yKey="temperature"
-                      yUnit={degreeCelsiusSign}
+                      yUnit={SYMBOLS.DEGREE_CELSIUS}
                     />
                   </Grid>
                 </Grid>
@@ -1084,15 +1078,15 @@
             ...other
           } = this.props;
           const auxVoltageExpression = channel
-            ? d3.format(".3f")(channel.auxVoltage) + voltageSign
-            : "";
+            ? d3.format(".3f")(channel.auxVoltage) + "V"
+            : SYMBOLS.NAN + "V";
           const auxVoltageRangeExpression = channel
             ? voltageRanges.find(x => x.value == channel.voltageRange).label +
               " range"
             : "";
           const auxTemperatureExpression = channel
-            ? d3.format(".2f")(channel.auxTemperature) + degreeCelsiusSign
-            : "";
+            ? d3.format(".2f")(channel.auxTemperature) + SYMBOLS.DEGREE_CELSIUS
+            : SYMBOLS.NAN + SYMBOLS.DEGREE_CELSIUS;
           const auxTemperatureSensorType = channel ? "PT100" : "";
           return (
             <React.Fragment>
@@ -1166,30 +1160,30 @@
 
           const frequncyExpression = isRunning
             ? channel.lastFrequency
-              ? d3.format(".3s")(channel.lastFrequency) + frequencySign
-              : " "
+              ? d3.format(".3s")(channel.lastFrequency) + "Hz"
+              : SYMBOLS.NAN + "Hz"
             : zitem
-            ? d3.format(".3s")(zitem.frequency) + frequencySign
-            : " ";
+            ? d3.format(".3s")(zitem.frequency) + "Hz"
+            : SYMBOLS.NAN + "Hz";
           const zModulusExpression = isRunning
             ? channel.lastZmod
-              ? d3.format(".3s")(channel.lastZmod) + ohmSign
-              : " "
+              ? d3.format(".3s")(channel.lastZmod) + SYMBOLS.OHM
+              : SYMBOLS.NAN + SYMBOLS.OHM
             : zitem
-            ? d3.format(".3s")(zitem.zmod) + ohmSign
-            : " ";
+            ? d3.format(".3s")(zitem.zmod) + SYMBOLS.OHM
+            : SYMBOLS.NAN + SYMBOLS.OHM;
           const zPhaseExpression = isRunning
             ? channel.lastZphase
-              ? d3.format(".2f")(channel.lastZphase) + degreeSign
-              : " "
+              ? d3.format(".2f")(channel.lastZphase) + SYMBOLS.DEGREE
+              : SYMBOLS.NAN + SYMBOLS.DEGREE
             : zitem
-            ? d3.format(".2f")(zitem.zphase) + degreeSign
-            : " ";
+            ? d3.format(".2f")(zitem.zphase) + SYMBOLS.DEGREE
+            : SYMBOLS.NAN + SYMBOLS.DEGREE;
           const auxVExpression = isRunning
             ? " "
             : zitem
-            ? d3.format(".2f")(zitem.vdc) + voltageSign
-            : " ";
+            ? d3.format(".2f")(zitem.vdc) + "V"
+            : SYMBOLS.NAN + "V";
           return (
             <React.Fragment>
               <Grid
@@ -1406,9 +1400,7 @@
               ? cook.started.moment
               : null;
           const stateExpression = isRunning
-            ? "Measuring @ " +
-              d3.format(".2s")(channel.stepFrequency) +
-              frequencySign
+            ? "Measuring @ " + d3.format(".2s")(channel.stepFrequency) + "Hz"
             : isRunningNoiseLevel
             ? "Measuring noise level..."
             : isTooHot
@@ -1418,7 +1410,7 @@
             : cook && cook.data.length > 0
             ? "Cooked, " + started.fromNow()
             : channel
-            ? "Idle"
+            ? "Ready"
             : "Loading...";
           return (
             <React.Fragment>
@@ -1719,25 +1711,25 @@
                             align="right"
                             className={classes.tableCell}
                           >
-                            Zreal ({ohmSign})
+                            Zreal ({SYMBOLS.OHM})
                           </TableCell>
                           <TableCell
                             align="right"
                             className={classes.tableCell}
                           >
-                            Zimag ({ohmSign})
+                            Zimag ({SYMBOLS.OHM})
                           </TableCell>
                           <TableCell
                             align="right"
                             className={classes.tableCell}
                           >
-                            Zmod ({ohmSign})
+                            Zmod ({SYMBOLS.OHM})
                           </TableCell>
                           <TableCell
                             align="right"
                             className={classes.tableCell}
                           >
-                            Zphase ({degreeSign})
+                            Zphase ({SYMBOLS.DEGREE})
                           </TableCell>
                           <TableCell
                             align="right"
@@ -1755,7 +1747,7 @@
                             align="right"
                             className={classes.tableCell}
                           >
-                            Temp ({degreeCelsiusSign})
+                            Temp ({SYMBOLS.DEGREE_CELSIUS})
                           </TableCell>
                           <TableCell
                             align="right"
@@ -2333,7 +2325,7 @@
 
           return (
             <MuiThemeProvider theme={muiTheme}>
-              <div className={classes.root}>
+              <React.Fragment>
                 <CssBaseline />
 
                 {/* Header */}
@@ -2346,7 +2338,7 @@
                   themeName={this.state.themeName}
                 />
 
-                <main className={classNames(classes.content, classes.layout)}>
+                <main className={classes.layout}>
                   <Grid
                     container
                     className={classes.gridContainer}
@@ -2407,7 +2399,7 @@
                     </Grid>
                   </Grid>
                 </main>
-              </div>
+              </React.Fragment>
             </MuiThemeProvider>
           );
         }

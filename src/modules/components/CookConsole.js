@@ -16,17 +16,14 @@ import Typography from "@material-ui/core/Typography";
 // components
 import LissajousCurve from "./LissajousCurve";
 
+// constants
+import { SYMBOLS } from "../constants";
+
 const styles = theme => ({
   linearProgress: {
     flexGrow: 1
   }
 });
-
-// Special characters
-const voltageSign = "V";
-const frequencySign = "Hz";
-const ohmSign = "\u2126";
-const degreeSign = "\u00B0";
 
 function durationFormat(durationAsSeconds) {
   return moment.utc(durationAsSeconds * 1000).format("HH:mm:ss");
@@ -51,30 +48,30 @@ class CookConsole extends React.Component {
 
     const frequncyExpression = isRunning
       ? channel.lastFrequency
-        ? format(".3s")(channel.lastFrequency) + frequencySign
-        : " "
+        ? format(".3s")(channel.lastFrequency) + "Hz"
+        : SYMBOLS.NAN + "Hz"
       : zitem
-      ? format(".3s")(zitem.frequency) + frequencySign
-      : " ";
+      ? format(".3s")(zitem.frequency) + "Hz"
+      : SYMBOLS.NAN + "Hz";
     const zModulusExpression = isRunning
       ? channel.lastZmod
-        ? format(".3s")(channel.lastZmod) + ohmSign
-        : " "
+        ? format(".3s")(channel.lastZmod) + SYMBOLS.OHM
+        : SYMBOLS.NAN + SYMBOLS.OHM
       : zitem
-      ? format(".3s")(zitem.zmod) + ohmSign
-      : " ";
+      ? format(".3s")(zitem.zmod) + SYMBOLS.OHM
+      : SYMBOLS.NAN + SYMBOLS.OHM;
     const zPhaseExpression = isRunning
       ? channel.lastZphase
-        ? format(".2f")(channel.lastZphase) + degreeSign
-        : " "
+        ? format(".2f")(channel.lastZphase) + SYMBOLS.DEGREE
+        : SYMBOLS.NAN + SYMBOLS.DEGREE
       : zitem
-      ? format(".2f")(zitem.zphase) + degreeSign
-      : " ";
+      ? format(".2f")(zitem.zphase) + SYMBOLS.DEGREE
+      : SYMBOLS.NAN + SYMBOLS.DEGREE;
     const auxVExpression = isRunning
       ? " "
       : zitem
-      ? format(".2f")(zitem.vdc) + voltageSign
-      : " ";
+      ? format(".2f")(zitem.vdc) + "V"
+      : SYMBOLS.NAN + "V";
     return (
       <React.Fragment>
         <Grid

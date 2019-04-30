@@ -1,7 +1,7 @@
 {
   "name": "EmbeddedWebServer",
   "description": "Web server running on SIF2 and ZIM",
-  "version": "0.1.1.0",
+  "version": "0.1.0.1",
   "releaseDate": "2019-04-30",
   "path": "index.htm"
 }
