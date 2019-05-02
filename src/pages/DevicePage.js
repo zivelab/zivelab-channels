@@ -13,11 +13,11 @@ import Grid from "@material-ui/core/Grid";
 
 // components
 import AppContent from "../modules/components/AppContent";
-import AuxPanel from "../modules/components/AuxPanel";
-import BodePanel from "../modules/components/BodePanel";
-import CookPanel from "../modules/components/CookPanel";
-import NyquistPanel from "../modules/components/NyquistPanel";
-import ZTablePanel from "../modules/components/ZTablePanel";
+import AuxPanel from "../modules/dashboards/AuxPanel";
+import BodePanel from "../modules/dashboards/BodePanel";
+import CookPanel from "../modules/dashboards/CookPanel";
+import NyquistPanel from "../modules/dashboards/NyquistPanel";
+import ZTablePanel from "../modules/dashboards/ZTablePanel";
 
 // functions
 import { changeAbout, enqueueSnackbar } from "../modules/redux/actions";
