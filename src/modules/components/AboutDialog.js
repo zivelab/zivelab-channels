@@ -41,7 +41,8 @@ const aboutLabels = {
   sifSerialNumber: "SIF Serial Number",
   zimBoard: "ZIM Board",
   zimFirmware: "ZIM Firmware",
-  zimSerialNumber: "ZIM Serial Number"
+  zimSerialNumber: "ZIM Serial Number",
+  embeddedWebServer: "Embedded Web Server"
 };
 
 class AboutDialog extends React.Component {
