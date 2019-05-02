@@ -942,7 +942,7 @@
                     disabled={!about}
                     onClick={onOpenAbout}
                   >
-                    <Tooltip title="About">
+                    <Tooltip title="About device">
                       <Icon>info</Icon>
                     </Tooltip>
                   </IconButton>
@@ -990,16 +990,19 @@
             temperatureSensor,
             ...other
           } = this.props;
-          const auxVoltageExpression = channel
-            ? d3.format(".3f")(channel.auxVoltage) + "V"
-            : SYMBOLS.NAN + "V";
+          const auxVoltageExpression =
+            channel && channel.auxVoltage
+              ? d3.format(".3f")(channel.auxVoltage) + "V"
+              : SYMBOLS.NAN + "V";
           const auxVoltageRangeExpression = channel
             ? voltageRanges.find(x => x.value == channel.voltageRange).label +
               " range"
             : "";
-          const auxTemperatureExpression = channel
-            ? d3.format(".2f")(channel.auxTemperature) + SYMBOLS.DEGREE_CELSIUS
-            : SYMBOLS.NAN + SYMBOLS.DEGREE_CELSIUS;
+          const auxTemperatureExpression =
+            channel && channel.auxTemperature
+              ? d3.format(".2f")(channel.auxTemperature) +
+                SYMBOLS.DEGREE_CELSIUS
+              : SYMBOLS.NAN + SYMBOLS.DEGREE_CELSIUS;
           const auxTemperatureSensorType =
             channel && temperatureSensor ? temperatureSensor : "";
           return (

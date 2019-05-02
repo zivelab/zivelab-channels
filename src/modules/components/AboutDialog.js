@@ -51,7 +51,7 @@ class AboutDialog extends React.Component {
   };
 
   render() {
-    const { classes, about, onClose, ...other } = this.props;
+    const { classes, about, helperTexts, onClose, ...other } = this.props;
     return (
       !isEmpty(about) && (
         <Dialog
@@ -71,6 +71,7 @@ class AboutDialog extends React.Component {
                 value={about[key] ? about[key] : "Not assigned"}
                 margin="normal"
                 multiline={true}
+                helperText={helperTexts[key] ? helperTexts[key] : ""}
                 InputProps={{
                   readOnly: true
                 }}
@@ -91,6 +92,7 @@ class AboutDialog extends React.Component {
 AboutDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   about: PropTypes.object.isRequired,
+  helperTexts: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired
 };
 
