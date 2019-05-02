@@ -201,7 +201,7 @@ class App extends React.Component {
               <AboutButton about={reduxAbout} />
               <ConfigureButton about={reduxAbout} />
               <OpenInNewButton about={reduxAbout} />
-              <Tooltip title="Toggle theme" enterDelay={300}>
+              <Tooltip title="Toggle light/dark theme" enterDelay={300}>
                 <IconButton
                   color="inherit"
                   onClick={this.togglePaletteType}

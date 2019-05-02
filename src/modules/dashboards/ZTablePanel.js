@@ -39,7 +39,7 @@ const styles = theme => ({
 
 class ZTablePanel extends React.Component {
   render() {
-    const { classes, cook, currentRanges } = this.props;
+    const { classes, cook, currentRanges, scientific } = this.props;
     const cooked = cook ? cook.data : null;
     const started = cook && cook.started ? cook.started.moment : null;
     const titleExpression = started
@@ -59,7 +59,7 @@ class ZTablePanel extends React.Component {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Paper className={classes.tableContainer}>
-              <Table className={classes.table} key="tbl">
+              <Table className={classes.table} id="cook-table" key="cook-table">
                 <TableHead>
                   <TableRow key="thead">
                     <TableCell align="right" className={classes.tableCell}>
@@ -93,7 +93,7 @@ class ZTablePanel extends React.Component {
                       Temp ({SYMBOLS.DEGREE_CELSIUS})
                     </TableCell>
                     <TableCell align="right" className={classes.tableCell}>
-                      IRange (A)
+                      IRange
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -107,22 +107,32 @@ class ZTablePanel extends React.Component {
                         {row.time}
                       </TableCell>
                       <TableCell align="right" className={classes.tableCell}>
-                        {format(".6s")(row.frequency)}
+                        {scientific
+                          ? format("e")(row.frequency)
+                          : format(".6s")(row.frequency)}
                       </TableCell>
                       <TableCell align="right" className={classes.tableCell}>
-                        {format(".6s")(row.zreal)}
+                        {scientific
+                          ? format("e")(row.zreal)
+                          : format(".6s")(row.zreal)}
                       </TableCell>
                       <TableCell align="right" className={classes.tableCell}>
-                        {format(".6s")(row.zimag)}
+                        {scientific
+                          ? format("e")(row.zimag)
+                          : format(".6s")(row.zimag)}
                       </TableCell>
                       <TableCell align="right" className={classes.tableCell}>
-                        {format(".6s")(row.zmod)}
+                        {scientific
+                          ? format("e")(row.zmod)
+                          : format(".6s")(row.zmod)}
                       </TableCell>
                       <TableCell align="right" className={classes.tableCell}>
                         {format(".3f")(row.zphase)}
                       </TableCell>
                       <TableCell align="right" className={classes.tableCell}>
-                        {format(".6s")(row.idc)}
+                        {scientific
+                          ? format("e")(row.idc)
+                          : format(".6s")(row.idc)}
                       </TableCell>
                       <TableCell align="right" className={classes.tableCell}>
                         {format(".3f")(row.vdc)}
@@ -151,7 +161,12 @@ class ZTablePanel extends React.Component {
 ZTablePanel.propTypes = {
   classes: PropTypes.object.isRequired,
   cook: PropTypes.object,
-  currentRanges: PropTypes.array
+  currentRanges: PropTypes.array,
+  scientific: PropTypes.bool
+};
+
+ZTablePanel.defaultProps = {
+  scientific: false
 };
 
 export default withStyles(styles)(ZTablePanel);

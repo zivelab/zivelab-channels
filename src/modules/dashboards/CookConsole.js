@@ -48,17 +48,17 @@ class CookConsole extends React.Component {
 
     const frequncyExpression = isRunning
       ? channel.lastFrequency
-        ? format(".3s")(channel.lastFrequency) + "Hz"
+        ? format(".4s")(channel.lastFrequency) + "Hz"
         : SYMBOLS.NAN + "Hz"
       : zitem
-      ? format(".3s")(zitem.frequency) + "Hz"
+      ? format(".4s")(zitem.frequency) + "Hz"
       : SYMBOLS.NAN + "Hz";
     const zModulusExpression = isRunning
       ? channel.lastZmod
-        ? format(".3s")(channel.lastZmod) + SYMBOLS.OHM
+        ? format(".4s")(channel.lastZmod) + SYMBOLS.OHM
         : SYMBOLS.NAN + SYMBOLS.OHM
       : zitem
-      ? format(".3s")(zitem.zmod) + SYMBOLS.OHM
+      ? format(".4s")(zitem.zmod) + SYMBOLS.OHM
       : SYMBOLS.NAN + SYMBOLS.OHM;
     const zPhaseExpression = isRunning
       ? channel.lastZphase

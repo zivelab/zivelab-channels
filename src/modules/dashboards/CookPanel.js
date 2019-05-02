@@ -10,6 +10,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 
 // components
 import CookConsole from "./CookConsole";
+import DownloadButton from "./DownloadButton";
 import StartExpButton from "./StartExpButton";
 import StopExpButton from "./StopExpButton";
 
@@ -39,6 +40,7 @@ class CookPanel extends React.Component {
       onGoLast,
       onStart,
       onStop,
+      onDownload,
       onChange,
       currentRanges
     } = this.props;
@@ -50,7 +52,7 @@ class CookPanel extends React.Component {
     const started =
       cook && cook.started && cook.started.moment ? cook.started.moment : null;
     const stateExpression = isRunning
-      ? "Measuring @ " + format(".2s")(channel.stepFrequency) + frequencySign
+      ? "Measuring @ " + format(".4s")(channel.stepFrequency) + frequencySign
       : isRunningNoiseLevel
       ? "Measuring noise level..."
       : isTooHot
@@ -76,6 +78,10 @@ class CookPanel extends React.Component {
                 currentRanges={currentRanges}
               />
               <StopExpButton disabled={!isRunning} onStop={onStop} />
+              <DownloadButton
+                disabled={!isIdle || !cook || cook.data.length < 1}
+                onDownload={onDownload}
+              />
             </div>
           }
         />
@@ -107,6 +113,7 @@ CookPanel.propTypes = {
   onGoPrevious: PropTypes.func.isRequired,
   onStart: PropTypes.func.isRequired,
   onStop: PropTypes.func.isRequired,
+  onDownload: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired
 };
 export default withStyles(styles)(CookPanel);

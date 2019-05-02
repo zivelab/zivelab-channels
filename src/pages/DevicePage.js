@@ -22,6 +22,7 @@ import ZTablePanel from "../modules/dashboards/ZTablePanel";
 // functions
 import { changeAbout, enqueueSnackbar } from "../modules/redux/actions";
 import compose from "../modules/utils/compose";
+import { exportTableToCsv } from "../modules/utils/object";
 
 const styles = theme => ({
   root: {
@@ -125,7 +126,9 @@ class DevicePage extends React.Component {
 
     voltageRanges: [],
     currentRanges: [],
-    temperatureSensor: "PT100"
+    temperatureSensor: "PT100",
+
+    scientific: false
   };
 
   controller = new AbortController();
@@ -220,6 +223,12 @@ class DevicePage extends React.Component {
     await this.stopExpAsync();
   };
 
+  handleDownload = async () => {
+    this.setState({
+      scientific: true
+    });
+  };
+
   handleClearAuxData = () => {
     this.setState({
       auxData: []
@@ -260,6 +269,12 @@ class DevicePage extends React.Component {
       JSON.stringify(prevProps.reduxAbout) !== JSON.stringify(this.state.about)
     ) {
       this.props.actions.about.changeAbout(this.state.about);
+    }
+    if (
+      prevState.scientific !== this.state.scientific &&
+      this.state.scientific
+    ) {
+      this.saveCookedAsCSV();
     }
   }
 
@@ -545,6 +560,21 @@ class DevicePage extends React.Component {
     }
   };
 
+  saveCookedAsCSV = () => {
+    if (this.state.about && this.state.about.zimSerialNumber) {
+      const tblID = "cook-table";
+      const fileName =
+        this.state.about.zimSerialNumber +
+        "_cooked_" +
+        this.state.cook.started.ticks;
+      exportTableToCsv(tblID, fileName);
+    }
+
+    this.setState({
+      scientific: false
+    });
+  };
+
   getTitle = about => {
     if (about) {
       const hostName = about.hostName || "Untitled";
@@ -567,6 +597,7 @@ class DevicePage extends React.Component {
     const { classes } = this.props;
     const { about, channel, cook, cookIndex, parameters, auxData } = this.state;
     const { voltageRanges, currentRanges, temperatureSensor } = this.state;
+    const { scientific } = this.state;
     const title = this.getTitle(about);
     return (
       <AppContent className={classes.root} title={title}>
@@ -602,6 +633,7 @@ class DevicePage extends React.Component {
                 onGoPrevious={this.handleGoPrevious}
                 onStart={this.handleStart}
                 onStop={this.handleStop}
+                onDownload={this.handleDownload}
                 onChange={this.handleChange}
               />
             </Grid>
@@ -621,6 +653,7 @@ class DevicePage extends React.Component {
               <ZTablePanel
                 cook={this.state.cook}
                 currentRanges={currentRanges}
+                scientific={scientific}
               />
             </Grid>
           </Grid>

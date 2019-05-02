@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 // controls
 import Badge from "@material-ui/core/Badge";
@@ -15,6 +17,8 @@ import AboutDialog from "./AboutDialog";
 
 // functions
 import { isEmpty, compareVersion } from "../utils/object";
+import { enqueueSnackbar } from "../redux/actions";
+import compose from "../utils/compose";
 
 const styles = theme => ({
   badge: {
@@ -40,6 +44,27 @@ class AboutButton extends React.Component {
     this.setState({
       open: false
     });
+  };
+
+  handleUpdate = (helperTexts, e) => {
+    this.setState({
+      open: false
+    });
+    if (helperTexts.sifFirmware) {
+      this.props.actions.snackbar.enqueueSnackbar(
+        "sifFirmware can be updated..., Reserved."
+      );
+    }
+    if (helperTexts.zimFirmware) {
+      this.props.actions.snackbar.enqueueSnackbar(
+        "zimFirmware can be updated..., Reserved."
+      );
+    }
+    if (helperTexts.embeddedWebServer) {
+      this.props.actions.snackbar.enqueueSnackbar(
+        "embeddedWebServer can be updated..., Reserved."
+      );
+    }
   };
 
   componentDidMount = async () => {
@@ -97,14 +122,16 @@ class AboutButton extends React.Component {
 
     if (!latest || !about) return helperTexts;
     if (compareVersion(latest.sifFirmware, about.sifFirmware) > 0) {
-      helperTexts.sifFirmware = "v" + latest.sifFirmware + " is available.";
+      helperTexts.sifFirmware =
+        "New version, " + latest.sifFirmware + " available";
     }
     if (compareVersion(latest.zimFirmware, about.zimFirmware) > 0) {
-      helperTexts.zimFirmware = "v" + latest.zimFirmware + " is available.";
+      helperTexts.zimFirmware =
+        "New version, " + latest.zimFirmware + " available";
     }
     if (compareVersion(latest.embeddedWebServer, about.embeddedWebServer) > 0) {
       helperTexts.embeddedWebServer =
-        "v" + latest.embeddedWebServer + " is available.";
+        "New version, " + latest.embeddedWebServer + " available";
     }
 
     return helperTexts;
@@ -115,7 +142,12 @@ class AboutButton extends React.Component {
     const { open, versions } = this.state;
     const helperTexts = this.getNotificationNumber(versions, about);
     const notificationNumber = Object.keys(helperTexts).length;
-    console.log(helperTexts);
+    const tooptip =
+      notificationNumber === 1
+        ? "New version available"
+        : notificationNumber > 1
+        ? "New versions available"
+        : "About device";
     return (
       !isEmpty(about) && (
         <>
@@ -130,7 +162,7 @@ class AboutButton extends React.Component {
               variant="dot"
               className={classes.badge}
             >
-              <Tooltip title="About device" enterDelay={300}>
+              <Tooltip title={tooptip} enterDelay={300}>
                 <InfoIcon />
               </Tooltip>
             </Badge>
@@ -140,6 +172,7 @@ class AboutButton extends React.Component {
             about={about}
             helperTexts={helperTexts}
             onClose={this.handleClose}
+            onUpdate={e => this.handleUpdate(helperTexts, e)}
           />
         </>
       )
@@ -152,4 +185,18 @@ AboutButton.propTypes = {
   about: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(AboutButton);
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: {
+      snackbar: bindActionCreators({ enqueueSnackbar }, dispatch)
+    }
+  };
+};
+
+export default compose(
+  connect(
+    null,
+    mapDispatchToProps
+  ),
+  withStyles(styles)
+)(AboutButton);

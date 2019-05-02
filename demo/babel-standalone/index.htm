@@ -368,19 +368,6 @@
         zimFirmware: "ZIM Firmware",
         zimSerialNumber: "ZIM Serial Number"
       };
-      const colHeaders = {
-        pt: "Pt",
-        time: "Time" + " [" + "s" + "]",
-        frequency: "Freq" + " [" + "Hz" + "]",
-        zreal: "Zreal" + " [" + SYMBOLS.OHM + "]",
-        zimag: "Zimag" + " [" + SYMBOLS.OHM + "]",
-        zmod: "Zmod" + " [" + SYMBOLS.OHM + "]",
-        zphase: "Zphase" + " [" + SYMBOLS.DEGREE + "]",
-        idc: "Idc" + " [" + "A" + "]",
-        vdc: "vdc" + " [" + "V" + "]",
-        temperature: "Temperature" + " [" + SYMBOLS.DEGREE_CELSIUS + "]",
-        currentRange: "IRange" + " [" + "A" + "]"
-      };
       const defaultParameters = {
         initialFrequency: 1000,
         finalFrequency: 1.0,
@@ -425,6 +412,67 @@
       function durationFormat(durationAsSeconds) {
         return moment.utc(durationAsSeconds * 1000).format("HH:mm:ss");
       }
+      function exportTableToCsv(tableId, filename) {
+        if (filename === null || typeof filename === undefined)
+          filename = tableId;
+        filename += ".csv";
+
+        const BOM = "\uFEFF";
+
+        const table = document.getElementById(tableId);
+        let csvString = BOM;
+        for (var rowCnt = 0; rowCnt < table.rows.length; rowCnt++) {
+          let rowData = table.rows[rowCnt].cells;
+          for (var colCnt = 0; colCnt < rowData.length; colCnt++) {
+            let columnData = rowData[colCnt].innerHTML;
+            if (columnData === null || columnData.length === 0) {
+              columnData = "".replace(/"/g, '""');
+            } else {
+              columnData = columnData.toString().replace(/"/g, '""'); // escape double quotes
+            }
+            csvString = csvString + '"' + columnData + '",';
+          }
+          csvString = csvString.substring(0, csvString.length - 1);
+          csvString = csvString + "\r\n";
+        }
+        csvString = csvString.substring(0, csvString.length - 1);
+
+        // IE 10, 11, Edge Run
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          const blob = new Blob([decodeURIComponent(csvString)], {
+            type: "text/csv;charset=utf8"
+          });
+
+          window.navigator.msSaveOrOpenBlob(blob, filename);
+        } else if (window.Blob && window.URL) {
+          // HTML5 Blob
+          const blob = new Blob([csvString], { type: "text/csv;charset=utf8" });
+          const csvUrl = URL.createObjectURL(blob);
+          let a = document.createElement("a");
+          a.setAttribute("style", "display:none");
+          a.setAttribute("href", csvUrl);
+          a.setAttribute("download", filename);
+          document.body.appendChild(a);
+
+          a.click();
+          a.remove();
+        } else {
+          // Data URI
+          const csvData =
+            "data:application/csv;charset=utf-8," +
+            encodeURIComponent(csvString);
+          //const blob = new Blob([csvString], { type: "text/csv;charset=utf8" });
+          //const csvUrl = URL.createObjectURL(blob);
+          let a = document.createElement("a");
+          a.setAttribute("style", "display:none");
+          a.setAttribute("target", "_blank");
+          a.setAttribute("href", csvData);
+          a.setAttribute("download", filename);
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }
+      }
       function LightBulbIcon(props) {
         return (
           <SvgIcon {...props}>
@@ -445,6 +493,13 @@
       22H10A1,1 0 0,1 9,21M12,4A5,5 0 0,0 7,9C7,11.05 8.23,12.81 10,13.58V16H14V13.58C15.77,
       12.81 17,11.05 17,9A5,5 0 0,0 12,4Z"
             />
+          </SvgIcon>
+        );
+      }
+      function ArrowDownBoxIcon(props) {
+        return (
+          <SvgIcon {...props}>
+            <path d="M3 5a2 2 0 0 1 2-2h14c1.104 0 2 .896 2 2v14c0 1.104-.896 2-2 2H5a2 2 0 0 1-2-2V5zm8 1v8.51l-3.505-3.505L6.08 12.42 12 18.34l5.92-5.92-1.415-1.414L13 14.51V6h-2z" />
           </SvgIcon>
         );
       }
@@ -1163,17 +1218,17 @@
 
           const frequncyExpression = isRunning
             ? channel.lastFrequency
-              ? d3.format(".3s")(channel.lastFrequency) + "Hz"
+              ? d3.format(".4s")(channel.lastFrequency) + "Hz"
               : SYMBOLS.NAN + "Hz"
             : zitem
-            ? d3.format(".3s")(zitem.frequency) + "Hz"
+            ? d3.format(".4s")(zitem.frequency) + "Hz"
             : SYMBOLS.NAN + "Hz";
           const zModulusExpression = isRunning
             ? channel.lastZmod
-              ? d3.format(".3s")(channel.lastZmod) + SYMBOLS.OHM
+              ? d3.format(".4s")(channel.lastZmod) + SYMBOLS.OHM
               : SYMBOLS.NAN + SYMBOLS.OHM
             : zitem
-            ? d3.format(".3s")(zitem.zmod) + SYMBOLS.OHM
+            ? d3.format(".4s")(zitem.zmod) + SYMBOLS.OHM
             : SYMBOLS.NAN + SYMBOLS.OHM;
           const zPhaseExpression = isRunning
             ? channel.lastZphase
@@ -1389,6 +1444,7 @@
             onGoLast,
             onStart,
             onStop,
+            onDownload,
             ...other
           } = this.props;
           const isIdle = channel ? channel.isIdle : false;
@@ -1403,7 +1459,7 @@
               ? cook.started.moment
               : null;
           const stateExpression = isRunning
-            ? "Measuring @ " + d3.format(".2s")(channel.stepFrequency) + "Hz"
+            ? "Measuring @ " + d3.format(".4s")(channel.stepFrequency) + "Hz"
             : isRunningNoiseLevel
             ? "Measuring noise level..."
             : isTooHot
@@ -1448,6 +1504,16 @@
                       >
                         <Tooltip title="Stop">
                           <Icon fontSize="large">stop</Icon>
+                        </Tooltip>
+                      </IconButton>
+                      <IconButton
+                        aria-label="Download"
+                        onClick={onDownload}
+                        disabled={!isIdle || !cook || cook.data.length < 1}
+                        color="default"
+                      >
+                        <Tooltip title="Save as CSV">
+                          <ArrowDownBoxIcon fontSize="large" />
                         </Tooltip>
                       </IconButton>
                       <Snackbar
@@ -1513,6 +1579,7 @@
         onOpenSetUp: PropTypes.func.isRequired,
         onStart: PropTypes.func.isRequired,
         onStop: PropTypes.func.isRequired,
+        onDownload: PropTypes.func.isRequired,
         openSetUp: PropTypes.bool.isRequired,
         openSnackbar: PropTypes.bool.isRequired
       };
@@ -1666,10 +1733,16 @@
       const BodePanelWrapped = withStyles(styles)(BodePanel);
       //#endregion BodePanelWrapped
 
-      //#region CookTablePanelWrapped
-      class CookTablePanel extends React.Component {
+      //#region ZTablePanelWrapped
+      class ZTablePanel extends React.Component {
         render() {
-          const { classes, cook, currentRanges, ...other } = this.props;
+          const {
+            classes,
+            cook,
+            currentRanges,
+            scientific,
+            ...other
+          } = this.props;
           const cooked = cook ? cook.data : null;
           const started = cook && cook.started ? cook.started.moment : null;
           const titleExpression = started
@@ -1689,7 +1762,11 @@
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                   <Paper className={classes.tableContainer}>
-                    <Table className={classes.table} key="tbl">
+                    <Table
+                      className={classes.table}
+                      id="cook-table"
+                      key="cook-table"
+                    >
                       <TableHead>
                         <TableRow key="thead">
                           <TableCell
@@ -1756,7 +1833,7 @@
                             align="right"
                             className={classes.tableCell}
                           >
-                            IRange (A)
+                            IRange
                           </TableCell>
                         </TableRow>
                       </TableHead>
@@ -1776,25 +1853,33 @@
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".6s")(row.frequency)}
+                              {scientific
+                                ? d3.format("e")(row.frequency)
+                                : d3.format(".6s")(row.frequency)}
                             </TableCell>
                             <TableCell
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".6s")(row.zreal)}
+                              {scientific
+                                ? d3.format("e")(row.zreal)
+                                : d3.format(".6s")(row.zreal)}
                             </TableCell>
                             <TableCell
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".6s")(row.zimag)}
+                              {scientific
+                                ? d3.format("e")(row.zimag)
+                                : d3.format(".6s")(row.zimag)}
                             </TableCell>
                             <TableCell
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".6s")(row.zmod)}
+                              {scientific
+                                ? d3.format("e")(row.zmod)
+                                : d3.format(".6s")(row.zmod)}
                             </TableCell>
                             <TableCell
                               align="right"
@@ -1806,7 +1891,9 @@
                               align="right"
                               className={classes.tableCell}
                             >
-                              {d3.format(".6s")(row.idc)}
+                              {scientific
+                                ? d3.format("e")(row.idc)
+                                : d3.format(".6s")(row.idc)}
                             </TableCell>
                             <TableCell
                               align="right"
@@ -1841,13 +1928,18 @@
           );
         }
       }
-      CookTablePanel.propTypes = {
+      ZTablePanel.propTypes = {
         classes: PropTypes.object.isRequired,
         cook: PropTypes.object.isRequired,
-        currentRanges: PropTypes.array.isRequired
+        currentRanges: PropTypes.array.isRequired,
+        scientific: PropTypes.bool
       };
-      const CookTablePanelWrapped = withStyles(styles)(CookTablePanel);
-      //#endregion CookTablePanelWrapped
+      ZTablePanel.defaultProps = {
+        scientific: false
+      };
+
+      const ZTablePanelWrapped = withStyles(styles)(ZTablePanel);
+      //#endregion ZTablePanelWrapped
 
       class Index extends React.Component {
         constructor(props) {
@@ -1875,7 +1967,9 @@
 
             voltageRanges: defaultVoltageRanges,
             currentRanges: defaultCurrentRanges,
-            temperatureSensor: "PT100"
+            temperatureSensor: "PT100",
+
+            scientific: false
           };
         }
 
@@ -2040,9 +2134,13 @@
             openSetUp: false
           });
         };
-
         handleStop = async () => {
           await this.stopExpAsync();
+        };
+        handleDownload = () => {
+          this.setState({
+            scientific: true
+          });
         };
         handleToggleTheme = () => {
           const themeName = this.state.themeName == "dark" ? "light" : "dark";
@@ -2282,6 +2380,20 @@
             console.log(e);
           }
         };
+        saveCookedAsCSV = () => {
+          if (this.state.about && this.state.about.zimSerialNumber) {
+            const tblID = "cook-table";
+            const fileName =
+              this.state.about.zimSerialNumber +
+              "_cooked_" +
+              this.state.cook.started.ticks;
+            exportTableToCsv(tblID, fileName);
+          }
+
+          this.setState({
+            scientific: false
+          });
+        };
         //#endregion Fetch
 
         componentDidMount = async () => {
@@ -2292,6 +2404,15 @@
           }, 3000);
           this.setState({ timer });
         };
+
+        componentDidUpdate(prevProps, prevState) {
+          if (
+            prevState.scientific !== this.state.scientific &&
+            this.state.scientific
+          ) {
+            this.saveCookedAsCSV();
+          }
+        }
 
         componentWillUnmount() {
           this.controller.abort();
@@ -2306,7 +2427,6 @@
           {
             /* Binding functions */
           }
-
           this.handleChangeParameter = this.handleChangeParameter.bind(this);
           this.handleClearAuxData = this.handleClearAuxData.bind(this);
           this.handleClose = this.handleClose.bind(this);
@@ -2319,6 +2439,7 @@
           this.handleSnackBar = this.handleSnackBar.bind(this);
           this.handleStart = this.handleStart.bind(this);
           this.handleStop = this.handleStop.bind(this);
+          this.handleDownload = this.handleDownload.bind(this);
           this.handleToggleTheme = this.handleToggleTheme.bind(this);
           this.loadAboutAsync = this.loadAboutAsync.bind(this);
           this.loadChannelAsync = this.loadChannelAsync.bind(this);
@@ -2376,6 +2497,7 @@
                         onOpenSetUp={this.handleOpenSetUp}
                         onStart={this.handleStart}
                         onStop={this.handleStop}
+                        onDownload={this.handleDownload}
                         openSetUp={this.state.openSetUp}
                         openSnackbar={this.state.openSnackbar}
                         parameters={this.state.parameters}
@@ -2395,9 +2517,10 @@
 
                     {/* Cook Table */}
                     <Grid item key="CookTable" xs={12} sm={12} md={12}>
-                      <CookTablePanelWrapped
+                      <ZTablePanelWrapped
                         cook={this.state.cook}
                         currentRanges={this.state.currentRanges}
+                        scientific={this.state.scientific}
                       />
                     </Grid>
                   </Grid>

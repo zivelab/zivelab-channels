@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 // controls
 import Dialog from "@material-ui/core/Dialog";
@@ -13,6 +15,8 @@ import copy from "clipboard-copy";
 
 // functions
 import { isEmpty } from "../utils/object";
+import { enqueueSnackbar } from "../redux/actions";
+import compose from "../utils/compose";
 
 const styles = theme => ({
   textField: {
@@ -48,10 +52,20 @@ const aboutLabels = {
 class AboutDialog extends React.Component {
   handleCopy = async () => {
     await copy(JSON.stringify(this.props.about, undefined, 3));
+    this.props.actions.snackbar.enqueueSnackbar("copied");
   };
 
+  handleUpdate = async () => {};
+
   render() {
-    const { classes, about, helperTexts, onClose, ...other } = this.props;
+    const {
+      classes,
+      about,
+      helperTexts,
+      onClose,
+      onUpdate,
+      ...other
+    } = this.props;
     return (
       !isEmpty(about) && (
         <Dialog
@@ -82,6 +96,11 @@ class AboutDialog extends React.Component {
             <Button color="primary" onClick={this.handleCopy}>
               Copy to Clipboard
             </Button>
+            {Object.keys(helperTexts).length && (
+              <Button color="secondary" onClick={onUpdate}>
+                Update all
+              </Button>
+            )}
           </DialogActions>
         </Dialog>
       )
@@ -93,7 +112,22 @@ AboutDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   about: PropTypes.object.isRequired,
   helperTexts: PropTypes.object.isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(AboutDialog);
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: {
+      snackbar: bindActionCreators({ enqueueSnackbar }, dispatch)
+    }
+  };
+};
+
+export default compose(
+  connect(
+    null,
+    mapDispatchToProps
+  ),
+  withStyles(styles)
+)(AboutDialog);
