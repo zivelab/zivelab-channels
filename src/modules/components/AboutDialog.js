@@ -87,7 +87,7 @@ class AboutDialog extends React.Component {
                 margin="normal"
                 multiline={true}
                 helperText={helperTexts[key] ? helperTexts[key] : ""}
-                error={helperTexts[key]}
+                error={helperTexts[key] ? true : false}
                 InputProps={{
                   readOnly: true
                 }}
