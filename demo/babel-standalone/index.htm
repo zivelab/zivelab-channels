@@ -512,6 +512,7 @@
 
         render() {
           const { classes, about, onClose, ...other } = this.props;
+          const title = about ? "About " + about.hostName : "About";
           return (
             about && (
               <Dialog
@@ -520,7 +521,7 @@
                 aria-labelledby="dialog-about"
                 {...other}
               >
-                <DialogTitle id="dialog-about">About</DialogTitle>
+                <DialogTitle id="dialog-about">{title}</DialogTitle>
                 <DialogContent>
                   {Object.keys(about).map((key, index) => (
                     <TextField

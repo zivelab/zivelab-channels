@@ -46,7 +46,7 @@ const aboutLabels = {
   zimBoard: "ZIM Board",
   zimFirmware: "ZIM Firmware",
   zimSerialNumber: "ZIM Serial Number",
-  embeddedWebServer: "Embedded Web Server"
+  embeddedWebApp: "Embedded Web App"
 };
 
 class AboutDialog extends React.Component {
@@ -66,6 +66,7 @@ class AboutDialog extends React.Component {
       onUpdate,
       ...other
     } = this.props;
+    const title = about ? "About " + about.hostName : "About";
     return (
       !isEmpty(about) && (
         <Dialog
@@ -74,9 +75,9 @@ class AboutDialog extends React.Component {
           aria-labelledby="dialog-about"
           {...other}
         >
-          <DialogTitle id="dialog-about">About</DialogTitle>
+          <DialogTitle id="dialog-about">{title}</DialogTitle>
           <DialogContent>
-            {Object.keys(about).map((key, index) => (
+            {Object.keys(about).map(key => (
               <TextField
                 id={key}
                 key={key}
@@ -86,6 +87,7 @@ class AboutDialog extends React.Component {
                 margin="normal"
                 multiline={true}
                 helperText={helperTexts[key] ? helperTexts[key] : ""}
+                error={helperTexts[key]}
                 InputProps={{
                   readOnly: true
                 }}

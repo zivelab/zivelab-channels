@@ -50,6 +50,10 @@ class AboutButton extends React.Component {
     this.setState({
       open: false
     });
+    this.props.actions.snackbar.enqueueSnackbar(
+      "Reserved. Please use the windows application for updating firmware or app."
+    );
+    /*
     if (helperTexts.sifFirmware) {
       this.props.actions.snackbar.enqueueSnackbar(
         "sifFirmware can be updated..., Reserved."
@@ -60,11 +64,12 @@ class AboutButton extends React.Component {
         "zimFirmware can be updated..., Reserved."
       );
     }
-    if (helperTexts.embeddedWebServer) {
+    if (helperTexts.embeddedWebApp) {
       this.props.actions.snackbar.enqueueSnackbar(
-        "embeddedWebServer can be updated..., Reserved."
+        "embeddedWebApp can be updated..., Reserved."
       );
     }
+    */
   };
 
   componentDidMount = async () => {
@@ -80,22 +85,34 @@ class AboutButton extends React.Component {
       "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/assets/sif4zim/version.json";
     const sifJson = await this.getVersionAsync(sifURL);
     const sifFirmware = sifJson ? sifJson.version : "";
+    const sifFirmwarePath = sifJson
+      ? sifURL.substring(0, sifURL.lastIndexOf("/")) + sifJson.path
+      : "";
 
     const zimURL =
       "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/assets/zim/version.json";
     const zimJson = await this.getVersionAsync(zimURL);
     const zimFirmware = zimJson ? zimJson.version : "";
+    const zimFirmwarePath = zimJson
+      ? zimURL.substring(0, zimURL.lastIndexOf("/")) + zimJson.path
+      : "";
 
-    const serverURL =
+    const appURL =
       "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/babel-standalone/version.json";
-    const serverJson = await this.getVersionAsync(serverURL);
-    const embeddedWebServer = serverJson ? serverJson.version : "";
+    const appJson = await this.getVersionAsync(appURL);
+    const embeddedWebApp = appJson ? appJson.version : "";
+    const embeddedWebAppPath = appJson
+      ? appURL.substring(0, appURL.lastIndexOf("/"))
+      : "";
 
     this.setState({
       versions: {
         sifFirmware: sifFirmware,
+        sifFirmwarePath: sifFirmwarePath,
         zimFirmware: zimFirmware,
-        embeddedWebServer: embeddedWebServer
+        zimFirmwarePath: zimFirmwarePath,
+        embeddedWebApp: embeddedWebApp,
+        embeddedWebAppPath: embeddedWebAppPath
       }
     });
   };
@@ -129,9 +146,9 @@ class AboutButton extends React.Component {
       helperTexts.zimFirmware =
         "New version, " + latest.zimFirmware + " available";
     }
-    if (compareVersion(latest.embeddedWebServer, about.embeddedWebServer) > 0) {
-      helperTexts.embeddedWebServer =
-        "New version, " + latest.embeddedWebServer + " available";
+    if (compareVersion(latest.embeddedWebApp, about.embeddedWebApp) > 0) {
+      helperTexts.embeddedWebApp =
+        "New version, " + latest.embeddedWebApp + " available";
     }
 
     return helperTexts;

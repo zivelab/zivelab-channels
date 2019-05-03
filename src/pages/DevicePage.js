@@ -315,9 +315,9 @@ class DevicePage extends React.Component {
           currentRanges[currentRanges.length - 1].label;
         const temperatureSensor = aboutJson.temperatureSensor || "PT100";
 
-        const embeddedWebServer = await this.loadWebServerVersionAsync();
-        if (embeddedWebServer) {
-          aboutJson.embeddedWebServer = embeddedWebServer;
+        const embeddedWebApp = await this.loadWebAppVersionAsync();
+        if (embeddedWebApp) {
+          aboutJson.embeddedWebApp = embeddedWebApp;
         }
 
         this.setState({
@@ -332,7 +332,7 @@ class DevicePage extends React.Component {
     }
   };
 
-  loadWebServerVersionAsync = async () => {
+  loadWebAppVersionAsync = async () => {
     const { ipAddress } = this.state;
     if (ipAddress !== currentIPAddress) return;
     try {
