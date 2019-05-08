@@ -23,9 +23,6 @@ import ListItemBoldText from "./ListItemBoldText";
 import ListItemLink from "./ListItemLink";
 
 const styles = theme => ({
-  leaf: {
-    fontWeight: theme.typography.fontWeightMedium
-  },
   badge: {
     top: "100%",
     right: -3,
@@ -72,7 +69,7 @@ class AppDrawerNavDevice extends React.Component {
   };
 
   RenderDevices = () => {
-    const { remote, devices } = this.props;
+    const { remote, devices, onClick } = this.props;
     const linkTo = ip => (remote ? "/remote-device/" + ip : "/my-device/" + ip);
     const deviceTitle = device => {
       const name = device.name || "Untitled";
@@ -114,6 +111,7 @@ class AppDrawerNavDevice extends React.Component {
         secondary={deviceDesc(device)}
         key={device.ipAddress}
         disableRipple
+        onClick={onClick}
       />
     ));
   };
@@ -226,7 +224,8 @@ AppDrawerNavDevice.propTypes = {
   onScan: PropTypes.func,
   isScanning: PropTypes.bool,
   scanCompleted: PropTypes.number,
-  scanTotal: PropTypes.number
+  scanTotal: PropTypes.number,
+  onClick: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(AppDrawerNavDevice);

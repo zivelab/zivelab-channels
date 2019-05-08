@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -172,6 +173,7 @@ class AppDrawerContents extends React.Component {
   }
 
   render() {
+    const { onClick } = this.props;
     const { myIP, myDevices, remoteDevices, knownDevice } = this.state;
     const { isLocalScan, isRemoteScan, scanCompleted, scanTotal } = this.state;
 
@@ -181,7 +183,7 @@ class AppDrawerContents extends React.Component {
       <React.Fragment key="section-to-list-nav-contents">
         <List>
           <Divider key="nav-getting-started-divider1" />
-          <AppDrawerGeneralItems />
+          <AppDrawerGeneralItems onClick={onClick} />
           <Divider key="nav-my-devices-divider" />
           <AppDrawerDeviceItems
             myIP={myIP}
@@ -190,6 +192,7 @@ class AppDrawerContents extends React.Component {
             isScanning={isLocalScan}
             scanCompleted={scanCompleted}
             scanTotal={scanTotal}
+            onClick={onClick}
           />
           <Divider key="nav-remote-devices-divider" />
           <AppDrawerDeviceItems
@@ -200,6 +203,7 @@ class AppDrawerContents extends React.Component {
             isScanning={isRemoteScan}
             scanCompleted={scanCompleted}
             scanTotal={scanTotal}
+            onClick={onClick}
           />
           <Divider key="nav-last-divider" />
         </List>
@@ -212,6 +216,10 @@ class AppDrawerContents extends React.Component {
     );
   }
 }
+
+AppDrawerContents.propTypes = {
+  onClick: PropTypes.func.isRequired
+};
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ enqueueSnackbar }, dispatch);

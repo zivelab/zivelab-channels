@@ -41,6 +41,7 @@ class AppDrawerNavItem extends React.Component {
           primary={primary}
           secondary={secondary}
           disableRipple
+          onClick={onClick}
           {...other}
         />
       );
@@ -70,11 +71,11 @@ AppDrawerNavItem.propTypes = {
   children: PropTypes.node,
   depth: PropTypes.number.isRequired,
   icon: PropTypes.element,
-  onClick: PropTypes.func,
   openImmediately: PropTypes.bool,
   primary: PropTypes.string.isRequired,
   secondary: PropTypes.string,
-  to: PropTypes.string
+  to: PropTypes.string,
+  onClick: PropTypes.func
 };
 
 AppDrawerNavItem.defaultProps = {

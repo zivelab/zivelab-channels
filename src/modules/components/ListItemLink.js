@@ -17,9 +17,6 @@ const styles = theme => ({
   active: {
     color: theme.palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium
-  },
-  nested: {
-    paddingLeft: theme.spacing.unit * 4
   }
 });
 
@@ -37,13 +34,21 @@ class ListItemLink extends React.Component {
   renderLink = itemProps => <Link to={this.props.to} {...itemProps} />;
 
   render() {
-    const { classes, icon, primary, secondary, to, depth } = this.props;
+    const {
+      classes,
+      icon,
+      primary,
+      secondary,
+      to,
+      depth,
+      onClick
+    } = this.props;
     const active = this.props.location.pathname === to;
     const style = {
       paddingLeft: 8 * depth
     };
     return (
-      <ListItem button dense component={this.renderLink}>
+      <ListItem button dense component={this.renderLink} onClick={onClick}>
         {icon && <ListItemIcon>{icon}</ListItemIcon>}
         <ListItemText
           primary={primary}
@@ -62,12 +67,12 @@ class ListItemLink extends React.Component {
 
 ListItemLink.propTypes = {
   classes: PropTypes.object.isRequired,
-  nested: PropTypes.bool,
   icon: PropTypes.element,
   primary: PropTypes.string,
   secondary: PropTypes.string,
   to: PropTypes.string.isRequired,
-  depth: PropTypes.number.isRequired
+  depth: PropTypes.number.isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
 export default compose(

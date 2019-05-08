@@ -14,7 +14,8 @@ class AppDrawerDeviceItems extends React.Component {
       onScan,
       isScanning,
       scanCompleted,
-      scanTotal
+      scanTotal,
+      onClick
     } = this.props;
     const path = remote ? "/remote-device" : "/my-device";
     const openImmediately = this.props.location.pathname.indexOf(path) >= 0;
@@ -28,6 +29,7 @@ class AppDrawerDeviceItems extends React.Component {
         isScanning={isScanning}
         scanCompleted={scanCompleted}
         scanTotal={scanTotal}
+        onClick={onClick}
       />
     );
   }
@@ -44,7 +46,8 @@ AppDrawerDeviceItems.propTypes = {
   onScan: PropTypes.func,
   isScanning: PropTypes.bool,
   scanCompleted: PropTypes.number,
-  scanTotal: PropTypes.number
+  scanTotal: PropTypes.number,
+  onClick: PropTypes.func.isRequired
 };
 
 export default withRouter(AppDrawerDeviceItems);

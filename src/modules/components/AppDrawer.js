@@ -1,15 +1,13 @@
 import React from "react";
+import clsx from "clsx";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 
 // controls
 import Drawer from "@material-ui/core/Drawer";
-import IconButton from "@material-ui/core/IconButton";
-
-// Icons
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import Hidden from "@material-ui/core/Hidden";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 
 // Components
 import AppDrawerContents from "./AppDrawerContents";
@@ -19,47 +17,65 @@ import compose from "../utils/compose";
 
 const drawerWidth = 240;
 const styles = theme => ({
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0
-  },
-  drawerPaper: {
+  paper: {
     width: drawerWidth
   },
-  drawerHeader: {
-    display: "flex",
-    alignItems: "center",
-    padding: "0 8px",
+  toolbar: {
     ...theme.mixins.toolbar,
-    justifyContent: "flex-end"
+    paddingLeft: theme.spacing.unit * 3,
+    display: "flex",
+    flexGrow: 1,
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "center"
   }
 });
 
+const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
+
 class AppDrawer extends React.Component {
-  render() {
-    const { classes, open, reduxTheme, toggleDrawer } = this.props;
+  renderNavItems = () => {
+    const { classes, onClose } = this.props;
     return (
-      <nav>
-        <Drawer
-          className={classes.drawer}
-          variant="persistent"
-          anchor="left"
-          open={open}
-          classes={{
-            paper: classes.drawerPaper
-          }}
-        >
-          <div className={classes.drawerHeader}>
-            <IconButton onClick={toggleDrawer(false)}>
-              {reduxTheme.direction === "ltr" ? (
-                <ChevronLeftIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-            </IconButton>
-          </div>
-          <AppDrawerContents />
-        </Drawer>
+      <div className={classes.nav}>
+        <div className={classes.toolbar} />
+        <AppDrawerContents onClick={onClose} />
+      </div>
+    );
+  };
+
+  render() {
+    const { classes, className, mobileOpen, onOpen, onClose } = this.props;
+    return (
+      <nav className={className} role="navigation" aria-label="Main navigation">
+        <Hidden lgUp implementation="js">
+          <SwipeableDrawer
+            classes={{
+              paper: clsx(classes.paper, "algolia-drawer")
+            }}
+            disableBackdropTransition={!iOS}
+            variant="temporary"
+            open={mobileOpen}
+            onOpen={onOpen}
+            onClose={onClose}
+            ModalProps={{
+              keepMounted: true
+            }}
+          >
+            {this.renderNavItems()}
+          </SwipeableDrawer>
+        </Hidden>
+        <Hidden mdDown implementation="css">
+          <Drawer
+            classes={{
+              paper: classes.paper
+            }}
+            variant="permanent"
+            open
+          >
+            {this.renderNavItems()}
+          </Drawer>
+        </Hidden>
       </nav>
     );
   }
@@ -67,8 +83,10 @@ class AppDrawer extends React.Component {
 
 AppDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
-  open: PropTypes.bool.isRequired,
-  toggleDrawer: PropTypes.func.isRequired
+  className: PropTypes.string,
+  mobileOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onOpen: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

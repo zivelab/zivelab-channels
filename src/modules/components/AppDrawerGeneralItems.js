@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 
 // Components
@@ -48,6 +49,7 @@ class AppDrawerGeneralItems extends React.Component {
           secondary={secondary}
           key={primary}
           to={page.pathname}
+          onClick={props.onClick}
         />
       );
     }
@@ -60,5 +62,9 @@ class AppDrawerGeneralItems extends React.Component {
     return <>{this.renderNavItems({ props, pages, depth: 0 })}</>;
   }
 }
+
+AppDrawerGeneralItems.propTypes = {
+  onClick: PropTypes.func.isRequired
+};
 
 export default withRouter(AppDrawerGeneralItems);

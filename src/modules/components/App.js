@@ -63,28 +63,26 @@ const styles = theme => ({
     flex: "0 1 auto"
   },
   appBar: {
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+    transition: theme.transitions.create("width"),
+    "@media print": {
+      position: "absolute"
+    }
   },
   appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    })
+    [theme.breakpoints.up("lg")]: {
+      width: `calc(100% - ${drawerWidth}px)`
+    }
   },
-  badgeMargin: {
-    margin: theme.spacing.unit * 2
+  drawer: {
+    [theme.breakpoints.up("lg")]: {
+      flexShrink: 0,
+      width: drawerWidth
+    }
   },
-  menuButton: {
-    marginLeft: 12,
-    marginRight: 20
-  },
-  hide: {
-    display: "none"
+  navIconHide: {
+    [theme.breakpoints.up("lg")]: {
+      display: "none"
+    }
   },
   content: {
     flexGrow: 1,
@@ -124,15 +122,16 @@ if (process.browser) {
 }
 
 class App extends React.Component {
-  queue = [];
-
   state = {
-    openDrawer: false,
-    messageInfo: {}
+    mobileOpen: false
   };
 
-  toggleDrawer = open => () => {
-    this.setState({ openDrawer: open });
+  handleDrawerOpen = () => {
+    this.setState({ mobileOpen: true });
+  };
+
+  handleDrawerClose = () => {
+    this.setState({ mobileOpen: false });
   };
 
   togglePaletteType = () => {
@@ -161,7 +160,7 @@ class App extends React.Component {
 
   render() {
     const { classes, reduxTheme, reduxTitle, reduxAbout } = this.props;
-    const { openDrawer } = this.state;
+    const { mobileOpen } = this.state;
     const title = reduxTitle || "Zive Channels";
     return (
       <Router basename={process.env.PUBLIC_URL}>
@@ -170,20 +169,15 @@ class App extends React.Component {
           <Banners />
           <AppBar
             position="fixed"
-            className={classNames(classes.appBar, {
-              [classes.appBarShift]: openDrawer
-            })}
+            className={classNames(classes.appBar, classes.appBarShift)}
           >
-            <Toolbar disableGutters={!openDrawer}>
+            <Toolbar>
               <IconButton
                 edge="start"
                 color="inherit"
                 aria-label="Open drawer"
-                onClick={this.toggleDrawer(true)}
-                className={classNames(
-                  classes.menuButton,
-                  openDrawer && classes.hide
-                )}
+                onClick={this.handleDrawerOpen}
+                className={classes.navIconHide}
               >
                 <MenuIcon />
               </IconButton>
@@ -201,38 +195,39 @@ class App extends React.Component {
               <AboutButton about={reduxAbout} />
               <ConfigureButton about={reduxAbout} />
               <OpenInNewButton about={reduxAbout} />
-              <Tooltip title="Toggle light/dark theme" enterDelay={300}>
-                <IconButton
-                  color="inherit"
-                  onClick={this.togglePaletteType}
-                  aria-label="toggleTheme"
-                >
+              <IconButton
+                color="inherit"
+                onClick={this.togglePaletteType}
+                aria-label="toggleTheme"
+              >
+                <Tooltip title="Toggle light/dark theme" enterDelay={300}>
                   {reduxTheme.paletteType === "light" ? (
                     <LightbulbOutlineIcon />
                   ) : (
                     <LightbulbFullIcon />
                   )}
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Github repository" enterDelay={300}>
-                <IconButton
-                  edge="end"
-                  component="a"
-                  color="inherit"
-                  href="https://github.com/zivelab/zivelab-channels"
-                  aria-label="github"
-                >
+                </Tooltip>
+              </IconButton>
+              <IconButton
+                edge="end"
+                component="a"
+                color="inherit"
+                href="https://github.com/zivelab/zivelab-channels"
+                aria-label="github"
+              >
+                <Tooltip title="Github repository" enterDelay={300}>
                   <GithubIcon />
-                </IconButton>
-              </Tooltip>
+                </Tooltip>{" "}
+              </IconButton>
             </Toolbar>
           </AppBar>
-          <AppDrawer open={openDrawer} toggleDrawer={this.toggleDrawer} />
-          <main
-            className={classNames(classes.content, {
-              [classes.contentShift]: openDrawer
-            })}
-          >
+          <AppDrawer
+            className={classes.drawer}
+            onClose={this.handleDrawerClose}
+            onOpen={this.handleDrawerOpen}
+            mobileOpen={mobileOpen}
+          />
+          <main className={classNames(classes.content, classes.contentShift)}>
             <Switch>
               <Redirect exact path="/" to="/getting-started/about" />
               <Route
