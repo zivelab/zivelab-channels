@@ -40,7 +40,7 @@
       src="https://unpkg.com/recharts/umd/Recharts.min.js"
       crossorigin="anonymous"
     ></script>
-    <!-- d3 format and momet -->
+    <!-- d3 format, momet, and others -->
     <script
       src="https://unpkg.com/d3-format/dist/d3-format.min.js"
       aria-controls="anonymous"
@@ -66,12 +66,8 @@
         AppBar,
         Button,
         Card,
-        CardActionArea,
-        CardActions,
         CardContent,
         CardHeader,
-        CardMedia,
-        CircularProgress,
         Collapse,
         colors,
         Container,
@@ -80,22 +76,16 @@
         Dialog,
         DialogActions,
         DialogContent,
-        DialogContentText,
         DialogTitle,
         Divider,
         ExpansionPanel,
         ExpansionPanelSummary,
         ExpansionPanelDetails,
-        Fab,
         Grid,
         Icon,
         IconButton,
         LinearProgress,
-        List,
-        ListItem,
-        ListItemText,
         MenuItem,
-        MoreVertIcon,
         MuiThemeProvider,
         Paper,
         Snackbar,
@@ -130,25 +120,34 @@
       });
 
       const styles = theme => ({
+        toolbar: {
+          paddingRight: 24 // keep right padding when drawer closed
+        },
+        appBar: {
+          transition: theme.transitions.create("width"),
+          "@media print": {
+            position: "absolute"
+          }
+        },
         appBarTitle: {
           flex: 1
         },
+        appBarSpacer: theme.mixins.toolbar,
         layout: {
           width: "auto",
+          flexGrow: 1,
+          padding: theme.spacing.unit * 3,
           marginLeft: theme.spacing.unit * 3,
           marginRight: theme.spacing.unit * 3,
-          marginTop: "32px",
           [theme.breakpoints.up(900 + theme.spacing.unit * 3 * 2)]: {
             width: 900,
             marginLeft: "auto",
             marginRight: "auto"
-          }
-        },
-        cardContent: {
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "baseline",
-          marginBottom: theme.spacing.unit * 2
+          },
+          transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen
+          })
         },
         cardChart: {
           display: "flex",
@@ -194,14 +193,6 @@
           width: "100%",
           marginTop: theme.spacing.unit * 3,
           overflowX: "auto"
-        },
-        tableRow: {
-          cursor: "pointer"
-        },
-        tableRowHover: {
-          "&:hover": {
-            backgroundColor: theme.palette.grey[200]
-          }
         },
         textField: {
           marginLeft: theme.spacing.unit,
@@ -251,7 +242,7 @@
           fill: theme.palette.secondary.light
         },
         linePlotDefault: {
-          stroke: theme.palette.primary.main // this is not working
+          stroke: theme.palette.primary.main
         },
         referenceLine: {
           stroke: theme.palette.divider
@@ -298,7 +289,7 @@
       // Math Constatnts
       const dateTimeOffset = 62135596800000; // ticks from 0000-01-01 to 1970-01-01
       const launched = new Date().getTime();
-      const queue = [];
+
       // Color palette for charting
       // http://ksrowell.com/blog-visualizing-data/2012/02/02/optimal-colors-for-graphs/
       const palette = {
@@ -478,8 +469,8 @@
           <SvgIcon {...props}>
             <path
               d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,
-      1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,
-      22H14A1,1 0 0,0 15,21V20H9V21Z"
+          1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,
+          22H14A1,1 0 0,0 15,21V20H9V21Z"
             />
           </SvgIcon>
         );
@@ -489,9 +480,9 @@
           <SvgIcon {...props}>
             <path
               d="M12,2A7,7 0 0,1 19,9C19,11.38 17.81,13.47 16,14.74V17A1,1 0 0,1 15,18H9A1,
-      1 0 0,1 8,17V14.74C6.19,13.47 5,11.38 5,9A7,7 0 0,1 12,2M9,21V20H15V21A1,1 0 0,1 14,
-      22H10A1,1 0 0,1 9,21M12,4A5,5 0 0,0 7,9C7,11.05 8.23,12.81 10,13.58V16H14V13.58C15.77,
-      12.81 17,11.05 17,9A5,5 0 0,0 12,4Z"
+          1 0 0,1 8,17V14.74C6.19,13.47 5,11.38 5,9A7,7 0 0,1 12,2M9,21V20H15V21A1,1 0 0,1 14,
+          22H10A1,1 0 0,1 9,21M12,4A5,5 0 0,0 7,9C7,11.05 8.23,12.81 10,13.58V16H14V13.58C15.77,
+          12.81 17,11.05 17,9A5,5 0 0,0 12,4Z"
             />
           </SvgIcon>
         );
@@ -503,11 +494,55 @@
           </SvgIcon>
         );
       }
+      // https://github.com/feross/clipboard-copy
+      // https://unpkg.com/clipboard-copy@latest/index.js returns Uncaught ReferenceError: module is not defined
+      function clipboardCopy(text) {
+        // Use the Async Clipboard API when available. Requires a secure browing
+        // context (i.e. HTTPS)
+        if (navigator.clipboard) {
+          return navigator.clipboard.writeText(text);
+        }
+
+        // ...Otherwise, use document.execCommand() fallback
+
+        // Put the text to copy into a <span>
+        var span = document.createElement("span");
+        span.textContent = text;
+
+        // Preserve consecutive spaces and newlines
+        span.style.whiteSpace = "pre";
+
+        // Add the <span> to the page
+        document.body.appendChild(span);
+
+        // Make a selection object representing the range of text selected by the user
+        var selection = window.getSelection();
+        var range = window.document.createRange();
+        selection.removeAllRanges();
+        range.selectNode(span);
+        selection.addRange(range);
+
+        // Copy text to the clipboard
+        var success = false;
+        try {
+          success = window.document.execCommand("copy");
+        } catch (err) {
+          console.log("error", err);
+        }
+
+        // Cleanup
+        selection.removeAllRanges();
+        window.document.body.removeChild(span);
+
+        // The Async Clipboard API returns a promise that may reject with `undefined`
+        // so we match that here for consistency.
+        return success ? Promise.resolve() : Promise.reject(); // eslint-disable-line prefer-promise-reject-errors
+      }
 
       //#region AboutDialogWrapped
       class AboutDialog extends React.Component {
         handleCopy = async () => {
-          //await clipboardCopy(JSON.stringify(this.props.about, undefined, 3));
+          await clipboardCopy(JSON.stringify(this.props.about, undefined, 3));
         };
 
         render() {
@@ -542,7 +577,7 @@
                   <Button
                     color="primary"
                     onClick={this.handleCopy}
-                    disabled={true}
+                    disabled={false}
                   >
                     Copy to Clipboard
                   </Button>
@@ -572,8 +607,9 @@
             onChange,
             ...other
           } = this.props;
-          if (parameters) {
-            return (
+
+          return (
+            parameters && (
               <Dialog
                 onClose={onClose}
                 scroll="paper"
@@ -662,10 +698,8 @@
                   </Button>
                 </DialogActions>
               </Dialog>
-            );
-          } else {
-            return <React.Fragment />;
-          }
+            )
+          );
         }
       }
       SetUpDialog.propTypes = {
@@ -775,71 +809,67 @@
               ? plotStyle
               : classes.scatterPlotDefault;
             return (
-              <React.Fragment>
-                <Recharts.ResponsiveContainer width="100%" height={50}>
-                  <Recharts.ScatterChart>
-                    {/*<Recharts.CartesianGrid/>*/}
-                    <Recharts.XAxis
-                      type="number"
-                      dataKey={xKey}
-                      name={xKey}
-                      unit={xUnit}
-                      tickFormatter={d3.format(".0s")}
-                      domain={["auto", "auto"]}
-                      hide={true}
-                    />
-                    <Recharts.YAxis
-                      type="number"
-                      dataKey={yKey}
-                      name={yKey}
-                      unit={yUnit}
-                      tickFormatter={d3.format(".3f")}
-                      domain={["auto", "auto"]}
-                      hide={true}
-                    />
-                    <Recharts.Scatter
-                      data={data}
-                      type="monotone"
-                      fill={palette.bar[0]}
-                      line={false}
-                    />
-                  </Recharts.ScatterChart>
-                </Recharts.ResponsiveContainer>
-              </React.Fragment>
+              <Recharts.ResponsiveContainer width="100%" height={50}>
+                <Recharts.ScatterChart>
+                  {/*<Recharts.CartesianGrid/>*/}
+                  <Recharts.XAxis
+                    type="number"
+                    dataKey={xKey}
+                    name={xKey}
+                    unit={xUnit}
+                    tickFormatter={d3.format(".0s")}
+                    domain={["auto", "auto"]}
+                    hide={true}
+                  />
+                  <Recharts.YAxis
+                    type="number"
+                    dataKey={yKey}
+                    name={yKey}
+                    unit={yUnit}
+                    tickFormatter={d3.format(".3f")}
+                    domain={["auto", "auto"]}
+                    hide={true}
+                  />
+                  <Recharts.Scatter
+                    data={data}
+                    type="monotone"
+                    fill={palette.bar[0]}
+                    line={false}
+                  />
+                </Recharts.ScatterChart>
+              </Recharts.ResponsiveContainer>
             );
           } else {
             const areaStyle = plotStyle ? plotStyle : classes.areaPlotDefault;
             return (
-              <React.Fragment>
-                <Recharts.ResponsiveContainer width="100%" height={60}>
-                  <Recharts.AreaChart data={data}>
-                    {/*<Recharts.CartesianGrid/>*/}
-                    <Recharts.XAxis
-                      type="number"
-                      dataKey={xKey}
-                      name={xKey}
-                      unit={xUnit}
-                      tickFormatter={d3.format(".0s")}
-                      domain={["auto", "auto"]}
-                      hide={true}
-                    />
-                    <Recharts.YAxis
-                      type="number"
-                      name={yKey}
-                      unit={yUnit}
-                      tickFormatter={d3.format(".3f")}
-                      domain={["auto", "auto"]}
-                      hide={true}
-                    />
-                    <Recharts.Area
-                      type="monotone"
-                      dataKey={yKey}
-                      fill={palette.bar[2]}
-                      stroke={palette.bar[2]}
-                    />
-                  </Recharts.AreaChart>
-                </Recharts.ResponsiveContainer>
-              </React.Fragment>
+              <Recharts.ResponsiveContainer width="100%" height={60}>
+                <Recharts.AreaChart data={data}>
+                  {/*<Recharts.CartesianGrid/>*/}
+                  <Recharts.XAxis
+                    type="number"
+                    dataKey={xKey}
+                    name={xKey}
+                    unit={xUnit}
+                    tickFormatter={d3.format(".0s")}
+                    domain={["auto", "auto"]}
+                    hide={true}
+                  />
+                  <Recharts.YAxis
+                    type="number"
+                    name={yKey}
+                    unit={yUnit}
+                    tickFormatter={d3.format(".3f")}
+                    domain={["auto", "auto"]}
+                    hide={true}
+                  />
+                  <Recharts.Area
+                    type="monotone"
+                    dataKey={yKey}
+                    fill={palette.bar[2]}
+                    stroke={palette.bar[2]}
+                  />
+                </Recharts.AreaChart>
+              </Recharts.ResponsiveContainer>
             );
           }
         }
@@ -884,56 +914,52 @@
             : null;
           if (!samples) {
             return (
-              <React.Fragment>
-                <div className={classes.chartOuterContainer169}>
-                  <div className={classes.chartInnerContainer} />
-                </div>
-              </React.Fragment>
+              <div className={classes.chartOuterContainer169}>
+                <div className={classes.chartInnerContainer} />
+              </div>
             );
           }
           return (
-            <React.Fragment>
-              <div className={classes.chartOuterContainer169}>
-                <div className={classes.chartInnerContainer}>
-                  <Recharts.ResponsiveContainer>
-                    <Recharts.LineChart data={samples}>
-                      {/*<Recharts.CartesianGrid /> */}
-                      <Recharts.XAxis
-                        type="number"
-                        dataKey="voltage"
-                        name="Voltage"
-                        unit="V"
-                        tickFormatter={d3.format(".0s")}
-                        domain={["auto", "auto"]}
-                        hide={true}
-                      />
-                      <Recharts.YAxis
-                        type="number"
-                        name="Current"
-                        unit="A"
-                        tickFormatter={d3.format(".0s")}
-                        domain={["auto", "auto"]}
-                        hide={true}
-                      />
-                      <Recharts.ReferenceLine
-                        x={0}
-                        className={classes.referenceLine}
-                      />
-                      <Recharts.ReferenceLine
-                        y={0}
-                        className={classes.referenceLine}
-                      />
-                      <Recharts.Line
-                        dataKey="current"
-                        type="basis"
-                        stroke={palette.line[1]}
-                        dot={false}
-                      />
-                    </Recharts.LineChart>
-                  </Recharts.ResponsiveContainer>
-                </div>
+            <div className={classes.chartOuterContainer169}>
+              <div className={classes.chartInnerContainer}>
+                <Recharts.ResponsiveContainer>
+                  <Recharts.LineChart data={samples}>
+                    {/*<Recharts.CartesianGrid /> */}
+                    <Recharts.XAxis
+                      type="number"
+                      dataKey="voltage"
+                      name="Voltage"
+                      unit="V"
+                      tickFormatter={d3.format(".0s")}
+                      domain={["auto", "auto"]}
+                      hide={true}
+                    />
+                    <Recharts.YAxis
+                      type="number"
+                      name="Current"
+                      unit="A"
+                      tickFormatter={d3.format(".0s")}
+                      domain={["auto", "auto"]}
+                      hide={true}
+                    />
+                    <Recharts.ReferenceLine
+                      x={0}
+                      className={classes.referenceLine}
+                    />
+                    <Recharts.ReferenceLine
+                      y={0}
+                      className={classes.referenceLine}
+                    />
+                    <Recharts.Line
+                      dataKey="current"
+                      type="basis"
+                      stroke={palette.line[1]}
+                      dot={false}
+                    />
+                  </Recharts.LineChart>
+                </Recharts.ResponsiveContainer>
               </div>
-            </React.Fragment>
+            </div>
           );
         }
       }
@@ -972,54 +998,56 @@
                     .join(" ")
                 : about.model;
               const ip = about.ipAddress;
-              return hostName === "Untitled"
-                ? model + " (" + ip + ")"
-                : hostName + " (" + model + ", " + ip + ")";
+              const pageTitle =
+                hostName === "Untitled"
+                  ? model + " (" + ip + ")"
+                  : hostName + " (" + model + ", " + ip + ")";
+              // update document title
+              if (document.title != pageTitle) {
+                document.title = pageTitle;
+              }
+              return pageTitle;
             } else {
               return "Loading...";
             }
           };
           return (
-            <React.Fragment>
-              <AppBar position="relative">
-                <Toolbar>
-                  {/* Title */}
-                  <Typography
-                    variant="h6"
-                    color="inherit"
-                    noWrap
-                    className={classes.appBarTitle}
-                  >
-                    {title()}
-                  </Typography>
-                  {/* About */}
-                  <IconButton
-                    color="inherit"
-                    disabled={!about}
-                    onClick={onOpenAbout}
-                  >
-                    <Tooltip title="About device">
-                      <Icon>info</Icon>
-                    </Tooltip>
-                  </IconButton>
-                  <AboutDialogWrapped
-                    about={about}
-                    open={openAbout}
-                    onClose={onClose}
-                  />
-                  {/* Theme */}
-                  <IconButton
-                    color="inherit"
-                    aria-label="Theme"
-                    onClick={onToggleTheme}
-                  >
-                    <Tooltip title="Toggle light/dark theme">
-                      {themeIcon}
-                    </Tooltip>
-                  </IconButton>
-                </Toolbar>
-              </AppBar>
-            </React.Fragment>
+            <AppBar position="fixed" className={classes.appBar}>
+              <Toolbar className={classes.toolbar}>
+                {/* Title */}
+                <Typography
+                  variant="h6"
+                  color="inherit"
+                  noWrap
+                  className={classes.appBarTitle}
+                >
+                  {title()}
+                </Typography>
+                {/* About */}
+                <IconButton
+                  color="inherit"
+                  disabled={!about}
+                  onClick={onOpenAbout}
+                >
+                  <Tooltip title="About device">
+                    <Icon>info</Icon>
+                  </Tooltip>
+                </IconButton>
+                <AboutDialogWrapped
+                  about={about}
+                  open={openAbout}
+                  onClose={onClose}
+                />
+                {/* Theme */}
+                <IconButton
+                  color="inherit"
+                  aria-label="Theme"
+                  onClick={onToggleTheme}
+                >
+                  <Tooltip title="Toggle light/dark theme">{themeIcon}</Tooltip>
+                </IconButton>
+              </Toolbar>
+            </AppBar>
           );
         }
       }
@@ -1062,55 +1090,53 @@
           const auxTemperatureSensorType =
             channel && temperatureSensor ? temperatureSensor : "";
           return (
-            <React.Fragment>
-              <Grid
-                container
-                spacing={16}
-                direction="column"
-                justify="flex-start"
-                alignItems="stretch"
-              >
-                <Grid item container xs={12} sm={12} md={12}>
-                  <Grid item xs={6} sm={6} md={6}>
-                    <Typography gutterBottom variant="h6">
-                      {auxVoltageExpression}
-                    </Typography>
-                    <Typography gutterBottom component="p">
-                      {auxVoltageRangeExpression}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} sm={6} md={6}>
-                    <SparklineWrapped
-                      data={auxData}
-                      xKey="time"
-                      xUnit="s"
-                      yKey="voltage"
-                      yUnit="V"
-                    />
-                  </Grid>
+            <Grid
+              container
+              spacing={16}
+              direction="column"
+              justify="flex-start"
+              alignItems="stretch"
+            >
+              <Grid item container xs={12} sm={12} md={12}>
+                <Grid item xs={6} sm={6} md={6}>
+                  <Typography gutterBottom variant="h6">
+                    {auxVoltageExpression}
+                  </Typography>
+                  <Typography gutterBottom component="p">
+                    {auxVoltageRangeExpression}
+                  </Typography>
                 </Grid>
-                {/*<Divider variant="middle"/>*/}
-                <Grid item container xs={12} sm={12} md={12}>
-                  <Grid item xs={6} sm={6} md={6}>
-                    <Typography gutterBottom variant="h6">
-                      {auxTemperatureExpression}
-                    </Typography>
-                    <Typography gutterBottom component="p">
-                      {auxTemperatureSensorType}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} sm={6} md={6}>
-                    <SparklineWrapped
-                      data={auxData}
-                      xKey="time"
-                      xUnit="s"
-                      yKey="temperature"
-                      yUnit={SYMBOLS.DEGREE_CELSIUS}
-                    />
-                  </Grid>
+                <Grid item xs={6} sm={6} md={6}>
+                  <SparklineWrapped
+                    data={auxData}
+                    xKey="time"
+                    xUnit="s"
+                    yKey="voltage"
+                    yUnit="V"
+                  />
                 </Grid>
               </Grid>
-            </React.Fragment>
+              {/*<Divider variant="middle"/>*/}
+              <Grid item container xs={12} sm={12} md={12}>
+                <Grid item xs={6} sm={6} md={6}>
+                  <Typography gutterBottom variant="h6">
+                    {auxTemperatureExpression}
+                  </Typography>
+                  <Typography gutterBottom component="p">
+                    {auxTemperatureSensorType}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6} sm={6} md={6}>
+                  <SparklineWrapped
+                    data={auxData}
+                    xKey="time"
+                    xUnit="s"
+                    yKey="temperature"
+                    yUnit={SYMBOLS.DEGREE_CELSIUS}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
           );
         }
       }
@@ -1148,33 +1174,31 @@
             : SYMBOLS.NAN + SYMBOLS.DEGREE_CELSIUS;
           const auxTemperatureSensorType = channel ? "PT100" : "";
           return (
-            <React.Fragment>
-              <Card>
-                <CardHeader
-                  //title="Aux. Readings"
-                  subheader="Aux. Readings"
-                  action={
-                    <div className={classes.cardControls}>
-                      <Tooltip title="Clear">
-                        <IconButton aria-label="Clear" onClick={onClear}>
-                          <Icon fontSize="large" color="action">
-                            clear_all
-                          </Icon>
-                        </IconButton>
-                      </Tooltip>
-                    </div>
-                  }
+            <Card>
+              <CardHeader
+                //title="Aux. Readings"
+                subheader="Aux. Readings"
+                action={
+                  <div className={classes.cardControls}>
+                    <Tooltip title="Clear">
+                      <IconButton aria-label="Clear" onClick={onClear}>
+                        <Icon fontSize="large" color="action">
+                          clear_all
+                        </Icon>
+                      </IconButton>
+                    </Tooltip>
+                  </div>
+                }
+              />
+              <CardContent>
+                <AuxConsole
+                  auxData={auxData}
+                  channel={channel}
+                  voltageRanges={voltageRanges}
+                  temperatureSensor={temperatureSensor}
                 />
-                <CardContent>
-                  <AuxConsole
-                    auxData={auxData}
-                    channel={channel}
-                    voltageRanges={voltageRanges}
-                    temperatureSensor={temperatureSensor}
-                  />
-                </CardContent>
-              </Card>
-            </React.Fragment>
+              </CardContent>
+            </Card>
           );
         }
       }
@@ -1244,169 +1268,167 @@
             ? d3.format(".2f")(zitem.vdc) + "V"
             : SYMBOLS.NAN + "V";
           return (
-            <React.Fragment>
+            <Grid
+              container
+              spacing={16}
+              direction="row"
+              justify="flex-start"
+              alignItems="center"
+            >
               <Grid
+                item
                 container
                 spacing={16}
-                direction="row"
+                direction="column"
                 justify="flex-start"
-                alignItems="center"
+                alignItems="stretch"
+                xs={12}
+                sm={6}
+                md={6}
               >
                 <Grid
                   item
                   container
-                  spacing={16}
-                  direction="column"
+                  direction="row"
                   justify="flex-start"
-                  alignItems="stretch"
+                  alignItems="baseline"
                   xs={12}
-                  sm={6}
-                  md={6}
+                  sm={12}
+                  md={12}
                 >
+                  <Grid item container xs={4} sm={4} md={4}>
+                    <Grid
+                      item
+                      container
+                      direction="column"
+                      alignItems="flex-start"
+                    >
+                      <Typography gutterBottom variant="h6">
+                        {frequncyExpression}
+                      </Typography>
+                      <Typography gutterBottom variant="h6">
+                        {auxVExpression}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid item container xs={8} sm={8} md={8}>
+                    <Grid
+                      item
+                      container
+                      direction="column"
+                      alignItems="flex-end"
+                    >
+                      <Typography gutterBottom variant="h5">
+                        {zModulusExpression}
+                      </Typography>
+                      <Typography gutterBottom variant="h5">
+                        {zPhaseExpression}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Divider variant="middle" />
+                {isRunning ? (
                   <Grid
                     item
                     container
                     direction="row"
                     justify="flex-start"
-                    alignItems="baseline"
+                    alignItems="center"
                     xs={12}
                     sm={12}
                     md={12}
                   >
-                    <Grid item container xs={4} sm={4} md={4}>
-                      <Grid
-                        item
-                        container
-                        direction="column"
-                        alignItems="flex-start"
-                      >
+                    <Grid item container xs={6} sm={6} md={6}>
+                      <Grid item container>
                         <Typography gutterBottom variant="h6">
-                          {frequncyExpression}
-                        </Typography>
-                        <Typography gutterBottom variant="h6">
-                          {auxVExpression}
+                          {durationFormat(channel.elapsedTime)}
                         </Typography>
                       </Grid>
                     </Grid>
-                    <Grid item container xs={8} sm={8} md={8}>
+                    <Grid item container xs={6} sm={6} md={6}>
                       <Grid
                         item
                         container
                         direction="column"
-                        alignItems="flex-end"
+                        justify="center"
+                        alignItems="stretch"
                       >
-                        <Typography gutterBottom variant="h5">
-                          {zModulusExpression}
-                        </Typography>
-                        <Typography gutterBottom variant="h5">
-                          {zPhaseExpression}
-                        </Typography>
+                        <div className={classes.grow}>
+                          <LinearProgress
+                            variant="determinate"
+                            value={channel.progress}
+                          />
+                        </div>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Divider variant="middle" />
-                  {isRunning ? (
-                    <Grid
-                      item
-                      container
-                      direction="row"
-                      justify="flex-start"
-                      alignItems="center"
-                      xs={12}
-                      sm={12}
-                      md={12}
+                ) : (
+                  <Grid
+                    item
+                    container
+                    direction="row"
+                    justify="space-evenly"
+                    alignItems="center"
+                    xs={12}
+                    sm={12}
+                    md={12}
+                  >
+                    <IconButton
+                      aria-label="GoFirst"
+                      onClick={onGoFirst}
+                      disabled={!isIdle || cookIndex <= 0}
                     >
-                      <Grid item container xs={6} sm={6} md={6}>
-                        <Grid item container>
-                          <Typography gutterBottom variant="h6">
-                            {durationFormat(channel.elapsedTime)}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid item container xs={6} sm={6} md={6}>
-                        <Grid
-                          item
-                          container
-                          direction="column"
-                          justify="center"
-                          alignItems="stretch"
-                        >
-                          <div className={classes.grow}>
-                            <LinearProgress
-                              variant="determinate"
-                              value={channel.progress}
-                            />
-                          </div>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  ) : (
-                    <Grid
-                      item
-                      container
-                      direction="row"
-                      justify="space-evenly"
-                      alignItems="center"
-                      xs={12}
-                      sm={12}
-                      md={12}
+                      <Tooltip title="Go first">
+                        <Icon fontSize="default">first_page</Icon>
+                      </Tooltip>
+                    </IconButton>
+                    <IconButton
+                      aria-label="GoPrevious"
+                      onClick={onGoPrevious}
+                      disabled={!isIdle || cookIndex <= 0}
                     >
-                      <IconButton
-                        aria-label="GoFirst"
-                        onClick={onGoFirst}
-                        disabled={!isIdle || cookIndex <= 0}
-                      >
-                        <Tooltip title="Go first">
-                          <Icon fontSize="default">first_page</Icon>
-                        </Tooltip>
-                      </IconButton>
-                      <IconButton
-                        aria-label="GoPrevious"
-                        onClick={onGoPrevious}
-                        disabled={!isIdle || cookIndex <= 0}
-                      >
-                        <Tooltip title="Go previous">
-                          <Icon fontSize="default">chevron_left</Icon>
-                        </Tooltip>
-                      </IconButton>
-                      <IconButton
-                        aria-label="GoNext"
-                        onClick={onGoNext}
-                        disabled={
-                          !isIdle ||
-                          cookIndex < 0 ||
-                          cookIndex >= cooked.length - 1
-                        }
-                      >
-                        <Tooltip title="Go next">
-                          <Icon fontSize="default">chevron_right</Icon>
-                        </Tooltip>
-                      </IconButton>
-                      <IconButton
-                        aria-label="GoLast"
-                        onClick={onGoLast}
-                        disabled={
-                          !isIdle ||
-                          cookIndex < 0 ||
-                          cookIndex >= cooked.length - 1
-                        }
-                      >
-                        <Tooltip title="Go last">
-                          <Icon fontSize="default">last_page</Icon>
-                        </Tooltip>
-                      </IconButton>
-                    </Grid>
-                  )}
-                </Grid>
-                <Grid item xs={12} sm={6} md={6}>
-                  <LissajousCurveWrapped
-                    channel={channel}
-                    cook={cook}
-                    index={cookIndex}
-                  />
-                </Grid>
+                      <Tooltip title="Go previous">
+                        <Icon fontSize="default">chevron_left</Icon>
+                      </Tooltip>
+                    </IconButton>
+                    <IconButton
+                      aria-label="GoNext"
+                      onClick={onGoNext}
+                      disabled={
+                        !isIdle ||
+                        cookIndex < 0 ||
+                        cookIndex >= cooked.length - 1
+                      }
+                    >
+                      <Tooltip title="Go next">
+                        <Icon fontSize="default">chevron_right</Icon>
+                      </Tooltip>
+                    </IconButton>
+                    <IconButton
+                      aria-label="GoLast"
+                      onClick={onGoLast}
+                      disabled={
+                        !isIdle ||
+                        cookIndex < 0 ||
+                        cookIndex >= cooked.length - 1
+                      }
+                    >
+                      <Tooltip title="Go last">
+                        <Icon fontSize="default">last_page</Icon>
+                      </Tooltip>
+                    </IconButton>
+                  </Grid>
+                )}
               </Grid>
-            </React.Fragment>
+              <Grid item xs={12} sm={6} md={6}>
+                <LissajousCurveWrapped
+                  channel={channel}
+                  cook={cook}
+                  index={cookIndex}
+                />
+              </Grid>
+            </Grid>
           );
         }
       }
@@ -1473,93 +1495,91 @@
             ? "Ready"
             : "Loading...";
           return (
-            <React.Fragment>
-              <Card>
-                <CardHeader
-                  subheader={stateExpression}
-                  action={
-                    <div className={classes.cardControls}>
-                      <IconButton
-                        aria-label="Start"
-                        onClick={onOpenSetUp}
-                        disabled={!isIdle}
-                        color="primary"
-                      >
-                        <Tooltip title="Start">
-                          <Icon fontSize="large">play_arrow</Icon>
-                        </Tooltip>
-                      </IconButton>
-                      <SetUpDialogWrapped
-                        open={openSetUp}
-                        parameters={parameters}
-                        currentRanges={currentRanges}
-                        onClose={onClose}
-                        onStart={onStart}
-                        onChange={onChangeParameter}
-                      />
-                      <IconButton
-                        aria-label="Stop"
-                        onClick={onStop}
-                        disabled={!isRunning}
-                        color="secondary"
-                      >
-                        <Tooltip title="Stop">
-                          <Icon fontSize="large">stop</Icon>
-                        </Tooltip>
-                      </IconButton>
-                      <IconButton
-                        aria-label="Download"
-                        onClick={onDownload}
-                        disabled={!isIdle || !cook || cook.data.length < 1}
-                        color="default"
-                      >
-                        <Tooltip title="Save as CSV">
-                          <ArrowDownBoxIcon fontSize="large" />
-                        </Tooltip>
-                      </IconButton>
-                      <Snackbar
-                        key={messageInfo.key}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left"
-                        }}
-                        open={openSnackbar}
-                        autoHideDuration={3000}
-                        onClose={onClose}
-                        ContentProps={{
-                          "aria-describedby": "message-id"
-                        }}
-                        message={
-                          <span id="message-id">{messageInfo.message}</span>
-                        }
-                        action={[
-                          <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            className={classes.close}
-                            onClick={onClose}
-                          >
-                            <Icon>close</Icon>
-                          </IconButton>
-                        ]}
-                      />
-                    </div>
-                  }
+            <Card>
+              <CardHeader
+                subheader={stateExpression}
+                action={
+                  <div className={classes.cardControls}>
+                    <IconButton
+                      aria-label="Start"
+                      onClick={onOpenSetUp}
+                      disabled={!isIdle}
+                      color="primary"
+                    >
+                      <Tooltip title="Start">
+                        <Icon fontSize="large">play_arrow</Icon>
+                      </Tooltip>
+                    </IconButton>
+                    <SetUpDialogWrapped
+                      open={openSetUp}
+                      parameters={parameters}
+                      currentRanges={currentRanges}
+                      onClose={onClose}
+                      onStart={onStart}
+                      onChange={onChangeParameter}
+                    />
+                    <IconButton
+                      aria-label="Stop"
+                      onClick={onStop}
+                      disabled={!isRunning}
+                      color="secondary"
+                    >
+                      <Tooltip title="Stop">
+                        <Icon fontSize="large">stop</Icon>
+                      </Tooltip>
+                    </IconButton>
+                    <IconButton
+                      aria-label="Download"
+                      onClick={onDownload}
+                      disabled={!isIdle || !cook || cook.data.length < 1}
+                      color="default"
+                    >
+                      <Tooltip title="Save as CSV">
+                        <ArrowDownBoxIcon fontSize="large" />
+                      </Tooltip>
+                    </IconButton>
+                    <Snackbar
+                      key={messageInfo.key}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left"
+                      }}
+                      open={openSnackbar}
+                      autoHideDuration={3000}
+                      onClose={onClose}
+                      ContentProps={{
+                        "aria-describedby": "message-id"
+                      }}
+                      message={
+                        <span id="message-id">{messageInfo.message}</span>
+                      }
+                      action={[
+                        <IconButton
+                          key="close"
+                          aria-label="Close"
+                          color="inherit"
+                          className={classes.close}
+                          onClick={onClose}
+                        >
+                          <Icon>close</Icon>
+                        </IconButton>
+                      ]}
+                    />
+                  </div>
+                }
+              />
+              <CardContent>
+                <CookConsoleWrapped
+                  cookIndex={cookIndex}
+                  channel={channel}
+                  cook={cook}
+                  onGoFirst={onGoFirst}
+                  onGoLast={onGoLast}
+                  onGoNext={onGoNext}
+                  onGoPrevious={onGoPrevious}
                 />
-                <CardContent>
-                  <CookConsoleWrapped
-                    cookIndex={cookIndex}
-                    channel={channel}
-                    cook={cook}
-                    onGoFirst={onGoFirst}
-                    onGoLast={onGoLast}
-                    onGoNext={onGoNext}
-                    onGoPrevious={onGoPrevious}
-                  />
-                </CardContent>
-              </Card>
-            </React.Fragment>
+              </CardContent>
+            </Card>
           );
         }
       }
@@ -1597,8 +1617,8 @@
             cooked.length > 0 && (
               <Card>
                 {/*<CardHeader
-      		          subheader="Nyquist Plot"
-                />*/}
+          		          subheader="Nyquist Plot"
+                    />*/}
                 <CardContent className={classes.cardChart}>
                   <Recharts.ResponsiveContainer width="100%" height={300}>
                     <Recharts.ScatterChart
@@ -1974,13 +1994,14 @@
           };
         }
 
+        queue = [];
         controller = new AbortController();
 
         //#region Event handlers
         processQueue = () => {
-          if (queue.length > 0) {
+          if (this.queue.length > 0) {
             this.setState({
-              messageInfo: queue.shift(),
+              messageInfo: this.queue.shift(),
               openSnackbar: true
             });
           }
@@ -2114,7 +2135,7 @@
             this.loadSamplesAsync(index);
         };
         handleSnackBar = message => {
-          queue.push({
+          this.queue.push({
             message,
             key: new Date().getTime()
           });
@@ -2450,83 +2471,82 @@
 
           return (
             <MuiThemeProvider theme={muiTheme}>
-              <React.Fragment>
-                <CssBaseline />
+              <CssBaseline />
 
-                {/* Header */}
-                <HeaderWrapped
-                  about={this.state.about}
-                  onClose={this.handleClose}
-                  onOpenAbout={this.handleOpenAbout}
-                  onToggleTheme={this.handleToggleTheme}
-                  openAbout={this.state.openAbout}
-                  themeName={this.state.themeName}
-                />
+              {/* Header */}
+              <HeaderWrapped
+                about={this.state.about}
+                onClose={this.handleClose}
+                onOpenAbout={this.handleOpenAbout}
+                onToggleTheme={this.handleToggleTheme}
+                openAbout={this.state.openAbout}
+                themeName={this.state.themeName}
+              />
 
-                <main className={classes.layout}>
-                  <Grid
-                    container
-                    className={classes.gridContainer}
-                    spacing={40}
-                    layout="row"
-                    alignItems="stretch"
-                  >
-                    {/* Aux Voltage/Temperature */}
-                    <Grid item key="AuxCard" xs={12} sm={12} md={4}>
-                      <AuxPanelWrapped
-                        auxData={this.state.auxData}
-                        channel={this.state.channel}
-                        voltageRanges={this.state.voltageRanges}
-                        temperatureSensor={this.state.temperatureSensor}
-                        onClear={this.handleClearAuxData}
-                      />
-                    </Grid>
-
-                    {/* Cook */}
-                    <Grid item key="CookCard" xs={12} sm={12} md={8}>
-                      <CookPanelWrapped
-                        cookIndex={this.state.cookIndex}
-                        channel={this.state.channel}
-                        cook={this.state.cook}
-                        messageInfo={this.state.messageInfo}
-                        onChangeParameter={this.handleChangeParameter}
-                        onClose={this.handleClose}
-                        onGoFirst={this.handleGoFirst}
-                        onGoLast={this.handleGoLast}
-                        onGoNext={this.handleGoNext}
-                        onGoPrevious={this.handleGoPrevious}
-                        onOpenSetUp={this.handleOpenSetUp}
-                        onStart={this.handleStart}
-                        onStop={this.handleStop}
-                        onDownload={this.handleDownload}
-                        openSetUp={this.state.openSetUp}
-                        openSnackbar={this.state.openSnackbar}
-                        parameters={this.state.parameters}
-                        currentRanges={this.state.currentRanges}
-                      />
-                    </Grid>
-
-                    {/* Nyquist*/}
-                    <Grid item key="CookNyquistCard" xs={12} sm={12} md={6}>
-                      <NyquistPanelWrapped cook={this.state.cook} />
-                    </Grid>
-
-                    {/* Bode*/}
-                    <Grid item key="CookBodeCard" xs={12} sm={12} md={6}>
-                      <BodePanelWrapped cook={this.state.cook} />
-                    </Grid>
-
-                    {/* Cook Table */}
-                    <Grid item key="CookTable" xs={12} sm={12} md={12}>
-                      <ZTablePanelWrapped
-                        cook={this.state.cook}
-                        currentRanges={this.state.currentRanges}
-                        scientific={this.state.scientific}
-                      />
-                    </Grid>
+              <main className={classNames(classes.layout)}>
+                <div className={classes.appBarSpacer} />
+                <Grid
+                  container
+                  className={classes.gridContainer}
+                  spacing={40}
+                  layout="row"
+                  alignItems="stretch"
+                >
+                  {/* Aux Voltage/Temperature */}
+                  <Grid item key="AuxCard" xs={12} sm={12} md={4}>
+                    <AuxPanelWrapped
+                      auxData={this.state.auxData}
+                      channel={this.state.channel}
+                      voltageRanges={this.state.voltageRanges}
+                      temperatureSensor={this.state.temperatureSensor}
+                      onClear={this.handleClearAuxData}
+                    />
                   </Grid>
-                </main>
-              </React.Fragment>
+
+                  {/* Cook */}
+                  <Grid item key="CookCard" xs={12} sm={12} md={8}>
+                    <CookPanelWrapped
+                      cookIndex={this.state.cookIndex}
+                      channel={this.state.channel}
+                      cook={this.state.cook}
+                      messageInfo={this.state.messageInfo}
+                      onChangeParameter={this.handleChangeParameter}
+                      onClose={this.handleClose}
+                      onGoFirst={this.handleGoFirst}
+                      onGoLast={this.handleGoLast}
+                      onGoNext={this.handleGoNext}
+                      onGoPrevious={this.handleGoPrevious}
+                      onOpenSetUp={this.handleOpenSetUp}
+                      onStart={this.handleStart}
+                      onStop={this.handleStop}
+                      onDownload={this.handleDownload}
+                      openSetUp={this.state.openSetUp}
+                      openSnackbar={this.state.openSnackbar}
+                      parameters={this.state.parameters}
+                      currentRanges={this.state.currentRanges}
+                    />
+                  </Grid>
+
+                  {/* Nyquist*/}
+                  <Grid item key="CookNyquistCard" xs={12} sm={12} md={6}>
+                    <NyquistPanelWrapped cook={this.state.cook} />
+                  </Grid>
+
+                  {/* Bode*/}
+                  <Grid item key="CookBodeCard" xs={12} sm={12} md={6}>
+                    <BodePanelWrapped cook={this.state.cook} />
+                  </Grid>
+
+                  {/* Cook Table */}
+                  <Grid item key="CookTable" xs={12} sm={12} md={12}>
+                    <ZTablePanelWrapped
+                      cook={this.state.cook}
+                      currentRanges={this.state.currentRanges}
+                      scientific={this.state.scientific}
+                    />
+                  </Grid>
+                </Grid>
+              </main>
             </MuiThemeProvider>
           );
         }

@@ -1,6 +1,7 @@
 import "../bootstrap";
 // --- Post bootstrap -----
 import React from "react";
+import classNames from "classnames";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -601,7 +602,7 @@ class DevicePage extends React.Component {
     const title = this.getTitle(about);
     return (
       <AppContent className={classes.root} title={title}>
-        <div className={clsx(classes.content, classes.layout)}>
+        <div className={classNames(classes.content, classes.layout)}>
           <Grid
             container
             className={classes.gridContainer}
