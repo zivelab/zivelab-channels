@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
 import { format } from "d3-format";
 
 // controls
@@ -12,8 +11,6 @@ import Sparkline from "./Sparkline";
 
 // constants
 import { SYMBOLS } from "../constants";
-
-const styles = theme => ({});
 
 class AuxConsole extends React.Component {
   render() {
@@ -92,4 +89,4 @@ AuxConsole.propTypes = {
   temperatureSensor: PropTypes.string
 };
 
-export default withStyles(styles)(AuxConsole);
+export default AuxConsole;

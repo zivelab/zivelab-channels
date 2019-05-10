@@ -73,158 +73,156 @@ class CookConsole extends React.Component {
       ? format(".2f")(zitem.vdc) + "V"
       : SYMBOLS.NAN + "V";
     return (
-      <React.Fragment>
+      <Grid
+        container
+        spacing={16}
+        direction="row"
+        justify="flex-start"
+        alignItems="center"
+      >
         <Grid
+          item
           container
           spacing={16}
-          direction="row"
+          direction="column"
           justify="flex-start"
-          alignItems="center"
+          alignItems="stretch"
+          xs={12}
+          sm={6}
+          md={6}
         >
           <Grid
             item
             container
-            spacing={16}
-            direction="column"
+            direction="row"
             justify="flex-start"
-            alignItems="stretch"
+            alignItems="baseline"
             xs={12}
-            sm={6}
-            md={6}
+            sm={12}
+            md={12}
           >
+            <Grid item container xs={4} sm={4} md={4}>
+              <Grid item container direction="column" alignItems="flex-start">
+                <Typography gutterBottom variant="h6">
+                  {frequncyExpression}
+                </Typography>
+                <Typography gutterBottom variant="h6">
+                  {auxVExpression}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item container xs={8} sm={8} md={8}>
+              <Grid item container direction="column" alignItems="flex-end">
+                <Typography gutterBottom variant="h5">
+                  {zModulusExpression}
+                </Typography>
+                <Typography gutterBottom variant="h5">
+                  {zPhaseExpression}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Divider variant="middle" />
+          {isRunning ? (
             <Grid
               item
               container
               direction="row"
               justify="flex-start"
-              alignItems="baseline"
+              alignItems="center"
               xs={12}
               sm={12}
               md={12}
             >
-              <Grid item container xs={4} sm={4} md={4}>
-                <Grid item container direction="column" alignItems="flex-start">
+              <Grid item container xs={6} sm={6} md={6}>
+                <Grid item container>
                   <Typography gutterBottom variant="h6">
-                    {frequncyExpression}
-                  </Typography>
-                  <Typography gutterBottom variant="h6">
-                    {auxVExpression}
+                    {durationFormat(channel.elapsedTime)}
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid item container xs={8} sm={8} md={8}>
-                <Grid item container direction="column" alignItems="flex-end">
-                  <Typography gutterBottom variant="h5">
-                    {zModulusExpression}
-                  </Typography>
-                  <Typography gutterBottom variant="h5">
-                    {zPhaseExpression}
-                  </Typography>
+              <Grid item container xs={6} sm={6} md={6}>
+                <Grid
+                  item
+                  container
+                  direction="column"
+                  justify="center"
+                  alignItems="stretch"
+                >
+                  <div className={classes.linearProgress}>
+                    <LinearProgress
+                      variant="determinate"
+                      value={channel.progress}
+                    />
+                  </div>
                 </Grid>
               </Grid>
             </Grid>
-            <Divider variant="middle" />
-            {isRunning ? (
-              <Grid
-                item
-                container
-                direction="row"
-                justify="flex-start"
-                alignItems="center"
-                xs={12}
-                sm={12}
-                md={12}
+          ) : (
+            <Grid
+              item
+              container
+              direction="row"
+              justify="space-evenly"
+              alignItems="center"
+              xs={12}
+              sm={12}
+              md={12}
+            >
+              <IconButton
+                aria-label="GoFirst"
+                onClick={onGoFirst}
+                disabled={!isIdle || cookIndex <= 0}
               >
-                <Grid item container xs={6} sm={6} md={6}>
-                  <Grid item container>
-                    <Typography gutterBottom variant="h6">
-                      {durationFormat(channel.elapsedTime)}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid item container xs={6} sm={6} md={6}>
-                  <Grid
-                    item
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="stretch"
-                  >
-                    <div className={classes.linearProgress}>
-                      <LinearProgress
-                        variant="determinate"
-                        value={channel.progress}
-                      />
-                    </div>
-                  </Grid>
-                </Grid>
-              </Grid>
-            ) : (
-              <Grid
-                item
-                container
-                direction="row"
-                justify="space-evenly"
-                alignItems="center"
-                xs={12}
-                sm={12}
-                md={12}
+                <Tooltip title="Go first">
+                  <Icon fontSize="default">first_page</Icon>
+                </Tooltip>
+              </IconButton>
+
+              <IconButton
+                aria-label="GoPrevious"
+                onClick={onGoPrevious}
+                disabled={!isIdle || cookIndex <= 0}
               >
-                <IconButton
-                  aria-label="GoFirst"
-                  onClick={onGoFirst}
-                  disabled={!isIdle || cookIndex <= 0}
-                >
-                  <Tooltip title="Go first">
-                    <Icon fontSize="default">first_page</Icon>
-                  </Tooltip>
-                </IconButton>
+                <Tooltip title="Go previous">
+                  <Icon fontSize="default">chevron_left</Icon>
+                </Tooltip>
+              </IconButton>
 
-                <IconButton
-                  aria-label="GoPrevious"
-                  onClick={onGoPrevious}
-                  disabled={!isIdle || cookIndex <= 0}
-                >
-                  <Tooltip title="Go previous">
-                    <Icon fontSize="default">chevron_left</Icon>
-                  </Tooltip>
-                </IconButton>
+              <IconButton
+                aria-label="GoNext"
+                onClick={onGoNext}
+                disabled={
+                  !isIdle ||
+                  cookIndex < 0 ||
+                  (cooked && cookIndex >= cooked.length - 1)
+                }
+              >
+                <Tooltip title="Go next">
+                  <Icon fontSize="default">chevron_right</Icon>
+                </Tooltip>
+              </IconButton>
 
-                <IconButton
-                  aria-label="GoNext"
-                  onClick={onGoNext}
-                  disabled={
-                    !isIdle ||
-                    cookIndex < 0 ||
-                    (cooked && cookIndex >= cooked.length - 1)
-                  }
-                >
-                  <Tooltip title="Go next">
-                    <Icon fontSize="default">chevron_right</Icon>
-                  </Tooltip>
-                </IconButton>
-
-                <IconButton
-                  aria-label="GoLast"
-                  onClick={onGoLast}
-                  disabled={
-                    !isIdle ||
-                    cookIndex < 0 ||
-                    (cooked && cookIndex >= cooked.length - 1)
-                  }
-                >
-                  <Tooltip title="Go last">
-                    <Icon fontSize="default">last_page</Icon>
-                  </Tooltip>
-                </IconButton>
-              </Grid>
-            )}
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-            <LissajousCurve channel={channel} cook={cook} index={cookIndex} />
-          </Grid>
+              <IconButton
+                aria-label="GoLast"
+                onClick={onGoLast}
+                disabled={
+                  !isIdle ||
+                  cookIndex < 0 ||
+                  (cooked && cookIndex >= cooked.length - 1)
+                }
+              >
+                <Tooltip title="Go last">
+                  <Icon fontSize="default">last_page</Icon>
+                </Tooltip>
+              </IconButton>
+            </Grid>
+          )}
         </Grid>
-      </React.Fragment>
+        <Grid item xs={12} sm={6} md={6}>
+          <LissajousCurve channel={channel} cook={cook} index={cookIndex} />
+        </Grid>
+      </Grid>
     );
   }
 }

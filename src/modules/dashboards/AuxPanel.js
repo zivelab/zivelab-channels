@@ -34,31 +34,29 @@ class AuxPanel extends React.Component {
       temperatureSensor
     } = this.props;
     return (
-      <React.Fragment>
-        <Card>
-          <CardHeader
-            //title="Aux. Readings"
-            subheader="Aux. Readings"
-            action={
-              <div className={classes.cardControls}>
-                <IconButton aria-label="Clear" onClick={onClear}>
-                  <Tooltip title="Clear">
-                    <ClearAllIcon fontSize="large" />
-                  </Tooltip>
-                </IconButton>
-              </div>
-            }
+      <Card>
+        <CardHeader
+          //title="Aux. Readings"
+          subheader="Aux. Readings"
+          action={
+            <div className={classes.cardControls}>
+              <IconButton aria-label="Clear" onClick={onClear}>
+                <Tooltip title="Clear">
+                  <ClearAllIcon fontSize="large" />
+                </Tooltip>
+              </IconButton>
+            </div>
+          }
+        />
+        <CardContent>
+          <AuxConsole
+            auxData={auxData}
+            channel={channel}
+            voltageRanges={voltageRanges}
+            temperatureSensor={temperatureSensor}
           />
-          <CardContent>
-            <AuxConsole
-              auxData={auxData}
-              channel={channel}
-              voltageRanges={voltageRanges}
-              temperatureSensor={temperatureSensor}
-            />
-          </CardContent>
-        </Card>
-      </React.Fragment>
+        </CardContent>
+      </Card>
     );
   }
 }

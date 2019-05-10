@@ -1,8 +1,6 @@
 import "../bootstrap";
 // --- Post bootstrap -----
 import React from "react";
-import classNames from "classnames";
-import clsx from "clsx";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
@@ -11,6 +9,7 @@ import moment from "moment";
 
 //controls
 import Grid from "@material-ui/core/Grid";
+import Hidden from "@material-ui/core/Hidden";
 
 // components
 import AppContent from "../modules/components/AppContent";
@@ -27,27 +26,8 @@ import { exportTableToCsv } from "../modules/utils/object";
 
 const styles = theme => ({
   root: {
-    marginBottom: 100
-  },
-  content: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
-    padding: (0, theme.spacing.unit * 2)
-  },
-  gridContainer: {
     width: "100%",
     margin: 0
-  },
-  layout: {
-    width: "auto",
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(900 + theme.spacing.unit * 3 * 2)]: {
-      width: 900,
-      marginLeft: "auto",
-      marginRight: "auto"
-    }
-    //paddingTop: 65, // appBar.height
   },
   textField: {
     marginLeft: theme.spacing.unit,
@@ -601,55 +581,56 @@ class DevicePage extends React.Component {
     const { scientific } = this.state;
     const title = this.getTitle(about);
     return (
-      <AppContent className={classes.root} title={title}>
-        <div className={classNames(classes.content, classes.layout)}>
-          <Grid
-            container
-            className={classes.gridContainer}
-            spacing={40}
-            layout="row"
-            alignItems="stretch"
-          >
-            {/* Aux Voltage/Temperature */}
-            <Grid item key="AuxCard" xs={12} sm={12} md={4}>
-              <AuxPanel
-                auxData={auxData}
-                channel={channel}
-                onClear={this.handleClearAuxData}
-                voltageRanges={voltageRanges}
-                temperatureSensor={temperatureSensor}
-              />
-            </Grid>
+      <AppContent title={title} responsive>
+        <Grid
+          container
+          className={classes.root}
+          spacing={40}
+          layout="row"
+          alignItems="stretch"
+        >
+          {/* Aux Voltage/Temperature */}
+          <Grid item key="AuxCard" xs={12} sm={12} md={4}>
+            <AuxPanel
+              auxData={auxData}
+              channel={channel}
+              onClear={this.handleClearAuxData}
+              voltageRanges={voltageRanges}
+              temperatureSensor={temperatureSensor}
+            />
+          </Grid>
 
-            {/* Cook */}
-            <Grid item key="CookCard" xs={12} sm={12} md={8}>
-              <CookPanel
-                channel={channel}
-                cook={cook}
-                cookIndex={cookIndex}
-                parameters={parameters}
-                onGoFirst={this.handleGoFirst}
-                onGoLast={this.handleGoLast}
-                onGoNext={this.handleGoNext}
-                onGoPrevious={this.handleGoPrevious}
-                onStart={this.handleStart}
-                onStop={this.handleStop}
-                onDownload={this.handleDownload}
-                onChange={this.handleChange}
-              />
-            </Grid>
+          {/* Cook */}
+          <Grid item key="CookCard" xs={12} sm={12} md={8}>
+            <CookPanel
+              channel={channel}
+              cook={cook}
+              cookIndex={cookIndex}
+              parameters={parameters}
+              onGoFirst={this.handleGoFirst}
+              onGoLast={this.handleGoLast}
+              onGoNext={this.handleGoNext}
+              onGoPrevious={this.handleGoPrevious}
+              onStart={this.handleStart}
+              onStop={this.handleStop}
+              onDownload={this.handleDownload}
+              onChange={this.handleChange}
+            />
+          </Grid>
 
-            {/* Nyquist*/}
-            <Grid item key="CookNyquistCard" xs={12} sm={12} md={6}>
-              <NyquistPanel cook={this.state.cook} />
-            </Grid>
+          {/* Nyquist */}
+          <Grid item key="CookNyquistCard" xs={12} sm={12} md={6}>
+            <NyquistPanel cook={this.state.cook} />
+          </Grid>
 
-            {/* Bode*/}
-            <Grid item key="CookBodeCard" xs={12} sm={12} md={6}>
-              <BodePanel cook={this.state.cook} />
-            </Grid>
+          {/* Bode */}
+          <Grid item key="CookBodeCard" xs={12} sm={12} md={6}>
+            <BodePanel cook={this.state.cook} />
+          </Grid>
 
-            {/* Cook Table */}
+          {/* Cook Table */}
+          {/* [TODO] I can't resolve that table is overflowed its parent. */}
+          <Hidden mdDown implementation="js">
             <Grid item key="CookTable" xs={12} sm={12} md={12}>
               <ZTablePanel
                 cook={this.state.cook}
@@ -657,8 +638,8 @@ class DevicePage extends React.Component {
                 scientific={scientific}
               />
             </Grid>
-          </Grid>
-        </div>
+          </Hidden>
+        </Grid>
       </AppContent>
     );
   }

@@ -9,6 +9,7 @@ import regression from "regression";
 import copy from "clipboard-copy";
 
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -25,14 +26,6 @@ import { changeAbout } from "../../../modules/redux/actions";
 import { isEmpty } from "../../../modules/utils/object";
 
 const styles = theme => ({
-  root: {
-    marginBottom: 100
-  },
-  content: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
-    padding: (0, theme.spacing.unit * 2)
-  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
@@ -41,8 +34,10 @@ const styles = theme => ({
   button: {
     margin: theme.spacing.unit
   },
-  table: {
-    minWidth: 700
+  paper: {
+    width: "100%",
+    maxWidth: 800,
+    overflowX: "auto"
   }
 });
 
@@ -129,155 +124,171 @@ class LinearRegressionPage extends Component {
     const { itemX, itemY, rows } = this.state;
     const { offset, slope, rSquare } = this.state;
     return (
-      <AppContent className={classes.root} title="Linear Regression">
-        <div className={classes.content}>
-          <Typography variant="h4" gutterBottom>
-            Model
-          </Typography>
-          <p />
-          <Typography
-            component="h2"
-            variant="h5"
-            color="textSecondary"
-            gutterBottom
-          >
-            y = &beta;0 + &beta;1 x + &epsilon;
-          </Typography>
-          <Typography variant="subtitle1" gutterBottom>
-            where &beta;0 is the offset, &beta;1 is the slope, and &epsilon; is
-            the error term.
-          </Typography>
-          <p />
-          <Typography variant="h4" gutterBottom>
-            Input Values
-          </Typography>
-          <p />
-          <TextField
-            id="new-item-x"
-            key="new-item-x"
-            label="Measured, x"
-            className={classes.textField}
-            type="number"
-            value={this.toPrettyString(itemX)}
-            onChange={this.handleChange("itemX")}
-            margin="normal"
-          />
-          <TextField
-            id="new-item-y"
-            key="new-item-y"
-            label="True, y"
-            className={classes.textField}
-            type="number"
-            value={this.toPrettyString(itemY)}
-            onChange={this.handleChange("itemY")}
-            margin="normal"
-          />
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={this.handleAddRow}
-            disabled={!this.validRow()}
-          >
-            Add
-          </Button>
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={this.handleClear}
-            disabled={rows.length < 1}
-          >
-            Clear List
-          </Button>
-          <p />
-          <Typography variant="h4" gutterBottom>
-            Parameters
-          </Typography>
-          <p />
-          <TextField
-            id="result-offset"
-            key="result-offset"
-            label="Offset"
-            className={classes.textField}
-            value={this.toPrettyString(offset, 6)}
-            margin="normal"
-            InputLabelProps={{ shrink: true }}
-            inputProps={{
-              readOnly: true
-            }}
-          />
-          <TextField
-            id="result-slope"
-            key="result-slope"
-            label="Slope"
-            className={classes.textField}
-            value={this.toPrettyString(slope, 6)}
-            margin="normal"
-            InputLabelProps={{ shrink: true }}
-            inputProps={{
-              readOnly: true
-            }}
-          />
-          <Button
-            color="primary"
-            onClick={this.handleCopy}
-            disabled={Number.isNaN(offset)}
-          >
-            Copy to Clipboard
-          </Button>
-          <p />
-          <Typography variant="h4" gutterBottom>
-            Statistics
-          </Typography>
-          <TextField
-            id="result-dof"
-            key="result-dof"
-            label="Degrees of Freedom"
-            className={classes.textField}
-            value={rows.length > 1 ? rows.length - 2 : ""}
-            margin="normal"
-            InputLabelProps={{ shrink: true }}
-            inputProps={{
-              readOnly: true
-            }}
-          />
-          <TextField
-            id="result-rsq"
-            key="result-rsq"
-            label="R-Square(COD)"
-            className={classes.textField}
-            value={this.toPrettyString(rSquare, 6)}
-            margin="normal"
-            InputLabelProps={{ shrink: true }}
-            inputProps={{
-              readOnly: true
-            }}
-          />
-          <p />
-          <Typography variant="h4" gutterBottom>
-            Data Set
-          </Typography>
-          <p />
-          <Paper>
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Pt</TableCell>
-                  <TableCell>X</TableCell>
-                  <TableCell>Y</TableCell>
+      <AppContent title="Linear Regression">
+        <Typography variant="h2" gutterBottom>
+          Model
+        </Typography>
+        <p />
+        <Typography
+          component="h2"
+          variant="h5"
+          color="textSecondary"
+          gutterBottom
+        >
+          y = &beta;0 + &beta;1 x + &epsilon;
+        </Typography>
+        <Typography variant="subtitle1" gutterBottom>
+          where &beta;0 is the offset, &beta;1 is the slope, and &epsilon; is
+          the error term.
+        </Typography>
+        <p />
+        <Typography variant="h4" gutterBottom>
+          Input Values
+        </Typography>
+        <p />
+        <Grid container spacing={24}>
+          <Grid item>
+            <TextField
+              id="new-item-x"
+              key="new-item-x"
+              label="Measured, x"
+              className={classes.textField}
+              type="number"
+              value={this.toPrettyString(itemX)}
+              onChange={this.handleChange("itemX")}
+              margin="normal"
+            />
+            <TextField
+              id="new-item-y"
+              key="new-item-y"
+              label="True, y"
+              className={classes.textField}
+              type="number"
+              value={this.toPrettyString(itemY)}
+              onChange={this.handleChange("itemY")}
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs>
+            <Button
+              variant="contained"
+              className={classes.button}
+              onClick={this.handleAddRow}
+              disabled={!this.validRow()}
+            >
+              Add
+            </Button>
+            <Button
+              variant="contained"
+              className={classes.button}
+              onClick={this.handleClear}
+              disabled={rows.length < 1}
+            >
+              Clear List
+            </Button>
+          </Grid>
+        </Grid>
+        <p />
+        <Typography variant="h4" gutterBottom>
+          Parameters
+        </Typography>
+        <p />
+        <Grid container spacing={24}>
+          <Grid item>
+            <TextField
+              id="result-offset"
+              key="result-offset"
+              label="Offset"
+              className={classes.textField}
+              value={this.toPrettyString(offset, 6)}
+              margin="normal"
+              InputLabelProps={{ shrink: true }}
+              inputProps={{
+                readOnly: true
+              }}
+            />
+            <TextField
+              id="result-slope"
+              key="result-slope"
+              label="Slope"
+              className={classes.textField}
+              value={this.toPrettyString(slope, 6)}
+              margin="normal"
+              InputLabelProps={{ shrink: true }}
+              inputProps={{
+                readOnly: true
+              }}
+            />
+          </Grid>
+          <Grid item xs>
+            <Button
+              color="primary"
+              onClick={this.handleCopy}
+              disabled={Number.isNaN(offset)}
+            >
+              Copy to Clipboard
+            </Button>
+          </Grid>
+        </Grid>
+        <p />
+        <Typography variant="h4" gutterBottom>
+          Statistics
+        </Typography>
+        <p />
+        <Grid container spacing={24}>
+          <Grid item>
+            <TextField
+              id="result-dof"
+              key="result-dof"
+              label="Degrees of Freedom"
+              className={classes.textField}
+              value={rows.length > 1 ? rows.length - 2 : ""}
+              margin="normal"
+              InputLabelProps={{ shrink: true }}
+              inputProps={{
+                readOnly: true
+              }}
+            />
+            <TextField
+              id="result-rsq"
+              key="result-rsq"
+              label="R-Square(COD)"
+              className={classes.textField}
+              value={this.toPrettyString(rSquare, 6)}
+              margin="normal"
+              InputLabelProps={{ shrink: true }}
+              inputProps={{
+                readOnly: true
+              }}
+            />
+          </Grid>
+        </Grid>
+        <p />
+        <Typography variant="h4" gutterBottom>
+          Data Set
+        </Typography>
+        <p />
+
+        <Paper className={classes.paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Pt</TableCell>
+                <TableCell>X</TableCell>
+                <TableCell>Y</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row, index) => (
+                <TableRow key={(index + 1).toString()}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{row[0]}</TableCell>
+                  <TableCell>{row[1]}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row, index) => (
-                  <TableRow key={(index + 1).toString()}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{row[0]}</TableCell>
-                    <TableCell>{row[1]}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Paper>
-        </div>
+              ))}
+            </TableBody>
+          </Table>
+        </Paper>
       </AppContent>
     );
   }

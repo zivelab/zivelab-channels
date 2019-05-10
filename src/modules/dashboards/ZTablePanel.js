@@ -20,14 +20,22 @@ import Typography from "@material-ui/core/Typography";
 import { SYMBOLS } from "../constants";
 
 const styles = theme => ({
-  tableContainer: {
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular
+  },
+  root: {
+    width: "100%",
+    overflowX: "auto"
+  },
+  paper: {
     width: "100%",
     marginTop: theme.spacing.unit * 3,
+    paddingLeft: 10,
     overflowX: "auto"
   },
   table: {
-    fontFamily: theme.typography.fontFamily,
-    width: "100%"
+    fontFamily: theme.typography.fontFamily
   },
   tableRow: {
     cursor: "pointer"
@@ -43,7 +51,7 @@ class ZTablePanel extends React.Component {
     const cooked = cook ? cook.data : null;
     const started = cook && cook.started ? cook.started.moment : null;
     const titleExpression = started
-      ? "Impedance data, measured at " +
+      ? "Impedance table, measured at " +
         started.format("HH:mm:ss") +
         " on " +
         started.format("YYYY-MM-DD")
@@ -58,7 +66,7 @@ class ZTablePanel extends React.Component {
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Paper className={classes.tableContainer}>
+            <Paper className={classes.paper}>
               <Table className={classes.table} id="cook-table" key="cook-table">
                 <TableHead>
                   <TableRow key="thead">

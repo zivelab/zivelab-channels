@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import clsx from "clsx";
+import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -11,14 +11,20 @@ import { changeTitle } from "../redux/actions";
 const styles = theme => ({
   root: {
     flex: "1 1 100%",
-    maxWidth: "100%",
-    [theme.breakpoints.up("sm")]: {
-      paddingRight: theme.spacing.unit * 1
-    },
-    [theme.breakpoints.up("lg")]: {
-      paddingLeft: theme.spacing.unit * 1,
-      paddingRight: theme.spacing.unit * 5
+    width: "auto",
+    padding: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 3
+  },
+  wrap: {
+    width: "calc(100% - 48px)",
+    [theme.breakpoints.up(900 + theme.spacing.unit * 3 * 2)]: {
+      width: 900,
+      marginLeft: "auto",
+      marginRight: "auto"
     }
+  },
+  bottomSpacer: {
+    marginBottom: 100
   }
 });
 
@@ -46,8 +52,19 @@ class AppContent extends React.Component {
   }
 
   render() {
-    const { className, classes, children } = this.props;
-    return <div className={clsx(classes.root, className)}>{children}</div>;
+    const { className, classes, children, responsive } = this.props;
+    return (
+      <div
+        className={classNames(
+          classes.root,
+          classes.bottomSpacer,
+          { [classes.wrap]: responsive },
+          className
+        )}
+      >
+        {children}
+      </div>
+    );
   }
 }
 
@@ -55,7 +72,12 @@ AppContent.propTypes = {
   children: PropTypes.node.isRequired,
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  responsive: PropTypes.bool
+};
+
+AppContent.defaultProps = {
+  responsive: false
 };
 
 const mapStateToProps = state => ({

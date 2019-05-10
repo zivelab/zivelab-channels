@@ -2,7 +2,6 @@ import "../../bootstrap";
 // --- Post bootstrap -----
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
@@ -10,20 +9,8 @@ import AppContent from "../../modules/components/AppContent";
 import Markdown from "../../modules/components/Markdown";
 import Page from "../../docs/pages/getting-started/about.md";
 
-import compose from "../../modules/utils/compose";
 import { isEmpty } from "../../modules/utils/object";
 import { changeAbout } from "../../modules/redux/actions";
-
-const styles = theme => ({
-  root: {
-    marginBottom: 100
-  },
-  markdown: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
-    padding: (0, theme.spacing.unit * 2)
-  }
-});
 
 class AboutPage extends Component {
   state = {
@@ -46,18 +33,16 @@ class AboutPage extends Component {
   }
 
   render() {
-    const { classes } = this.props;
     const { md } = this.state;
     return (
-      <AppContent className={classes.root} title="About">
-        <Markdown className={classes.markdown} markdown={md} />
+      <AppContent title="About">
+        <Markdown markdown={md} />
       </AppContent>
     );
   }
 }
 
 AboutPage.propTypes = {
-  classes: PropTypes.object.isRequired,
   reduxAbout: PropTypes.object.isRequired
 };
 
@@ -68,10 +53,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ changeAbout }, dispatch);
 
-export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  withStyles(styles)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
 )(AboutPage);
