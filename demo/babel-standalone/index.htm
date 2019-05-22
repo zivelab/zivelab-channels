@@ -346,6 +346,7 @@
         frequencyRanges: "Frequency Ranges",
         voltageRanges: "Voltage Ranges",
         currentRanges: "Current Ranges",
+        maxPowerRating: "Max Power Rating",
         temperatureSensor: "Temperature Sensor",
         macAddress: "Mac Address",
         ipAddress: "IP Address",
@@ -2186,6 +2187,7 @@
             if (aboutJson) {
               aboutJson.hostName = aboutJson.hostName || "Untitled";
               aboutJson.configureIPv4 = aboutJson.configureIPv4 || "Using DHCP";
+              aboutJson.maxPowerRating = aboutJson.maxPowerRating || "40W";
               const voltageRanges = aboutJson.voltageRanges
                 .split("/")
                 .map((range, index) => {

@@ -278,6 +278,7 @@ class DevicePage extends React.Component {
       if (aboutJson) {
         aboutJson.hostName = aboutJson.hostName || "Untitled";
         aboutJson.configureIPv4 = aboutJson.configureIPv4 || "Using DHCP";
+        aboutJson.maxPowerRating = aboutJson.maxPowerRating || "40W";
         const voltageRanges = aboutJson.voltageRanges
           .split("/")
           .map((range, index) => {

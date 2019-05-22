@@ -55,23 +55,24 @@ class AboutButton extends React.Component {
       "Reserved. Please use the windows app to update firmware/app."
     );
 
-    /*
     const { versions } = this.state;
     const { about } = this.props;
     if (!versions || !about) return;
 
-    if (compareVersion(versions.sifFirmware, about.sifFirmware) > 0) {
-      await this.updateSifFirmware(versions.sifFirmwarePath);
-    }
+    this.props.actions.snackbar.enqueueSnackbar("Updating SIF firmware.");
+    //if (compareVersion(versions.sifFirmware, about.sifFirmware) > 0) {
+    await this.updateSifFirmware(versions.sifFirmwarePath);
+    //}
 
-    if (compareVersion(versions.zimFirmware, about.zimFirmware) > 0) {
-      await this.updateZimFirmware(versions.zimFirmwarePath);
-    }
+    this.props.actions.snackbar.enqueueSnackbar("Updating ZIM firmware.");
+    //if (compareVersion(versions.zimFirmware, about.zimFirmware) > 0) {
+    await this.updateZimFirmware(versions.zimFirmwarePath);
+    //}
 
-    if (compareVersion(versions.embeddedWebApp, about.embeddedWebApp) > 0) {
-      await this.updateAppContents(versions.embeddedWebAppPaths);
-    }
-    */
+    this.props.actions.snackbar.enqueueSnackbar("Updating Web App.");
+    //if (compareVersion(versions.embeddedWebApp, about.embeddedWebApp) > 0) {
+    await this.updateAppContents(versions.embeddedWebAppPaths);
+    //}
   };
 
   updateSifFirmware = async source => {

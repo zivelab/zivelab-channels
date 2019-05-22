@@ -33,6 +33,7 @@ const aboutLabels = {
   frequencyRanges: "Frequency Ranges",
   voltageRanges: "Voltage Ranges",
   currentRanges: "Current Ranges",
+  maxPowerRating: "Max Power Rating",
   temperatureSensor: "Temperature Sensor",
   configureIPv4: "Configure IPv4",
   ipAddress: "IPv4 Address",

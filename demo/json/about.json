@@ -5,6 +5,7 @@
   "frequencyRanges": "4kHz to 0.1Hz",
   "voltageRanges": "1000V/100V",
   "currentRanges": "2A/400mA/200mA/40mA/20mA/4mA/2mA/400uA",
+  "maxPowerRating": "40W",
   "temperatureSensor": "PT100",
   "configureIPv4": "Using DHCP",
   "ipAddress": "192.168.0.6",

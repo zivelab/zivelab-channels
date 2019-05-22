@@ -1,7 +1,7 @@
 {
   "name": "EmbeddedWebApp",
-  "description": "Web App running on SIF2 and ZIM",
-  "version": "0.1.0.4",
-  "releaseDate": "2019-05-09",
+  "description": "Web App running on BZA1000",
+  "version": "0.1.0.5",
+  "releaseDate": "2019-05-22",
   "path": "index.htm"
 }
