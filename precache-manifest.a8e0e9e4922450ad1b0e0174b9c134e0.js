@@ -12,8 +12,8 @@ self.__precacheManifest = [
     "url": "/zivelab-channels/static/js/runtime~main.149fc12e.js"
   },
   {
-    "revision": "cce37787fa861fb9650c",
-    "url": "/zivelab-channels/static/js/main.43a85850.chunk.js"
+    "revision": "627ca820cd6e63387334",
+    "url": "/zivelab-channels/static/js/main.fd2d9bf3.chunk.js"
   },
   {
     "revision": "3998a42a6c7d5f51ed2f",
@@ -24,7 +24,7 @@ self.__precacheManifest = [
     "url": "/zivelab-channels/static/css/2.24554e6e.chunk.css"
   },
   {
-    "revision": "3ec729bf09b4b1c54edf575e45f0f130",
+    "revision": "230502aedb36ab838c358657697786c2",
     "url": "/zivelab-channels/index.html"
   }
 ];
