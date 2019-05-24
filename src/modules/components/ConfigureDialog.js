@@ -18,8 +18,8 @@ import { validateIPaddress } from "../utils/net";
 
 const styles = theme => ({
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
     width: 200
   },
   menu: {
@@ -267,6 +267,9 @@ class ConfigureDialog extends React.Component {
               </div>
             </DialogContent>
             <DialogActions>
+              <Button onClick={this.handleClose} color="default">
+                Cancel
+              </Button>
               <Button
                 color="primary"
                 onClick={this.handleClick}

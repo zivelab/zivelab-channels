@@ -18,7 +18,7 @@ const styles = theme => ({
   cardControls: {
     display: "flex",
     alignItems: "center",
-    paddingLeft: theme.spacing.unit
+    paddingLeft: theme.spacing(1)
   }
 });
 
@@ -44,20 +44,20 @@ class CookPanel extends React.Component {
       onChange,
       currentRanges
     } = this.props;
-    const isIdle = channel ? channel.isIdle : false;
-    const isRunning = channel ? channel.isRunning : false;
-    const isRunningNoiseLevel = channel ? channel.isRunningNoiseLevel : false;
-    const isTooHot = channel ? channel.isTooHot : false;
-    const isFailed = channel ? channel.isFailed : false;
+    const ready = channel ? channel.isIdle : false;
+    const running = channel ? channel.isRunning : false;
+    const measuringNoiseLevel = channel ? channel.isRunningNoiseLevel : false;
+    const tooHot = channel ? channel.isTooHot : false;
+    const somethingWrong = channel ? channel.isFailed : false;
     const started =
       cook && cook.started && cook.started.moment ? cook.started.moment : null;
-    const stateExpression = isRunning
+    const stateExpression = running
       ? "Measuring @ " + format(".4s")(channel.stepFrequency) + frequencySign
-      : isRunningNoiseLevel
+      : measuringNoiseLevel
       ? "Measuring noise level..."
-      : isTooHot
+      : tooHot
       ? "Heat sink is very hot..."
-      : isFailed
+      : somethingWrong
       ? "Something wrong, check cables..."
       : cook && cook.data.length > 0
       ? "Cooked, " + started.fromNow()
@@ -71,15 +71,15 @@ class CookPanel extends React.Component {
           action={
             <div className={classes.cardControls}>
               <StartExpButton
-                disabled={!isIdle && !isFailed}
+                disabled={!ready}
                 parameters={parameters}
                 onStart={onStart}
                 onChange={onChange}
                 currentRanges={currentRanges}
               />
-              <StopExpButton disabled={!isRunning} onStop={onStop} />
+              <StopExpButton disabled={!running} onStop={onStop} />
               <DownloadButton
-                disabled={!isIdle || !cook || cook.data.length < 1}
+                disabled={!ready || !cook || cook.data.length < 1}
                 onDownload={onDownload}
               />
             </div>

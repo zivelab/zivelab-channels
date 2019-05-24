@@ -7,9 +7,9 @@ import { getContents } from "../utils/parseMarkdown";
 
 const styles = theme => ({
   markdownElement: {
-    marginTop: theme.spacing.unit * 2, //theme.spacing(2),
-    marginBottom: theme.spacing.unit * 2, //theme.spacing(2),
-    padding: (0, theme.spacing.unit) //theme.spacing(0, 1)
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(0, 1) // (0, theme.spacing.unit)
   }
 });
 

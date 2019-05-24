@@ -31,7 +31,9 @@ class ListItemLink extends React.Component {
     }
   }
 
-  renderLink = itemProps => <Link to={this.props.to} {...itemProps} />;
+  renderLink = React.forwardRef((itemProps, ref) => (
+    <Link to={this.props.to} {...itemProps} ref={ref} />
+  ));
 
   render() {
     const {

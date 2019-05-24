@@ -16,13 +16,14 @@ import InfoIcon from "@material-ui/icons/Info";
 import AboutDialog from "./AboutDialog";
 
 // functions
+// eslint-disable-next-line
 import { isEmpty, compareVersion, asyncForEach } from "../utils/object";
 import { enqueueSnackbar } from "../redux/actions";
 import compose from "../utils/compose";
 
 const styles = theme => ({
   badge: {
-    padding: 0 //`0 ${theme.spacing.unit * 2}px`
+    padding: 0 //`0 ${theme.spacing(2)}px`
   }
 });
 
@@ -55,26 +56,29 @@ class AboutButton extends React.Component {
       "Reserved. Please use the windows app to update firmware/app."
     );
 
-    const { versions } = this.state;
-    const { about } = this.props;
-    if (!versions || !about) return;
+    return;
 
-    this.props.actions.snackbar.enqueueSnackbar("Updating SIF firmware.");
+    //const { versions } = this.state;
+    //const { about } = this.props;
+    //if (!versions || !about) return;
+
+    //this.props.actions.snackbar.enqueueSnackbar("Updating SIF firmware.");
     //if (compareVersion(versions.sifFirmware, about.sifFirmware) > 0) {
-    await this.updateSifFirmware(versions.sifFirmwarePath);
+    //await this.updateSifFirmware(versions.sifFirmwarePath);
     //}
 
-    this.props.actions.snackbar.enqueueSnackbar("Updating ZIM firmware.");
+    //this.props.actions.snackbar.enqueueSnackbar("Updating ZIM firmware.");
     //if (compareVersion(versions.zimFirmware, about.zimFirmware) > 0) {
-    await this.updateZimFirmware(versions.zimFirmwarePath);
+    //await this.updateZimFirmware(versions.zimFirmwarePath);
     //}
 
-    this.props.actions.snackbar.enqueueSnackbar("Updating Web App.");
+    //this.props.actions.snackbar.enqueueSnackbar("Updating Web App.");
     //if (compareVersion(versions.embeddedWebApp, about.embeddedWebApp) > 0) {
-    await this.updateAppContents(versions.embeddedWebAppPaths);
+    //await this.updateAppContents(versions.embeddedWebAppPaths);
     //}
   };
 
+  /*
   updateSifFirmware = async source => {
     if (!this.props.about || !source) return;
 
@@ -83,20 +87,29 @@ class AboutButton extends React.Component {
       const sourceFetch = await fetch(source, {
         signal: this.controller.signal
       });
-      const sourceBlob = await sourceFetch.blob();
-      if (sourceBlob) {
+      const content = await sourceFetch.blob();
+
+      if (content) {
+        const file = new File([content], "sif.bin");
+
         var formData = new FormData();
-        formData.append("sif", sourceBlob, "sif.bin");
+        formData.append("content", file);
+
         const targetURL = "http://" + ipAddress + "/update?target=sif";
         const settings = {
           method: "POST",
           body: formData,
           signal: this.controller.signal
         };
+
         const response = await fetch(targetURL, settings);
         if (response.ok) {
           this.props.actions.snackbar.enqueueSnackbar(
             "SIF firmware updated successfully."
+          );
+        } else {
+          this.props.actions.snackbar.enqueueSnackbar(
+            "Fail to update SIF firmware."
           );
         }
       }
@@ -182,6 +195,8 @@ class AboutButton extends React.Component {
       console.log(e);
     }
   };
+
+  */
 
   componentDidMount = async () => {
     await this.loadVersionsAsync();

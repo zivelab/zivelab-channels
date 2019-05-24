@@ -19,7 +19,7 @@ const styles = theme => ({
   cardControls: {
     display: "flex",
     alignItems: "center",
-    paddingLeft: theme.spacing.unit
+    paddingLeft: theme.spacing(1)
   }
 });
 

@@ -22,7 +22,7 @@ const styles = theme => ({
   },
   toolbar: {
     ...theme.mixins.toolbar,
-    paddingLeft: theme.spacing.unit * 3,
+    paddingLeft: theme.spacing(3),
     display: "flex",
     flexGrow: 1,
     flexDirection: "column",
@@ -39,7 +39,7 @@ class AppDrawer extends React.Component {
     return (
       <div className={classes.nav}>
         <div className={classes.toolbar} />
-        <AppDrawerContents onClick={onClose} />
+        {<AppDrawerContents onClick={onClose} />}
       </div>
     );
   };
