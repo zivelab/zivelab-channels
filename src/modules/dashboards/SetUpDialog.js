@@ -3,18 +3,18 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
 // controls
+import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
-import TextField from "@material-ui/core/TextField";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
 import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
 
 const styles = theme => ({
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
     width: 200
   },
   menu: {
@@ -90,6 +90,7 @@ class SetUpDialog extends React.Component {
                 label="Current Range"
                 select
                 value={parameters.currentRange}
+                //helperText="Limited to rated output current, max power rating divided by battery voltage"
                 margin="dense"
                 className={classes.textField}
                 onChange={e => onChange(e, "currentRange")}
@@ -116,11 +117,11 @@ class SetUpDialog extends React.Component {
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={onStart} color="primary">
-                Start
-              </Button>
               <Button onClick={onClose} color="default">
                 Cancel
+              </Button>
+              <Button onClick={onStart} color="primary">
+                Start
               </Button>
             </DialogActions>
           </Dialog>

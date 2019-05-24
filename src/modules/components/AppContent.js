@@ -12,12 +12,12 @@ const styles = theme => ({
   root: {
     flex: "1 1 100%",
     width: "auto",
-    padding: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit * 3
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(3)
   },
   wrap: {
     width: "calc(100% - 48px)",
-    [theme.breakpoints.up(900 + theme.spacing.unit * 3 * 2)]: {
+    [theme.breakpoints.up(900 + theme.spacing(3 * 2))]: {
       width: 900,
       marginLeft: "auto",
       marginRight: "auto"

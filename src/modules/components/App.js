@@ -59,7 +59,7 @@ const styles = theme => ({
     flexGrow: 1
   },
   title: {
-    marginLeft: theme.spacing.unit * 2,
+    marginLeft: theme.spacing(2),
     flex: "0 1 auto"
   },
   appBar: {
@@ -86,7 +86,7 @@ const styles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
@@ -195,30 +195,30 @@ class App extends React.Component {
               <AboutButton about={reduxAbout} />
               <ConfigureButton about={reduxAbout} />
               <OpenInNewButton about={reduxAbout} />
-              <IconButton
-                color="inherit"
-                onClick={this.togglePaletteType}
-                aria-label="toggleTheme"
-              >
-                <Tooltip title="Toggle light/dark theme" enterDelay={300}>
+              <Tooltip title="Toggle light/dark theme" enterDelay={300}>
+                <IconButton
+                  color="inherit"
+                  onClick={this.togglePaletteType}
+                  aria-label="toggleTheme"
+                >
                   {reduxTheme.paletteType === "light" ? (
                     <LightbulbOutlineIcon />
                   ) : (
                     <LightbulbFullIcon />
                   )}
-                </Tooltip>
-              </IconButton>
-              <IconButton
-                edge="end"
-                component="a"
-                color="inherit"
-                href="https://github.com/zivelab/zivelab-channels"
-                aria-label="github"
-              >
-                <Tooltip title="Github repository" enterDelay={300}>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Github repository" enterDelay={300}>
+                <IconButton
+                  edge="end"
+                  component="a"
+                  color="inherit"
+                  href="https://github.com/zivelab/zivelab-channels"
+                  aria-label="github"
+                >
                   <GithubIcon />
-                </Tooltip>{" "}
-              </IconButton>
+                </IconButton>
+              </Tooltip>
             </Toolbar>
           </AppBar>
           <AppDrawer

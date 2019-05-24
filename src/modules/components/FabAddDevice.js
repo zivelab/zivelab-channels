@@ -23,8 +23,8 @@ import { getCookie } from "../utils/helpers";
 const styles = theme => ({
   fab: {
     position: "absolute",
-    bottom: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2
+    bottom: theme.spacing(2),
+    right: theme.spacing(2)
   },
   fabMoveUp: {
     transform: "translate3d(0, -75px, 0)",

@@ -22,7 +22,7 @@ import compose from "../utils/compose";
 
 const styles = theme => ({
   badge: {
-    padding: 0 //`0 ${theme.spacing.unit * 2}px`
+    padding: 0 //`0 ${theme.spacing(2)}px`
   }
 });
 
@@ -64,14 +64,14 @@ class AboutButton extends React.Component {
     await this.updateSifFirmware(versions.sifFirmwarePath);
     //}
 
-    this.props.actions.snackbar.enqueueSnackbar("Updating ZIM firmware.");
+    //this.props.actions.snackbar.enqueueSnackbar("Updating ZIM firmware.");
     //if (compareVersion(versions.zimFirmware, about.zimFirmware) > 0) {
-    await this.updateZimFirmware(versions.zimFirmwarePath);
+    //await this.updateZimFirmware(versions.zimFirmwarePath);
     //}
 
-    this.props.actions.snackbar.enqueueSnackbar("Updating Web App.");
+    //this.props.actions.snackbar.enqueueSnackbar("Updating Web App.");
     //if (compareVersion(versions.embeddedWebApp, about.embeddedWebApp) > 0) {
-    await this.updateAppContents(versions.embeddedWebAppPaths);
+    //await this.updateAppContents(versions.embeddedWebAppPaths);
     //}
   };
 
@@ -79,30 +79,63 @@ class AboutButton extends React.Component {
     if (!this.props.about || !source) return;
 
     const ipAddress = this.props.about.ipAddress;
+    const targetURL = "http://" + ipAddress + "/update?target=sif";
+    var oReq = new XMLHttpRequest();
+    oReq.open("POST", targetURL, true);
+    oReq.onload = function(oEvent) {
+      // Uploaded.
+    };
+
+    var blob = new Blob(["abc123"], { type: "text/plain" });
+
+    oReq.send(blob);
+
+    /*
+    const ipAddress = this.props.about.ipAddress;
     try {
       const sourceFetch = await fetch(source, {
         signal: this.controller.signal
       });
-      const sourceBlob = await sourceFetch.blob();
-      if (sourceBlob) {
+      const content = await sourceFetch.blob();
+
+      if (content) {
+        console.log("Size = " + content.size);
+        console.log(content);
+
+        const file = new File(["abc123"], "sif.bin");
+        //const file = new File([content], "sif.bin", {
+        //  type: "application/octet-stream"
+        //});
+
         var formData = new FormData();
-        formData.append("sif", sourceBlob, "sif.bin");
+        formData.append("content", file);
+
         const targetURL = "http://" + ipAddress + "/update?target=sif";
         const settings = {
           method: "POST",
+          //mode: "no-cors",
+          //headers: {
+          //  "Access-Control-Allow-Origin": "*"
+          //},
           body: formData,
           signal: this.controller.signal
         };
+
         const response = await fetch(targetURL, settings);
         if (response.ok) {
           this.props.actions.snackbar.enqueueSnackbar(
             "SIF firmware updated successfully."
+          );
+        } else {
+          this.props.actions.snackbar.enqueueSnackbar(
+            "Fail to update SIF firmware."
           );
         }
       }
     } catch (e) {
       console.log(e);
     }
+    */
   };
 
   updateZimFirmware = async source => {

@@ -22,12 +22,12 @@ const styles = theme => ({
     marginBottom: 100
   },
   content: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
-    padding: (0, theme.spacing.unit * 2)
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(0, 2) //(0, theme.spacing.unit * 2)
   },
   button: {
-    marginTop: theme.spacing.unit * 4
+    marginTop: theme.spacing(4)
   }
 });
 
@@ -51,7 +51,9 @@ class NotFoundPage extends Component {
       });
   }
 
-  defaultLink = props => <Link to="/getting-started/about" {...props} />;
+  defaultLink = React.forwardRef((props, ref) => (
+    <Link to="/getting-started/about" {...props} ref={ref} />
+  ));
 
   render() {
     const { classes } = this.props;

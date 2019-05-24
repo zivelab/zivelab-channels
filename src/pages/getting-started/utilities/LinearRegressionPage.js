@@ -27,12 +27,12 @@ import { isEmpty } from "../../../modules/utils/object";
 
 const styles = theme => ({
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
     width: 200
   },
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1)
   },
   paper: {
     width: "100%",
@@ -146,7 +146,7 @@ class LinearRegressionPage extends Component {
           Input Values
         </Typography>
         <p />
-        <Grid container spacing={24}>
+        <Grid container spacing={10}>
           <Grid item>
             <TextField
               id="new-item-x"
@@ -193,7 +193,7 @@ class LinearRegressionPage extends Component {
           Parameters
         </Typography>
         <p />
-        <Grid container spacing={24}>
+        <Grid container spacing={10}>
           <Grid item>
             <TextField
               id="result-offset"
@@ -235,7 +235,7 @@ class LinearRegressionPage extends Component {
           Statistics
         </Typography>
         <p />
-        <Grid container spacing={24}>
+        <Grid container spacing={10}>
           <Grid item>
             <TextField
               id="result-dof"
