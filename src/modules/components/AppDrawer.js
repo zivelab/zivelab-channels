@@ -38,7 +38,7 @@ class AppDrawer extends React.Component {
     const { classes, onClose } = this.props;
     return (
       <div className={classes.nav}>
-        <div className={classes.toolbar} />
+        <div className={classes.toolbar}>{/* TODO insert title here*/}</div>
         {<AppDrawerContents onClick={onClose} />}
       </div>
     );

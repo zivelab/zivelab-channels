@@ -181,7 +181,7 @@ class AppDrawerContents extends React.Component {
     const isScanning = scanTotal > 0 && scanCompleted < scanTotal;
     return (
       <React.Fragment key="section-to-list-nav-contents">
-        <List>
+        <List disablePadding>
           <Divider key="nav-getting-started-divider1" />
           <AppDrawerGeneralItems onClick={onClick} />
           <Divider key="nav-my-devices-divider" />
