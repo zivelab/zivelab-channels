@@ -269,7 +269,7 @@ class LinearRegressionPage extends Component {
         </Typography>
         <p />
 
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} elevation={2}>
           <Table>
             <TableHead>
               <TableRow>
