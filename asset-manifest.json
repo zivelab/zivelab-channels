@@ -1,15 +1,17 @@
 {
-  "main.js": "/zivelab-channels/static/js/main.ed3fa0ea.chunk.js",
-  "main.js.map": "/zivelab-channels/static/js/main.ed3fa0ea.chunk.js.map",
-  "runtime~main.js": "/zivelab-channels/static/js/runtime~main.149fc12e.js",
-  "runtime~main.js.map": "/zivelab-channels/static/js/runtime~main.149fc12e.js.map",
-  "static/css/2.24554e6e.chunk.css": "/zivelab-channels/static/css/2.24554e6e.chunk.css",
-  "static/js/2.116f03f5.chunk.js": "/zivelab-channels/static/js/2.116f03f5.chunk.js",
-  "static/js/2.116f03f5.chunk.js.map": "/zivelab-channels/static/js/2.116f03f5.chunk.js.map",
-  "index.html": "/zivelab-channels/index.html",
-  "precache-manifest.689ea8d4901119a116767efd961befd0.js": "/zivelab-channels/precache-manifest.689ea8d4901119a116767efd961befd0.js",
-  "service-worker.js": "/zivelab-channels/service-worker.js",
-  "static/css/2.24554e6e.chunk.css.map": "/zivelab-channels/static/css/2.24554e6e.chunk.css.map",
-  "static/media/about.md": "/zivelab-channels/static/media/about.c89566c5.md",
-  "static/media/notFound.md": "/zivelab-channels/static/media/notFound.4faf7044.md"
+  "files": {
+    "main.js": "/zivelab-channels/static/js/main.ea70b9b4.chunk.js",
+    "main.js.map": "/zivelab-channels/static/js/main.ea70b9b4.chunk.js.map",
+    "runtime~main.js": "/zivelab-channels/static/js/runtime~main.149fc12e.js",
+    "runtime~main.js.map": "/zivelab-channels/static/js/runtime~main.149fc12e.js.map",
+    "static/css/2.863731d1.chunk.css": "/zivelab-channels/static/css/2.863731d1.chunk.css",
+    "static/js/2.d72e5543.chunk.js": "/zivelab-channels/static/js/2.d72e5543.chunk.js",
+    "static/js/2.d72e5543.chunk.js.map": "/zivelab-channels/static/js/2.d72e5543.chunk.js.map",
+    "index.html": "/zivelab-channels/index.html",
+    "precache-manifest.f1fdcad2e3fb8d586d6e95664ce50aff.js": "/zivelab-channels/precache-manifest.f1fdcad2e3fb8d586d6e95664ce50aff.js",
+    "service-worker.js": "/zivelab-channels/service-worker.js",
+    "static/css/2.863731d1.chunk.css.map": "/zivelab-channels/static/css/2.863731d1.chunk.css.map",
+    "static/media/about.md": "/zivelab-channels/static/media/about.c89566c5.md",
+    "static/media/notFound.md": "/zivelab-channels/static/media/notFound.4faf7044.md"
+  }
 }
