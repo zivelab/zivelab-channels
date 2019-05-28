@@ -75,7 +75,7 @@ class CookConsole extends React.Component {
     return (
       <Grid
         container
-        spacing={16}
+        spacing={2}
         direction="row"
         justify="flex-start"
         alignItems="center"
@@ -83,7 +83,7 @@ class CookConsole extends React.Component {
         <Grid
           item
           container
-          spacing={16}
+          spacing={2}
           direction="column"
           justify="flex-start"
           alignItems="stretch"

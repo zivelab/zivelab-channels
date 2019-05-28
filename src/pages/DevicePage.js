@@ -584,7 +584,7 @@ class DevicePage extends React.Component {
         <Grid
           container
           className={classes.root}
-          spacing={40}
+          spacing={5}
           layout="row"
           alignItems="stretch"
         >

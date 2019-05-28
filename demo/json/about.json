@@ -1,6 +1,6 @@
 {
   "hostName": "ZIM1100",
-  "model": "Zive ZIM-SIF",
+  "model": "Zive ZBA1000",
   "description": "Impedance Meter",
   "frequencyRanges": "4kHz to 0.1Hz",
   "voltageRanges": "1000V/100V",
