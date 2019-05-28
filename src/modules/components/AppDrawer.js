@@ -20,6 +20,9 @@ const styles = theme => ({
   paper: {
     width: drawerWidth
   },
+  toolbarIe11: {
+    display: "flex"
+  },
   toolbar: {
     ...theme.mixins.toolbar,
     paddingLeft: theme.spacing(3),
@@ -38,7 +41,9 @@ class AppDrawer extends React.Component {
     const { classes, onClose } = this.props;
     return (
       <div className={classes.nav}>
-        <div className={classes.toolbar}>{/* TODO insert title here*/}</div>
+        <div className={classes.toolbarIe11}>
+          <div className={classes.toolbar}>{/* TODO insert title here*/}</div>
+        </div>
         {<AppDrawerContents onClick={onClose} />}
       </div>
     );

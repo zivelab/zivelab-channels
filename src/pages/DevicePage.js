@@ -42,7 +42,6 @@ const styles = theme => ({
 // Math Constatnts
 const dateTimeOffset = 62135596800000; // ticks from 0000-01-01 to 1970-01-01
 const launched = new Date().getTime();
-//const queue = [];
 
 // Device specfic constants
 const states = {
@@ -234,12 +233,10 @@ class DevicePage extends React.Component {
   componentDidMount = async () => {
     await this.loadAboutAsync();
     await this.loadChannelAsync();
-    /*
     let timer = setInterval(async () => {
       await this.loadChannelAsync();
     }, 2000);
     this.setState({ timer });
-    */
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -264,7 +261,7 @@ class DevicePage extends React.Component {
   componentWillUnmount() {
     currentIPAddress = null;
     this.controller.abort();
-    //clearInterval(this.state.timer);
+    clearInterval(this.state.timer);
   }
 
   loadAboutAsync = async () => {
