@@ -1,0 +1,24 @@
+/* roboto-300 - cyrillic-ext_vietnamese_greek-ext_cyrillic_latin_greek_latin-ext */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  src: local("Roboto Light"), local("Roboto-Light"),
+    url("./roboto-v19-300.woff2") format("woff2");
+}
+/* roboto-regular - cyrillic-ext_vietnamese_greek-ext_cyrillic_latin_greek_latin-ext */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Roboto"), local("Roboto-Regular"),
+    url("./roboto-v19-regular.woff2") format("woff2");
+}
+/* roboto-500 - cyrillic-ext_vietnamese_greek-ext_cyrillic_latin_greek_latin-ext */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  src: local("Roboto Medium"), local("Roboto-Medium"),
+    url("./roboto-v19-500.woff2") format("woff2");
+}
