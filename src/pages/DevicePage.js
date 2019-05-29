@@ -52,7 +52,8 @@ const states = {
   Stopped: "Stopped",
   RunningNoiseLevel: "RunningNoiseLevel",
   TooHotFET: "TooHotFET",
-  Failed: "Failed"
+  Failed: "Failed",
+  NotYetCalibrated: "NotYetCalibrated"
 };
 
 const defaultParameters = {
@@ -344,7 +345,8 @@ class DevicePage extends React.Component {
           key => states[key] === channelJson.state
         );
         channelJson.received = Date.now();
-        channelJson.isIdle = state === states.Idle;
+        channelJson.isIdle =
+          state === states.Idle || state === states.NotYetCalibrated;
         channelJson.isRunning =
           state === states.Running ||
           state === states.Finished ||
@@ -352,6 +354,7 @@ class DevicePage extends React.Component {
         channelJson.isRunningNoiseLevel = state === states.RunningNoiseLevel;
         channelJson.isTooHot = state === states.TooHotFET;
         channelJson.isFailed = state === states.Failed;
+        channelJson.notYetCalibrated = state === states.NotYetCalibrated;
 
         if (
           state === states.Running &&

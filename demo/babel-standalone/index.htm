@@ -317,7 +317,8 @@
         Stopped: "Stopped",
         RunningNoiseLevel: "RunningNoiseLevel",
         TooHotFET: "TooHotFET",
-        Failed: "Failed"
+        Failed: "Failed",
+        NotYetCalibrated: "NotYetCalibrated"
       };
       const defaultVoltageRanges = [
         { value: 0, label: "1000V" },
@@ -1472,6 +1473,7 @@
             : false;
           const isTooHot = channel ? channel.isTooHot : false;
           const isFailed = channel ? channel.isFailed : false;
+          const notYetCalibrated = channel ? channel.notYetCalibrated : false;
           const started =
             cook && cook.started && cook.started.moment
               ? cook.started.moment
@@ -1484,6 +1486,8 @@
             ? "Heat sink is very hot..."
             : isFailed
             ? "Something wrong, check cables..."
+            : notYetCalibrated
+            ? "Not yet calibrated..."
             : cook && cook.data.length > 0
             ? "Cooked, " + started.fromNow()
             : channel
@@ -2221,7 +2225,8 @@
                 key => states[key] == channelJson.state
               );
               channelJson.received = Date.now();
-              channelJson.isIdle = state == states.Idle;
+              channelJson.isIdle =
+                state == states.Idle || state == states.NotYetCalibrated;
               channelJson.isRunning =
                 state == states.Running ||
                 state == states.Finished ||
@@ -2230,6 +2235,7 @@
                 state == states.RunningNoiseLevel;
               channelJson.isTooHot = state === states.TooHotFET;
               channelJson.isFailed = state === states.Failed;
+              channelJson.notYetCalibrated = state == states.NotYetCalibrated;
 
               if (
                 state == states.Running &&
