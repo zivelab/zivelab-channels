@@ -1,7 +1,7 @@
 {
   "name": "EmbeddedWebApp",
   "description": "Web App running on BZA1000",
-  "version": "0.1.0.6",
-  "releaseDate": "2019-05-28",
+  "version": "0.1.0.7",
+  "releaseDate": "2019-05-30",
   "path": "index.htm"
 }

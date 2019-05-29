@@ -1,6 +1,6 @@
 {
-  "name": "Web App",
-  "short_name": "Web App",
+  "name": "Dashboard of ZBA channel",
+  "short_name": "ZBA channel",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
