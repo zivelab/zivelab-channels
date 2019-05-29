@@ -53,6 +53,7 @@ const states = {
   RunningNoiseLevel: "RunningNoiseLevel",
   TooHotFET: "TooHotFET",
   Failed: "Failed",
+  NotYetReady: "NotYetReady", // cause of transient Vac.
   NotYetCalibrated: "NotYetCalibrated"
 };
 
@@ -354,6 +355,7 @@ class DevicePage extends React.Component {
         channelJson.isRunningNoiseLevel = state === states.RunningNoiseLevel;
         channelJson.isTooHot = state === states.TooHotFET;
         channelJson.isFailed = state === states.Failed;
+        channelJson.notYetReady = state === states.NotYetReady;
         channelJson.notYetCalibrated = state === states.NotYetCalibrated;
 
         if (

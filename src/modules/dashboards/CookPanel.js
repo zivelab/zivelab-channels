@@ -49,6 +49,7 @@ class CookPanel extends React.Component {
     const measuringNoiseLevel = channel ? channel.isRunningNoiseLevel : false;
     const tooHot = channel ? channel.isTooHot : false;
     const somethingWrong = channel ? channel.isFailed : false;
+    const notYetReady = channel ? channel.notYetReady : false;
     const notYetCalibrated = channel ? channel.notYetCalibrated : false;
     const started =
       cook && cook.started && cook.started.moment ? cook.started.moment : null;
@@ -60,6 +61,8 @@ class CookPanel extends React.Component {
       ? "Heat sink is very hot..."
       : somethingWrong
       ? "Something wrong, check cables..."
+      : notYetReady
+      ? "Not yet ready, unstable Vac..."
       : notYetCalibrated
       ? "Not yet calibrated..."
       : cook && cook.data.length > 0

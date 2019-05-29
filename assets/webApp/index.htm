@@ -288,6 +288,7 @@
         RunningNoiseLevel: "RunningNoiseLevel",
         TooHotFET: "TooHotFET",
         Failed: "Failed",
+        NotYetReady: "NotYetReady", // cause of transient Vac.
         NotYetCalibrated: "NotYetCalibrated"
       };
       const defaultVoltageRanges = [
@@ -1443,6 +1444,7 @@
             : false;
           const isTooHot = channel ? channel.isTooHot : false;
           const isFailed = channel ? channel.isFailed : false;
+          const notYetReady = channel ? channel.notYetReady : false;
           const notYetCalibrated = channel ? channel.notYetCalibrated : false;
           const started =
             cook && cook.started && cook.started.moment
@@ -1456,6 +1458,8 @@
             ? "Heat sink is very hot..."
             : isFailed
             ? "Something wrong, check cables..."
+            : notYetReady
+            ? "Not yet ready, unstable Vac..."
             : notYetCalibrated
             ? "Not yet calibrated..."
             : cook && cook.data.length > 0
@@ -2205,6 +2209,7 @@
                 state == states.RunningNoiseLevel;
               channelJson.isTooHot = state === states.TooHotFET;
               channelJson.isFailed = state === states.Failed;
+              channelJson.notYetReady = state === states.NotYetReady;
               channelJson.notYetCalibrated = state === states.NotYetCalibrated;
 
               if (
