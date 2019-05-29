@@ -228,7 +228,7 @@ class AboutButton extends React.Component {
       : null;
 
     const appURL =
-      "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/demo/babel-standalone/version.json";
+      "https://raw.githubusercontent.com/zivelab/zivelab-channels/master/assets/webApp/version.json";
     const appJson = await this.getVersionAsync(appURL);
     const embeddedWebApp = appJson ? appJson.version : "";
     const embeddedWebAppPaths = appJson ? await this.getAppFilesAsync() : null;
@@ -265,7 +265,7 @@ class AboutButton extends React.Component {
   getAppFilesAsync = async () => {
     try {
       const url =
-        "https://api.github.com/repos/zivelab/zivelab-channels/contents/demo/babel-standalone";
+        "https://api.github.com/repos/zivelab/zivelab-channels/contents/assets/webApp";
       const submoduleFetch = await fetch(url, {
         signal: this.controller.signal
       });
