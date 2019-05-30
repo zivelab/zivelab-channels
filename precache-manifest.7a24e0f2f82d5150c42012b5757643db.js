@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "94dbda4e842868c16a8ae243e3f9a2dd",
+    "revision": "ae72bc2377ee3c725bc4762a838f28ad",
     "url": "/zivelab-channels/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/zivelab-channels/static/js/2.d72e5543.chunk.js"
   },
   {
-    "revision": "8545df0929a3ed6116a5",
-    "url": "/zivelab-channels/static/js/main.ea70b9b4.chunk.js"
+    "revision": "02d7ade246c5869d017f",
+    "url": "/zivelab-channels/static/js/main.ca979b6a.chunk.js"
   },
   {
     "revision": "b5a7163a3f12e0f4b668",
