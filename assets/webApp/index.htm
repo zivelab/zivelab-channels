@@ -1,3 +1,6 @@
+<!-- Online version -->
+<!-- Run this locally on Firefox, allowing Cross Origin Requests from files. -->
+
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
@@ -10,24 +13,52 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
     <link rel="manifest" href="site.webmanifest" />
-    <!-- react, material-ui, and so on -->
-    <script src="./packages/react@16.8.6/react.production.min.js"></script>
-    <script src="./packages/react-dom@16.8.6/react-dom.production.min.js"></script>
-    <script src="./packages/material-ui@4.0.1/material-ui.production.min.js"></script>
-    <script src="./packages/classnames@2.2.6/index.js"></script>
-    <script src="./packages/prop-types@15.7.2/prop-types.min.js"></script>
-    <script src="./packages/recharts@1.6.2/recharts.min.js"></script>
+    <!-- packages -->
     <script
-      src="./packages/d3-format@1.3.2/d3-format.min.js"
+      src="https://unpkg.com/react@16.8.6/umd/react.production.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@16.8.6/umd/react-dom.production.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@material-ui/core@4.0.1/umd/material-ui.production.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/prop-types@15.7.2/prop-types.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/recharts@1.6.2/umd/Recharts.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/d3-format@1.3.2/dist/d3-format.min.js"
       aria-controls="anonymous"
     ></script>
-    <script src="./packages/moment@2.24.0/moment.js"></script>
+    <script
+      src="https://unpkg.com/moment@2.24.0/moment.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- babel -->
+    <script
+      src="https://unpkg.com/@babel/standalone@7.4.5/babel.min.js"
+      crossorigin="anonymous"
+    ></script>
     <!-- stylesheets -->
-    <link rel="stylesheet" href="./font/roboto.css" />
-    <link rel="stylesheet" href="./iconfont/material-icons.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
   </head>
   <body>
     <div id="root"></div>
-    <script src="./src/app.production.js"></script>
+    <script type="text/babel" src="./src/app.js"></script>
   </body>
 </html>
