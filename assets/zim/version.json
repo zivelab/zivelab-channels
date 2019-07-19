@@ -1,7 +1,7 @@
 {
   "name": "zim",
   "description": "FPGA Firmware of ZIM",
-  "version": "1.0.1.0",
-  "releaseDate": "2019-04-30",
-  "path": "ZIM.1.0.1.0.bin"
+  "version": "1.0.2.0",
+  "releaseDate": "2019-07-10",
+  "path": "ZIM.1.0.2.0.bin"
 }
