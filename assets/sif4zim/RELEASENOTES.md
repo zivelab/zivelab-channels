@@ -1,3 +1,7 @@
+### 1.3.6.1 - 2019-07-22
+
+- Add more delay time to enhance stability of I2C communication.
+
 ### 1.3.6.0 - 2019-07-18
 
 - Can control boards even when VDC < -2V.
