@@ -1,3 +1,7 @@
+### 1.3.6.2 - 2019-07-26
+
+- Add conditions causing "Not calibrated" status.
+
 ### 1.3.6.1 - 2019-07-22
 
 - Add more delay time to enhance stability of I2C communication.
